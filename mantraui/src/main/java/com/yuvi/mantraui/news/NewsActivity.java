@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.yuvi.mantraui.AdapterModel;
 import com.yuvi.mantraui.R;
 
 import org.json.JSONObject;
@@ -38,7 +39,8 @@ public class NewsActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        NewsAdapter adapter = new NewsAdapter(this, url, packageName, newsMap, false){
+        AdapterModel model = new AdapterModel(newsMap, url, packageName, true);
+        NewsAdapter adapter = new NewsAdapter(this, model){
             @Override
             protected void onFailed(String message) {
                 super.onFailed(message);
@@ -47,5 +49,6 @@ public class NewsActivity extends AppCompatActivity {
         };
         rv_news.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         rv_news.setAdapter(adapter);
+        adapter.setOnLoadMoreListener(rv_news);
     }
 }
