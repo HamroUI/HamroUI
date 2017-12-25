@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +17,10 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import org.json.JSONArray;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by yubaraj on 12/21/17.
@@ -109,7 +115,33 @@ public class Utils {
         }
 
     }
+    public static String getUrlFromYoutubeKey(String youtubeKey) {
+        if (!TextUtils.isEmpty(youtubeKey)) {
+            String url = "https://i.ytimg.com/vi/" + youtubeKey + "/hqdefault.jpg";
+            return url;
+        }
+        return null;
+    }
 
+    public static String getRelativeTime(String date, String dateFormat) {
+        //"yyyy-MM-dd"
+        Log.d("utilities", "date = " + date);
+        if (TextUtils.isEmpty(date)) {
+            return "Just Now";
+        }
+        if (date == null || date.isEmpty())
+            return "Just Now";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+//            format.setTimeZone(TimeZone.getTimeZone("GMT+5:45"));
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date dt = format.parse(date);
+            return (String) DateUtils.getRelativeTimeSpanString(dt.getTime(), System.currentTimeMillis(), 0L, DateUtils.FORMAT_ABBREV_ALL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 
     public static String getVersionName(Context context) {
         try {

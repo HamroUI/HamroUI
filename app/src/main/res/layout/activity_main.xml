@@ -18,4 +18,16 @@
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="News"
+        android:id="@+id/btn_news"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Videos"
+        android:id="@+id/btn_videos"/>
 </LinearLayout>

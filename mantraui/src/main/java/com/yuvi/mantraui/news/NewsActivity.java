@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.yuvi.mantraui.AdapterModel;
 import com.yuvi.mantraui.R;
@@ -45,6 +46,12 @@ public class NewsActivity extends AppCompatActivity {
             protected void onFailed(String message) {
                 super.onFailed(message);
                 Log.d("NewsActivity", "Failed, Message = " + message);
+            }
+
+            @Override
+            protected void onLoadingMoreComplete() {
+                super.onLoadingMoreComplete();
+                Toast.makeText(getApplicationContext(), "No more news", Toast.LENGTH_SHORT).show();
             }
         };
         rv_news.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
