@@ -1,6 +1,7 @@
 package com.yuvi.mantraui;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
@@ -15,11 +16,6 @@ import com.mantraideas.simplehttp.datamanager.dmmodel.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by yubaraj on 12/21/17.
@@ -34,6 +30,7 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     private boolean loading = false, hasMoreData = false;
     int start = 0;
     AdapterModel model;
+    Handler handler = new Handler();
 
     protected int TYPE_PROGRESS = 1, TYPE_DATA = 2;
 
@@ -54,11 +51,18 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
         return super.getItemViewType(position);
     }
 
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            notifyDataSetChanged();
+        }
+    };
+
     @Override
     public void onLoadMore() {
         try {
             jsonArray.put(jsonArray.length(), null);
-            notifyDataSetChanged();
+            handler.post(runnable);
             model.requestMap.put("start", start + "");
             Utils.log(BaseRecyclerViewAdapter.class, "start = " + start);
             queryData();
