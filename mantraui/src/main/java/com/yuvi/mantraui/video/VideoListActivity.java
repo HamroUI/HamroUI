@@ -1,16 +1,24 @@
 package com.yuvi.mantraui.video;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeApiServiceUtil;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeIntents;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.yuvi.mantraui.AdapterModel;
 import com.yuvi.mantraui.OnItemClickListener;
 import com.yuvi.mantraui.R;
+import com.yuvi.mantraui.Utils;
 
 import org.json.JSONObject;
 
@@ -21,7 +29,7 @@ import java.util.Iterator;
  * Created by yubaraj on 12/25/17.
  */
 
-public class VideoListActivity extends AppCompatActivity  implements OnItemClickListener{
+public class VideoListActivity extends AppCompatActivity implements OnItemClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +50,7 @@ public class VideoListActivity extends AppCompatActivity  implements OnItemClick
         }
         RecyclerView rv_video = findViewById(R.id.rv_video);
         AdapterModel model = new AdapterModel(videoMap, url, packageName, true);
-        VideoAdapter adapter = new VideoAdapter(getApplicationContext(), model){
+        VideoAdapter adapter = new VideoAdapter(getApplicationContext(), model) {
             @Override
             protected void onLoadingMoreComplete() {
                 super.onLoadingMoreComplete();
@@ -63,8 +71,9 @@ public class VideoListActivity extends AppCompatActivity  implements OnItemClick
 
     @Override
     public void onItemClicked(JSONObject dataJSON) {
+        String youtubeID = dataJSON.optString("youtubeID");
         startActivity(new Intent(getApplicationContext(), PlayerActivity.class)
-                .putExtra("videoId", dataJSON.optString("youtubeID"))
+                .putExtra("yid", youtubeID)
         );
     }
 }

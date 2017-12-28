@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.mantraideas.simplehttp.datamanager.DataRequestManager;
@@ -93,26 +94,30 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     }
 
     public void setOnLoadMoreListener(RecyclerView recyclerView) {
-        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
-                    .getLayoutManager();
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView,
-                                       int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
+        if(model.hasPagination) {
+            if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
+                        .getLayoutManager();
+                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView,
+                                           int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
 
-                    totalItemCount = linearLayoutManager.getItemCount();
-                    lastVisibleItem = linearLayoutManager
-                            .findLastVisibleItemPosition();
-                    Utils.log(BaseRecyclerViewAdapter.class, "call OnMore = " + (!loading && hasMoreData && totalItemCount <= (lastVisibleItem + visibleThreshold)));
-                    if (!loading && hasMoreData && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                        // End has been reached
-                        // Do something
-                        BaseRecyclerViewAdapter.this.onLoadMore();
+                        totalItemCount = linearLayoutManager.getItemCount();
+                        lastVisibleItem = linearLayoutManager
+                                .findLastVisibleItemPosition();
+                        Utils.log(BaseRecyclerViewAdapter.class, "call OnMore = " + (!loading && hasMoreData && totalItemCount <= (lastVisibleItem + visibleThreshold)));
+                        if (!loading && hasMoreData && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                            // End has been reached
+                            // Do something
+                            BaseRecyclerViewAdapter.this.onLoadMore();
+                        }
                     }
-                }
-            });
+                });
+            }
+        }else {
+            Log.w("BaseRecyclerViewAdapter", "set pagination to true in AdapterModel to enable the loadmore ");
         }
     }
 

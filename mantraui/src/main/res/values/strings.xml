@@ -1,6 +1,16 @@
 <resources>
-    <string name="app_name">News</string>
+    <string name="app_name">MantraUi</string>
+
+    <!--App label-->
     <string name="gallery">Gallery</string>
     <string name="news">News</string>
     <string name="videos">Videos</string>
+
+    <!--Youtube-->
+    <string name="player_error">Error initializing YouTube player: %s</string>
+    <string name="seek_to">Jump To</string>
+    <string name="seek_to_hint">Seconds</string>
+    <string name="youtubekey">AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc</string>
+    <string name="loadfailed">UNABLE TO LAOD VIDEO</string>
+    <string name="loadfaileMessage">We are sorry for not been able to play the video because of the content owner permission.However you can view this video in youtube.</string>
 </resources>
