@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import java.util.List;
 
 public class SliderView extends Fragment {
     ViewPager pager;
+    Handler handler = null;
 
     @Nullable
     @Override
@@ -64,10 +66,10 @@ public class SliderView extends Fragment {
                 "            \"url\": \"wc22://web?url=http://english.alarabiya.net/en/features/2017/12/17/Qatar-looking-into-using-Iranian-island-for-World-Cup-2022.html\"\n" +
                 "        }\n" +
                 "    ]";
-        try{
+        try {
             JSONArray jsonArray = new JSONArray(data);
             Utils.log(SliderView.class, "dataLength = " + jsonArray.length());
-            for(int i = 0; i < jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.optJSONObject(i);
                 sliderModels.add(new SliderModel(json.optString("image"), json.optString("url"), json.optString("name")));
             }
@@ -75,12 +77,13 @@ public class SliderView extends Fragment {
             pager.setAdapter(adapter);
             Utils.log(this.getClass(), "adapterSize = " + adapter.getCount());
             indicator.addWithSlider(pager);
+            handler = new Handler();
             handler.postDelayed(runnable, 4000);
-        }catch (Exception e){e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-
-    Handler handler = new Handler();
 
     Runnable runnable = new Runnable() {
         @Override
@@ -97,6 +100,7 @@ public class SliderView extends Fragment {
 
     class SliderAdapter extends FragmentStatePagerAdapter {
         List<SliderModel> dataList;
+
         public SliderAdapter(FragmentManager manager, List<SliderModel> dataList) {
             super(manager);
             this.dataList = dataList;
@@ -125,12 +129,29 @@ public class SliderView extends Fragment {
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(handler != null){
+    public void onPause() {
+        super.onPause();
+        Log.d("SliderView", "sliderView is paused");
+        if (handler != null) {
             handler.removeCallbacks(runnable);
+            handler = null;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("SliderView", "slider is resumed");
+        if (handler == null) {
+            handler = new Handler();
+            handler.post(runnable);
         }
     }
 }
