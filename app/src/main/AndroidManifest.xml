@@ -22,6 +22,7 @@
         <activity android:name="com.yuvi.mantraui.news.NewsActivity"/>
         <activity android:name="com.yuvi.mantraui.video.VideoListActivity"/>
         <activity android:name="com.yuvi.mantraui.video.PlayerActivity"/>
+        <activity android:name="com.yuvi.mantraui.gallery.GalleryActivity"/>
     </application>
 
 </manifest>

@@ -1,5 +1,32 @@
-{"type":"news",
-  "request": {"url":"","action":"get_news","start":"0", "limit":"10"},
-  "home":{"show":true, "max":5, "showAll" : true},
-  "link":"sp://news"
-}
+[
+  {
+    "type": "news",
+    "request": {
+      "url": "",
+      "action": "news",
+      "start": "0",
+      "limit": "10"
+    },
+    "home": {
+      "show": true,
+      "max": 5,
+      "showAll": true
+    },
+    "link": "sp://news"
+  },
+  {
+    "type": "gallery",
+    "request": {
+      "url": "",
+      "action": "get_videos",
+      "start": "0",
+      "limit": "10"
+    },
+    "home": {
+      "show": true,
+      "max": 5,
+      "showAll": true
+    },
+    "link": "sp://news"
+  }
+]

@@ -16,7 +16,7 @@
         android:id="@+id/sliderview"
         android:name="com.yuvi.mantraui.slider.SliderView"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="150dp" />
 
     <Button
         android:layout_width="match_parent"
@@ -30,4 +30,12 @@
         android:layout_marginTop="8dp"
         android:text="Videos"
         android:id="@+id/btn_videos"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Videos"
+        android:id="@+id/btn_gallery"/>
+
 </LinearLayout>
