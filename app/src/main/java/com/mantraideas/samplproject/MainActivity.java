@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.yuvi.mantraui.alert.AlertData;
 import com.yuvi.mantraui.alert.AlertView;
+import com.yuvi.mantraui.audio.AudioActivity;
 import com.yuvi.mantraui.gallery.GalleryActivity;
 import com.yuvi.mantraui.news.NewsActivity;
 import com.yuvi.mantraui.video.VideoListActivity;
@@ -47,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
                     .putExtra("nc", nc));
         });
 
-        //Gallery
+        // testAudio
+         findViewById(R.id.btn_audio).setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), AudioActivity.class)));
 
+        //testGallery
         findViewById(R.id.btn_gallery).setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, GalleryActivity.class));
         });

@@ -18,7 +18,7 @@
     "type": "gallery",
     "request": {
       "url": "",
-      "action": "get_videos",
+      "action": "get_gallery",
       "start": "0",
       "limit": "10"
     },

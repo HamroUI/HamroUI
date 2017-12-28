@@ -38,4 +38,11 @@
         android:text="Gallery"
         android:id="@+id/btn_gallery"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Audio"
+        android:id="@+id/btn_audio"/>
+
 </LinearLayout>
