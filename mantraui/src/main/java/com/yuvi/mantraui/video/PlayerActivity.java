@@ -2,6 +2,7 @@ package com.yuvi.mantraui.video;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -113,6 +114,8 @@ public class PlayerActivity extends YouTubeBaseActivity implements YouTubePlayer
     @Override
     public void onError(YouTubePlayer.ErrorReason errorReason) {
         Log.d("PlayerActivity", "errorMesg = " + errorReason.name());
+        // first set the screen to portrait , usually the player video is in landscape mode
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         VideoErrorDialogueFragment fragment = new VideoErrorDialogueFragment();
         Bundle bundle = new Bundle();
         bundle.putString("yid", yId);

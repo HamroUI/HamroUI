@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.Target;
 
 import org.json.JSONArray;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -115,6 +116,7 @@ public class Utils {
         }
 
     }
+
     public static String getUrlFromYoutubeKey(String youtubeKey) {
         if (!TextUtils.isEmpty(youtubeKey)) {
             String url = "https://i.ytimg.com/vi/" + youtubeKey + "/hqdefault.jpg";
@@ -163,7 +165,6 @@ public class Utils {
     }
 
 
-
     public static void loadImageWithGlide(Context context, String url, ImageView iv_thumbnail, final ProgressBar progressBar) {
         Glide.with(context).
                 load(url)
@@ -188,6 +189,30 @@ public class Utils {
                 })
                 .crossFade(1000)
                 .into(iv_thumbnail);
+    }
+
+    public static String readFileFromInputStream(InputStream is) {
+        try {
+            int size = is.available();
+            byte buffer[] = new byte[size];
+            is.read(buffer);
+            is.close();
+            return new String(buffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static InputStream getInputStreamFromFile(Context context, String filename) {
+        Log.d("Utilities", "filname = " + filename);
+        try {
+            InputStream is = context.getAssets().open(filename);
+            return is;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
