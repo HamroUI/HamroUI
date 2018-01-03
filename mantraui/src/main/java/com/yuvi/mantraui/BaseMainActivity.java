@@ -1,6 +1,10 @@
 package com.yuvi.mantraui;
 
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
@@ -21,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.yuvi.mantraui.slider.SliderView;
 
 import org.json.JSONException;
@@ -98,6 +104,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         toolbar.setLayoutParams(new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 50)));
         toolbar.setBackgroundColor(Color.parseColor("#3F51B5"));
         toolbar.setId(R.id.toolbar);
+        toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat_Light);
+        toolbar.getContext().setTheme(R.style.ThemeOverlay_AppCompat_Dark_ActionBar);
         return toolbar;
     }
 
@@ -111,9 +119,11 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         Toolbar toolbar = getToolbar();
         linearLayout.addView(toolbar);
         linearLayout.addView(getFrameLayout());
+        linearLayout.addView(getBottomSheetNavigation());
+
         drawerLayout.addView(linearLayout);
         drawerLayout.addView(getNavigationView());
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar , R.string.app_name, R.string.app_name) {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -143,7 +153,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
     private FrameLayout getFrameLayout() {
         FrameLayout frameLayout = new FrameLayout(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        layoutParams.weight = 1;
         frameLayout.setLayoutParams(layoutParams);
         frameLayout.setId(R.id.container);
         return frameLayout;
@@ -159,11 +170,10 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     private NavigationView getNavigationView() {
         NavigationView navigationView = new NavigationView(this);
         navigationView.setMinimumWidth(Utils.pxFromDp(this, 300));
-        DrawerLayout.LayoutParams navLayout = new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT,   DrawerLayout.LayoutParams.MATCH_PARENT, Gravity.START);
+        DrawerLayout.LayoutParams navLayout = new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.MATCH_PARENT, Gravity.START);
         navigationView.setLayoutParams(navLayout);
-        navigationView.setBackgroundColor(Color.parseColor("#FF0000"));
+        navigationView.setBackgroundColor(Color.parseColor("#F5F5F5"));
         navigationView.setId(R.id.navview);
-        navigationView.inflateMenu(R.menu.home_menu);
         updateMenusItemOfNavigationView(navigationView);
         return navigationView;
     }
@@ -171,14 +181,49 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
     private BottomNavigationView getBottomSheetNavigation() {
         BottomNavigationView bottomNavigationView = new BottomNavigationView(this);
-        bottomNavigationView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        bottomNavigationView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 50)));
         bottomNavigationView.setId(R.id.bottomsheet);
+        bottomNavigationView.setItemTextColor(myColorStateList);
+        bottomNavigationView.setItemIconTintList(myColorStateList);
+        bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.h_blue_500));
+        Menu menu = bottomNavigationView.getMenu();
+        menu.add(0, Menu.FIRST, Menu.NONE, "TEXT");
+        menu.add(0, Menu.FIRST+1, Menu.NONE, "Sample");
+        MenuItem menuItem = menu.findItem(Menu.FIRST);
+        new LoadIcon(menuItem).execute();
         return bottomNavigationView;
     }
 
     private Fragment getSliderView() {
         SliderView view = new SliderView();
         return view;
+    }
+
+    class LoadIcon extends AsyncTask<Void, Void, Bitmap>{
+        MenuItem menuItem;
+        public LoadIcon(MenuItem menuItem){
+            this.menuItem = menuItem;
+        }
+        @Override
+        protected Bitmap doInBackground(Void... voids) {
+            try {
+                Bitmap bitmap = Glide.with(getApplicationContext())
+                        .load("https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png")
+                        .asBitmap()
+                        .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                        .get();
+                return bitmap;
+            }catch (Exception e){e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            BitmapDrawable mBitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+            menuItem.setIcon(mBitmapDrawable);
+        }
     }
 
     @Override
@@ -197,4 +242,17 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     }
 
     public abstract InputStream getAppconfigFile();
+
+
+    //    The first dimension is an array of state sets, the second ist the state set itself. The colors array lists the colors for each matching state set, therefore the length of the colors array has to match the first dimension of the states array (or it will crash when the state is "used"). Here and example:
+    ColorStateList myColorStateList = new ColorStateList(
+            new int[][]{
+                    new int[]{android.R.attr.state_checked}, //1
+                    new int[]{-android.R.attr.state_checked}, //2
+            },
+            new int[]{
+                    R.color.h_grey_500, //1
+                    R.color.h_red_500, //2
+            }
+    );
 }
