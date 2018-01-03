@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.yuvi.mantraui.slider.SliderView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,6 +89,9 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 //    }
 
     JSONObject appConfigJSON;
+    JSONArray actionBarArray = new JSONArray();
+    int ACTIONBAR = 100;
+    int BOTTOMSHEET = 1000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,22 +99,23 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         LinearLayout linearLayout = getHomeLayout();
         Toolbar toolbar = getToolbar();
         linearLayout.addView(toolbar);
-        ViewGroup view = linearLayout;
+        View view = linearLayout;
 
         try {
             appConfigJSON = new JSONObject(Utils.readFileFromInputStream(getAppconfigFile()));
             HashMap<String, String> homeMap = new HashMap<>();
             Iterator<String> iterator = appConfigJSON.keys();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
                 String key = iterator.next();
-                switch (key){
+                switch (key) {
                     case "sidebar":
-                        view = setDrawableLayout(linearLayout, toolbar);
+                        view = setDrawableLayout(linearLayout);
                         break;
                     case "home":
+                        manageHome(appConfigJSON.optJSONObject("home"));
                         break;
                     case "bottomsheet":
-                       linearLayout.addView(getBottomSheetNavigation());
+                        linearLayout.addView(getBottomSheetNavigation());
                         break;
                     case "modulesconfig":
                         break;
@@ -121,8 +127,33 @@ public abstract class BaseMainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         setContentView(view);
-        Log.d("BaseMainActivity", "appconfig = " + appConfigJSON.toString());
+        setSupportActionBar(toolbar);
+
+        if (view instanceof DrawerLayout) {
+            ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, (DrawerLayout) view, toolbar, R.string.app_name, R.string.app_name) {
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    super.onDrawerClosed(drawerView);
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    Log.d("BaseMainActivity", "drawer opened");
+                }
+            };
+
+            ((DrawerLayout) view).addDrawerListener(actionBarDrawerToggle);
+            actionBarDrawerToggle.syncState();
+        }
 //        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, getSliderView()).commit();
+    }
+
+    private void manageHome(JSONObject homeJSON) {
+        if (homeJSON.has("actionbar")) {
+            actionBarArray = homeJSON.optJSONArray("actionbar");
+        }
     }
 
     private Toolbar getToolbar() {
@@ -135,7 +166,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         return toolbar;
     }
 
-    private DrawerLayout setDrawableLayout(LinearLayout layout, Toolbar toolbar) {
+    private DrawerLayout setDrawableLayout(LinearLayout layout) {
         DrawerLayout drawerLayout = new DrawerLayout(this);
         DrawerLayout.LayoutParams layoutParams = new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         drawerLayout.setLayoutParams(layoutParams);
@@ -143,31 +174,14 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         layout.addView(getFrameLayout());
         drawerLayout.addView(layout);
         drawerLayout.addView(getNavigationView());
-
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                Log.d("BaseMainActivity", "drawer opened");
-            }
-        };
-
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
         return drawerLayout;
     }
 
     private LinearLayout getHomeLayout() {
         LinearLayout linearLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-        layoutParams.weight = 1;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         linearLayout.setLayoutParams(layoutParams);
+        linearLayout.setBackgroundColor(Color.parseColor("#F5F5F5"));
         linearLayout.setId(R.id.ll_container);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         return linearLayout;
@@ -211,9 +225,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.h_blue_500));
         Menu menu = bottomNavigationView.getMenu();
         menu.add(0, Menu.FIRST, Menu.NONE, "TEXT");
-        menu.add(0, Menu.FIRST+1, Menu.NONE, "Sample");
+        menu.add(0, Menu.FIRST + 1, Menu.NONE, "Sample");
         MenuItem menuItem = menu.findItem(Menu.FIRST);
-        new LoadIcon(menuItem).execute();
         return bottomNavigationView;
     }
 
@@ -222,21 +235,27 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         return view;
     }
 
-    class LoadIcon extends AsyncTask<Void, Void, Bitmap>{
+    class LoadIcon extends AsyncTask<Void, Void, Bitmap> {
         MenuItem menuItem;
-        public LoadIcon(MenuItem menuItem){
+        String url;
+
+        public LoadIcon(MenuItem menuItem, String url) {
             this.menuItem = menuItem;
+            this.url = url;
+            Utils.log(this.getClass(), "Loading :: " + url + " in menuItem");
         }
+
         @Override
         protected Bitmap doInBackground(Void... voids) {
             try {
                 Bitmap bitmap = Glide.with(getApplicationContext())
-                        .load("https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png")
+                        .load(url)
                         .asBitmap()
                         .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                         .get();
                 return bitmap;
-            }catch (Exception e){e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
         }
@@ -251,7 +270,19 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
+        Log.d("BaseMain", "actionBarArray =" + actionBarArray.length());
+        menu.clear();
+        for (int i = 0; i < actionBarArray.length(); i++) {
+            JSONObject menuJSON = actionBarArray.optJSONObject(i);
+            menu.add(0, ACTIONBAR + i, 1000 + i, menuJSON.optString("title"));
+            MenuItem menuItem = menu.findItem(ACTIONBAR + i);
+            if (menuJSON.optBoolean("showalways")) {
+                menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            }
+            if (menuJSON.has("icon") && !TextUtils.isEmpty(menuJSON.optString("icon"))) {
+                new LoadIcon(menuItem, menuJSON.optString("icon")).execute();
+            }
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 

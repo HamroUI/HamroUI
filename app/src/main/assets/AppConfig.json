@@ -49,19 +49,33 @@
       {
         "title":"refresh",
         "showalways":true, /*forcefully shows the icon in actionbar*/
-        "icon":"iconurl",
+        "icon":"https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png",
         "link":""
       },
       {
         "title":"share",
         "showalways":false,  /* if false shows in popupmenu*/
-        "icon":"iconurl",
+        "icon":"",
         "link":""
       },
       {
         "title":"disclaimer",
         "showalways":false,
-        "icon":"iconurl",
+        "icon":"",
+        "link":""
+      }
+    ,
+      {
+        "title":"rateus",
+        "showalways":false,
+        "icon":"",
+        "link":""
+      }
+    ,
+      {
+        "title":"About Developer",
+        "showalways":false,
+        "icon":"",
         "link":""
       }
     ],
