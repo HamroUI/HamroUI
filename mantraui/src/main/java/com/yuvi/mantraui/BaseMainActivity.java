@@ -34,6 +34,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -89,14 +91,38 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LinearLayout linearLayout = getHomeLayout();
+        Toolbar toolbar = getToolbar();
+        linearLayout.addView(toolbar);
+        ViewGroup view = linearLayout;
+
         try {
             appConfigJSON = new JSONObject(Utils.readFileFromInputStream(getAppconfigFile()));
+            HashMap<String, String> homeMap = new HashMap<>();
+            Iterator<String> iterator = appConfigJSON.keys();
+            while(iterator.hasNext()){
+                String key = iterator.next();
+                switch (key){
+                    case "sidebar":
+                        view = setDrawableLayout(linearLayout, toolbar);
+                        break;
+                    case "home":
+                        break;
+                    case "bottomsheet":
+                       linearLayout.addView(getBottomSheetNavigation());
+                        break;
+                    case "modulesconfig":
+                        break;
+
+                }
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        setContentView(getDrawableLayout());
+        setContentView(view);
         Log.d("BaseMainActivity", "appconfig = " + appConfigJSON.toString());
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, getSliderView()).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, getSliderView()).commit();
     }
 
     private Toolbar getToolbar() {
@@ -109,20 +135,15 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         return toolbar;
     }
 
-    private DrawerLayout getDrawableLayout() {
+    private DrawerLayout setDrawableLayout(LinearLayout layout, Toolbar toolbar) {
         DrawerLayout drawerLayout = new DrawerLayout(this);
         DrawerLayout.LayoutParams layoutParams = new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         drawerLayout.setLayoutParams(layoutParams);
         drawerLayout.setId(R.id.drawable);
-
-        LinearLayout linearLayout = getHomeLayout();
-        Toolbar toolbar = getToolbar();
-        linearLayout.addView(toolbar);
-        linearLayout.addView(getFrameLayout());
-        linearLayout.addView(getBottomSheetNavigation());
-
-        drawerLayout.addView(linearLayout);
+        layout.addView(getFrameLayout());
+        drawerLayout.addView(layout);
         drawerLayout.addView(getNavigationView());
+
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
 
             @Override
@@ -144,7 +165,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
     private LinearLayout getHomeLayout() {
         LinearLayout linearLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        layoutParams.weight = 1;
         linearLayout.setLayoutParams(layoutParams);
         linearLayout.setId(R.id.ll_container);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -173,6 +195,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         DrawerLayout.LayoutParams navLayout = new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.MATCH_PARENT, Gravity.START);
         navigationView.setLayoutParams(navLayout);
         navigationView.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        navigationView.setItemTextColor(myColorStateList);
         navigationView.setId(R.id.navview);
         updateMenusItemOfNavigationView(navigationView);
         return navigationView;
@@ -228,6 +251,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+
         return super.onPrepareOptionsMenu(menu);
     }
 
