@@ -1,6 +1,9 @@
 package com.yuvi.mantraui;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -98,8 +101,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     boolean isSideBarLeft = true;
     String primaryColor = "#3F51B5", primarrDarkColor = "#303F9F";
     String secondaryColor = "#FF4081";
-    HashMap<String, Intent> intentMap = new HashMap<>();
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,7 +109,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         Toolbar toolbar = getToolbar();
         linearLayout.addView(toolbar);
         View view = linearLayout;
-
         try {
             appConfigJSON = new JSONObject(Utils.readFileFromInputStream(getAppconfigFile()));
             if (appConfigJSON.has("primarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("primarycolor"))) {
@@ -138,18 +138,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                         JSONArray bottomsheetArray = appConfigJSON.optJSONArray("bottomsheet");
                         linearLayout.addView(getBottomSheetNavigation(bottomsheetArray));
                         break;
-                    case "modulesconfig":
-                        try {
-                            JSONArray modulesConfigArray = appConfigJSON.optJSONArray("modulesconfig");
-                            for (int i = 0; i < modulesConfigArray.length(); i++) {
-                                JSONObject moduleJSON = modulesConfigArray.optJSONObject(i);
-                                intentMap.put(moduleJSON.optString("className"), new Intent(this, Class.forName(moduleJSON.optString("className"))).putExtra("config", moduleJSON.toString()));
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        break;
-
                 }
             }
 
@@ -260,6 +248,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         DrawerLayout.LayoutParams navLayout = new DrawerLayout.LayoutParams(Utils.pxFromDp(this, width), DrawerLayout.LayoutParams.MATCH_PARENT, isSideBarLeft ? Gravity.START : Gravity.END);
         navigationView.setLayoutParams(navLayout);
         navigationView.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        navigationView.getContext().setTheme(R.style.NavigationViewStyle);
         navigationView.setItemTextColor(navColorStateList);
         getMenuFromJSONArray(navigationView.getMenu(), menuArray, Menu.FIRST);
         return navigationView;
@@ -271,8 +260,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                     new int[]{}
             },
             new int[]{
-                    Color.parseColor("#727272"),
-                    Color.parseColor("#212121")
+                    Color.parseColor(primaryColor),
+                    Color.parseColor("#727272")
             }
     );
 
@@ -341,10 +330,10 @@ public abstract class BaseMainActivity extends AppCompatActivity {
             JSONObject menuJSON = jsonArray.optJSONObject(i);
             if (menuJSON.has("submenu")) {
                 JSONArray itemArray = menuJSON.optJSONArray("items");
-                SubMenu subMenu = menu.addSubMenu(i + 1, i + 1, 1000 + i, menuJSON.optString("submenu"));
+                SubMenu subMenu = menu.addSubMenu(menuJSON.optString("submenu"));
                 for (int j = 0; j < itemArray.length(); j++) {
                     JSONObject itemMenuJSON = itemArray.optJSONObject(j);
-                    subMenu.add(i + 1, (MENUSTART * (i + 1)) + j, 1000 + i, itemMenuJSON.optString("title"));
+                    subMenu.add(0, (MENUSTART +(i*100)) + j,  i*100+j, itemMenuJSON.optString("title"));
                     MenuItem menuItem = subMenu.findItem(MENUSTART + (MENUSTART * (i + 1)) + j);
                     if (itemMenuJSON.has("showalways") && itemMenuJSON.optBoolean("showalways")) {
                         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -381,7 +370,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     }
 
     public abstract InputStream getAppconfigFile();
-
 
     //    The first dimension is an array of state sets, the second ist the state set itself. The colors array lists the colors for each matching state set, therefore the length of the colors array has to match the first dimension of the states array (or it will crash when the state is "used"). Here and example:
     ColorStateList myColorStateList = new ColorStateList(

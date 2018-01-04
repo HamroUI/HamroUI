@@ -16,11 +16,8 @@
         "items": [
           {
             "title": "home",
-            /* sidebar menu title*/
             "icon": "",
-            /*sidebar menu icon url should be valid url*/
             "link": "sp://home"
-            /* deeplink of the page that need to be open*/
           },
           {
             "title": "home",
@@ -84,18 +81,6 @@
       },
       {
         "title": "disclaimer",
-        "showalways": false,
-        "icon": "",
-        "link": ""
-      },
-      {
-        "title": "rateus",
-        "showalways": false,
-        "icon": "",
-        "link": ""
-      },
-      {
-        "title": "About Developer",
         "showalways": false,
         "icon": "",
         "link": ""
@@ -176,9 +161,8 @@
       "link": "sp://videos"
     }
   ],
-  "modulesconfig": [
-    {
-      "className": "NewsActivity",
+  "modulesconfig": {
+    "NewsActivity": {
       "request": {
         "action": "news",
         "start": "0",
@@ -200,8 +184,7 @@
         0
       ]
     },
-    {
-      "className": "GalleryActivity",
+    "GalleryActivity": {
       "request": {
         "action": "get_photo",
         "start": "0",
@@ -223,8 +206,7 @@
         4000
       ]
     },
-    {
-      "className": "VideoListActivity",
+    "VideoListActivity": {
       "request": {
         "action": "videos",
         "start": "0",
@@ -246,5 +228,5 @@
         3000
       ]
     }
-  ]
+  }
 }

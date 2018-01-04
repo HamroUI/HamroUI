@@ -3,6 +3,7 @@ package com.yuvi.mantraui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.design.internal.BottomNavigationItemView;
@@ -64,6 +65,23 @@ public class Utils {
         }
         return jsonArray;
 
+    }
+    public static void listAllActivities(Context context) throws PackageManager.NameNotFoundException
+    {
+        // [^.]\w+$  -> regex to get only activity name
+//        List<PackageInfo> packages = getPackageManager().getInstalledPackages(0);
+//        for(PackageInfo pack : packages)
+//        {
+        ActivityInfo[] activityInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).activities;
+        Log.i("BaseMain", context.getPackageName()+ " has total " + ((activityInfo==null)?0:activityInfo.length) + " activities");
+        if(activityInfo!=null)
+        {
+            for(int i=0; i<activityInfo.length; i++)
+            {
+                Log.i("PC", context.getPackageName() + " ::: " + activityInfo[i].name);
+            }
+        }
+//        }
     }
 
     public static JSONArray remove(JSONArray jsonArray, int position) {
