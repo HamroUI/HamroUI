@@ -1,60 +1,71 @@
-/*Application configuration json file*/
-
 {
   "pkgname": "",
-  /* application package name*/
-  "primarydark":"",
+  "primarydark": "",
   "primarycolor": "",
-  /*  main color in the application , should be in the hex code for ef #FF0000 for red*/
   "secondarycolor": "",
-  /* secondary color and should be in hex code*/
   "banneradd": "admob_key",
-  /*  banner add admob key*/
   "fullscreenkey": "admob_key",
-  /*fullscreen admob key*/
   "baseurl": "",
-  /* base url for the server call*/
   "youtubeAPIKey": "",
-  /* should include the youtube api key if the application has the youtube video
-
-  if the app has sidebar should keep the Sidebar jsonobject
-  if sidebar is missing the app will not have sidebar
-  the menu in the sidebar will be shown in the order of the jsonArray
-  menu numbers not limited*/
-
   "sidebar": {
-    "menu": [
-      // sidebar menu
-      {
-        "title": "home",
-        // sidebar menu title
-        "icon": "",
-        // sidebar menu icon url should be valid url
-        "link": "sp://home"
-        // deeplink of the page that need to be open
-      },
-      {
-        "title": "home",
-        "icon": "",
-        "link": "sp://home"
-      },
-      {
-        "title": "home",
-        "icon": "",
-        "link": "sp://home"
-      },
-      {
-        "title": "home",
-        "icon": "",
-        "link": "sp://home"
-      }
-    ],
     "width": 300,
-    // width of the sidebar when opened fully
-    "align": "right"
-    // position of the sidebar for eg right will place the sidebar open from right -> left
+    "align": "left",
+    "menu": [
+      {
+        "submenu": "Main",
+        "items": [
+          {
+            "title": "home",
+            /* sidebar menu title*/
+            "icon": "",
+            /*sidebar menu icon url should be valid url*/
+            "link": "sp://home"
+            /* deeplink of the page that need to be open*/
+          },
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          }
+        ]
+      },
+      {
+        "submenu": "Others",
+        "items": [
+          {
+            "title": "Share",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "Rateus",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "Setting",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "About Developer",
+            "icon": "",
+            "link": "sp://home"
+          }
+        ]
+      }
+    ]
   },
-  /*Landing page config*/
   "home": {
     "actionbar": [
       {
@@ -91,16 +102,7 @@
       }
     ],
     "alert": true,
-    /* should show the alertview*/
     "slider": true,
-    /*should show the slider view*/
-
-    /*grid option
-    if app has grid then need to kept otherwise simply remove the grid array
-    contains the menu item in horizontal
-     can contain any number of the menu option
-    if not fitted in the screen will be scrolled horizontally */
-
     "grid": [
       {
         "title": "news",
@@ -121,19 +123,13 @@
         "link": "sp://gallery"
       }
     ],
-    /* modules if needed to be shown in home*/
     "modules": [
       {
         "type": "news",
-        /* type of modules*/
         "max": 5,
-        /*max number of items need to be shown in home*/
         "showall": true,
-        /*should keep the showall*/
         "link": "sp://news",
-        /*link to be followed when showall clicked*/
         "orientation": "horizontal"
-        /* if horizontal the news will be shown horizontally*/
       },
       {
         "type": "videos",
@@ -158,8 +154,6 @@
       }
     ]
   },
-  /* bottomsheet configuration
-  if not needed simply remove this array */
   "bottomsheet": [
     {
       "title": "news",
@@ -182,48 +176,32 @@
       "link": "sp://videos"
     }
   ],
-  /* modules configuration*/
-
   "modulesconfig": [
     {
-      "type": "news",
-      /* module type*/
+      "className": "NewsActivity",
       "request": {
         "action": "news",
         "start": "0",
         "limit": "10"
       },
-      /* request parameters as needed by REST api*/
-
       "url": "",
-      /* url if it is different from baseurl*/
       "hasPagination": true,
-      /* set true if has pagination*/
       "persist": true,
-      /* set true if needed to save offline*/
       "loginrequired": false,
-      /* set true if this features need login*/
       "bookmark": true,
-      /* set true if it has bookmark*/
       "hasbanneradd": [
         true,
-        /* shows banneradd*/
         "top"
-        /* shows in the top if the view*/
       ],
       "hasFullScreen": [
         true,
-        /* shows fullscreen*/
         "backpressed",
-        /* shows when backpressed*/
         0,
-        /* shows everytime if 1, shows when backpressed for 2 times*/
         0
-        /* delay time to show the add*/
       ]
     },
     {
-      "type": "gallery",
+      "className": "GalleryActivity",
       "request": {
         "action": "get_photo",
         "start": "0",
@@ -241,13 +219,12 @@
       "hasFullScreen": [
         true,
         "onopen",
-        /* show the full screen add if opened two times after the 4 sec delay*/
         1,
         4000
       ]
     },
     {
-      "type": "video",
+      "className": "VideoListActivity",
       "request": {
         "action": "videos",
         "start": "0",

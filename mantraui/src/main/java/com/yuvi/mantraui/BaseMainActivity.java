@@ -1,5 +1,6 @@
 package com.yuvi.mantraui;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -28,6 +30,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.yuvi.mantraui.news.NewsActivity;
 import com.yuvi.mantraui.slider.SliderView;
 
 import org.json.JSONArray;
@@ -95,6 +98,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     boolean isSideBarLeft = true;
     String primaryColor = "#3F51B5", primarrDarkColor = "#303F9F";
     String secondaryColor = "#FF4081";
+    HashMap<String, Intent> intentMap = new HashMap<>();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,15 +111,15 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
         try {
             appConfigJSON = new JSONObject(Utils.readFileFromInputStream(getAppconfigFile()));
-            if(appConfigJSON.has("primarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("primarycolor"))){
+            if (appConfigJSON.has("primarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("primarycolor"))) {
                 primaryColor = appConfigJSON.optString("primarycolor");
                 appConfigJSON.remove("primarycolor");
             }
-            if(appConfigJSON.has("secondarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("secondarycolor"))){
+            if (appConfigJSON.has("secondarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("secondarycolor"))) {
                 secondaryColor = appConfigJSON.optString("secondarycolor");
                 appConfigJSON.remove("secondarycolor");
             }
-            if(appConfigJSON.has("primarydark") && !TextUtils.isEmpty(appConfigJSON.optString("primarydark"))){
+            if (appConfigJSON.has("primarydark") && !TextUtils.isEmpty(appConfigJSON.optString("primarydark"))) {
                 primarrDarkColor = appConfigJSON.optString("primarydark");
                 appConfigJSON.remove(primarrDarkColor);
             }
@@ -134,6 +139,15 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                         linearLayout.addView(getBottomSheetNavigation(bottomsheetArray));
                         break;
                     case "modulesconfig":
+                        try {
+                            JSONArray modulesConfigArray = appConfigJSON.optJSONArray("modulesconfig");
+                            for (int i = 0; i < modulesConfigArray.length(); i++) {
+                                JSONObject moduleJSON = modulesConfigArray.optJSONObject(i);
+                                intentMap.put(moduleJSON.optString("className"), new Intent(this, Class.forName(moduleJSON.optString("className"))).putExtra("config", moduleJSON.toString()));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         break;
 
                 }
@@ -238,19 +252,29 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     }
 
 
-    private NavigationView getNavigationView(int width, String align, JSONArray menuArray) {
+    private NavigationView getNavigationView(float width, String align, JSONArray menuArray) {
         Utils.log(BaseMainActivity.class, "width = " + width + " align" + align + " menuArray = " + menuArray);
         NavigationView navigationView = new NavigationView(this);
+        navigationView.setId(R.id.navview);
         isSideBarLeft = align.equals("left");
-        DrawerLayout.LayoutParams navLayout = new DrawerLayout.LayoutParams(width, DrawerLayout.LayoutParams.MATCH_PARENT, isSideBarLeft ? Gravity.START : Gravity.END);
+        DrawerLayout.LayoutParams navLayout = new DrawerLayout.LayoutParams(Utils.pxFromDp(this, width), DrawerLayout.LayoutParams.MATCH_PARENT, isSideBarLeft ? Gravity.START : Gravity.END);
         navigationView.setLayoutParams(navLayout);
         navigationView.setBackgroundColor(Color.parseColor("#F5F5F5"));
-        navigationView.setItemTextColor(myColorStateList);
-        navigationView.setId(R.id.navview);
+        navigationView.setItemTextColor(navColorStateList);
         getMenuFromJSONArray(navigationView.getMenu(), menuArray, Menu.FIRST);
         return navigationView;
     }
 
+    ColorStateList navColorStateList = new ColorStateList(
+            new int[][]{
+                    new int[]{android.R.attr.state_pressed},
+                    new int[]{}
+            },
+            new int[]{
+                    Color.parseColor("#727272"),
+                    Color.parseColor("#212121")
+            }
+    );
 
     private BottomNavigationView getBottomSheetNavigation(JSONArray menuArray) {
         Utils.log(BaseMainActivity.class, "bottomsheetArray = " + menuArray.length());
@@ -315,17 +339,36 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     private Menu getMenuFromJSONArray(Menu menu, JSONArray jsonArray, int MENUSTART) {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject menuJSON = jsonArray.optJSONObject(i);
-            menu.add(0, MENUSTART + i, 1000 + i, menuJSON.optString("title"));
-            MenuItem menuItem = menu.findItem(MENUSTART + i);
-            if (menuJSON.has("showalways") && menuJSON.optBoolean("showalways")) {
-                menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            if (menuJSON.has("submenu")) {
+                JSONArray itemArray = menuJSON.optJSONArray("items");
+                SubMenu subMenu = menu.addSubMenu(i + 1, i + 1, 1000 + i, menuJSON.optString("submenu"));
+                for (int j = 0; j < itemArray.length(); j++) {
+                    JSONObject itemMenuJSON = itemArray.optJSONObject(j);
+                    subMenu.add(i + 1, (MENUSTART * (i + 1)) + j, 1000 + i, itemMenuJSON.optString("title"));
+                    MenuItem menuItem = subMenu.findItem(MENUSTART + (MENUSTART * (i + 1)) + j);
+                    if (itemMenuJSON.has("showalways") && itemMenuJSON.optBoolean("showalways")) {
+                        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    }
+                    if (itemMenuJSON.has("icon") && !TextUtils.isEmpty(itemMenuJSON.optString("icon"))) {
+                        new LoadIcon(menuItem, itemMenuJSON.optString("icon")).execute();
+                    }
+                }
+            } else {
+                menu.add(Menu.NONE, MENUSTART + i, 1000 + i, menuJSON.optString("title"));
+                MenuItem menuItem = menu.findItem(MENUSTART + i);
+                if (menuJSON.has("showalways") && menuJSON.optBoolean("showalways")) {
+                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                }
+                if (menuJSON.has("icon") && !TextUtils.isEmpty(menuJSON.optString("icon"))) {
+                    new LoadIcon(menuItem, menuJSON.optString("icon")).execute();
+                }
             }
-            if (menuJSON.has("icon") && !TextUtils.isEmpty(menuJSON.optString("icon"))) {
-                new LoadIcon(menuItem, menuJSON.optString("icon")).execute();
-            }
+
+
         }
         return menu;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -351,4 +394,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                     R.color.h_green_500, //2
             }
     );
+
+
 }
