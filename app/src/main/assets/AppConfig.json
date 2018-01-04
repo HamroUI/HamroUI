@@ -3,16 +3,17 @@
 {
   "pkgname": "",
   /* application package name*/
+  "primarydark":"",
   "primarycolor": "",
- /*  main color in the application , should be in the hex code for ef #FF0000 for red*/
-  "secondaycolor": "",
+  /*  main color in the application , should be in the hex code for ef #FF0000 for red*/
+  "secondarycolor": "",
   /* secondary color and should be in hex code*/
   "banneradd": "admob_key",
- /*  banner add admob key*/
+  /*  banner add admob key*/
   "fullscreenkey": "admob_key",
   /*fullscreen admob key*/
   "baseurl": "",
- /* base url for the server call*/
+  /* base url for the server call*/
   "youtubeAPIKey": "",
   /* should include the youtube api key if the application has the youtube video
 
@@ -27,14 +28,24 @@
       {
         "title": "home",
         // sidebar menu title
-        "icon": "iconurl",
+        "icon": "",
         // sidebar menu icon url should be valid url
         "link": "sp://home"
         // deeplink of the page that need to be open
       },
       {
         "title": "home",
-        "icon": "iconurl",
+        "icon": "",
+        "link": "sp://home"
+      },
+      {
+        "title": "home",
+        "icon": "",
+        "link": "sp://home"
+      },
+      {
+        "title": "home",
+        "icon": "",
         "link": "sp://home"
       }
     ],
@@ -45,38 +56,38 @@
   },
   /*Landing page config*/
   "home": {
-    "actionbar":[
+    "actionbar": [
       {
-        "title":"refresh",
-        "showalways":true, /*forcefully shows the icon in actionbar*/
-        "icon":"https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png",
-        "link":""
+        "title": "refresh",
+        "showalways": true,
+        /*forcefully shows the icon in actionbar*/
+        "icon": "https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png",
+        "link": ""
       },
       {
-        "title":"share",
-        "showalways":false,  /* if false shows in popupmenu*/
-        "icon":"",
-        "link":""
+        "title": "share",
+        "showalways": false,
+        /* if false shows in popupmenu*/
+        "icon": "",
+        "link": ""
       },
       {
-        "title":"disclaimer",
-        "showalways":false,
-        "icon":"",
-        "link":""
-      }
-    ,
+        "title": "disclaimer",
+        "showalways": false,
+        "icon": "",
+        "link": ""
+      },
       {
-        "title":"rateus",
-        "showalways":false,
-        "icon":"",
-        "link":""
-      }
-    ,
+        "title": "rateus",
+        "showalways": false,
+        "icon": "",
+        "link": ""
+      },
       {
-        "title":"About Developer",
-        "showalways":false,
-        "icon":"",
-        "link":""
+        "title": "About Developer",
+        "showalways": false,
+        "icon": "",
+        "link": ""
       }
     ],
     "alert": true,
@@ -152,22 +163,22 @@
   "bottomsheet": [
     {
       "title": "news",
-      "icon": "icon_url",
+      "icon": "",
       "link": "sp://news"
     },
     {
       "title": "audio",
-      "icon": "icon_url",
+      "icon": "",
       "link": "sp://audio"
     },
     {
       "title": "gallery",
-      "icon": "icon_url",
+      "icon": "",
       "link": "sp://gallery"
     },
     {
       "title": "videos",
-      "icon": "icon_url",
+      "icon": "",
       "link": "sp://videos"
     }
   ],
@@ -175,74 +186,88 @@
 
   "modulesconfig": [
     {
-      "type": "news",  /* module type*/
+      "type": "news",
+      /* module type*/
       "request": {
         "action": "news",
         "start": "0",
         "limit": "10"
-      },  /* request parameters as needed by REST api*/
+      },
+      /* request parameters as needed by REST api*/
 
-      "url": "", /* url if it is different from baseurl*/
-      "hasPagination": true,  /* set true if has pagination*/
-      "persist": true,  /* set true if needed to save offline*/
-      "loginrequired": false,  /* set true if this features need login*/
-      "bookmark": true,   /* set true if it has bookmark*/
+      "url": "",
+      /* url if it is different from baseurl*/
+      "hasPagination": true,
+      /* set true if has pagination*/
+      "persist": true,
+      /* set true if needed to save offline*/
+      "loginrequired": false,
+      /* set true if this features need login*/
+      "bookmark": true,
+      /* set true if it has bookmark*/
       "hasbanneradd": [
-        true,   /* shows banneradd*/
-        "top"  /* shows in the top if the view*/
+        true,
+        /* shows banneradd*/
+        "top"
+        /* shows in the top if the view*/
       ],
       "hasFullScreen": [
-        true,   /* shows fullscreen*/
-        "backpressed",  /* shows when backpressed*/
-        0,   /* shows everytime if 1, shows when backpressed for 2 times*/
-        0  /* delay time to show the add*/
+        true,
+        /* shows fullscreen*/
+        "backpressed",
+        /* shows when backpressed*/
+        0,
+        /* shows everytime if 1, shows when backpressed for 2 times*/
+        0
+        /* delay time to show the add*/
       ]
     },
     {
       "type": "gallery",
       "request": {
-          "action": "get_photo",
-          "start": "0",
-          "limit": "10"
-        },
-        "url": "",
-        "hasPagination": true,
-        "persist": true,
-        "loginrequired": false,
-        "bookmark": true,
-        "hasbanneradd": [
-          true,
-          "bottom"
-        ],
-        "hasFullScreen": [
-          true,
-          "onopen",  /* show the full screen add if opened two times after the 4 sec delay*/
-          1,
-          4000
-        ]
+        "action": "get_photo",
+        "start": "0",
+        "limit": "10"
       },
+      "url": "",
+      "hasPagination": true,
+      "persist": true,
+      "loginrequired": false,
+      "bookmark": true,
+      "hasbanneradd": [
+        true,
+        "bottom"
+      ],
+      "hasFullScreen": [
+        true,
+        "onopen",
+        /* show the full screen add if opened two times after the 4 sec delay*/
+        1,
+        4000
+      ]
+    },
     {
       "type": "video",
       "request": {
-          "action": "videos",
-          "start": "0",
-          "limit": "10"
-        },
-        "url": "",
-        "hasPagination": true,
-        "persist": true,
-        "loginrequired": false,
-        "bookmark": true,
-        "hasbanneradd": [
-          true,
-          "bottom"
-        ],
-        "hasFullScreen": [
-          true,
-          "onopen",
-          1,
-          3000
-        ]
-      }
+        "action": "videos",
+        "start": "0",
+        "limit": "10"
+      },
+      "url": "",
+      "hasPagination": true,
+      "persist": true,
+      "loginrequired": false,
+      "bookmark": true,
+      "hasbanneradd": [
+        true,
+        "bottom"
+      ],
+      "hasFullScreen": [
+        true,
+        "onopen",
+        1,
+        3000
+      ]
+    }
   ]
 }

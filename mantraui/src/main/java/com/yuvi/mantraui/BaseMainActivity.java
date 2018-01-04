@@ -92,6 +92,9 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     JSONArray actionBarArray = new JSONArray();
     int ACTIONBAR = 100;
     int BOTTOMSHEET = 1000;
+    boolean isSideBarLeft = true;
+    String primaryColor = "#3F51B5", primarrDarkColor = "#303F9F";
+    String secondaryColor = "#FF4081";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,19 +106,32 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
         try {
             appConfigJSON = new JSONObject(Utils.readFileFromInputStream(getAppconfigFile()));
-            HashMap<String, String> homeMap = new HashMap<>();
+            if(appConfigJSON.has("primarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("primarycolor"))){
+                primaryColor = appConfigJSON.optString("primarycolor");
+                appConfigJSON.remove("primarycolor");
+            }
+            if(appConfigJSON.has("secondarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("secondarycolor"))){
+                secondaryColor = appConfigJSON.optString("secondarycolor");
+                appConfigJSON.remove("secondarycolor");
+            }
+            if(appConfigJSON.has("primarydark") && !TextUtils.isEmpty(appConfigJSON.optString("primarydark"))){
+                primarrDarkColor = appConfigJSON.optString("primarydark");
+                appConfigJSON.remove(primarrDarkColor);
+            }
+
             Iterator<String> iterator = appConfigJSON.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next();
                 switch (key) {
                     case "sidebar":
-                        view = setDrawableLayout(linearLayout);
+                        view = setDrawableLayout(linearLayout, appConfigJSON.optJSONObject("sidebar"));
                         break;
                     case "home":
                         manageHome(appConfigJSON.optJSONObject("home"));
                         break;
                     case "bottomsheet":
-                        linearLayout.addView(getBottomSheetNavigation());
+                        JSONArray bottomsheetArray = appConfigJSON.optJSONArray("bottomsheet");
+                        linearLayout.addView(getBottomSheetNavigation(bottomsheetArray));
                         break;
                     case "modulesconfig":
                         break;
@@ -130,7 +146,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (view instanceof DrawerLayout) {
-            ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, (DrawerLayout) view, toolbar, R.string.app_name, R.string.app_name) {
+            final DrawerLayout drawerLayout = (DrawerLayout) view;
+            ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
 
                 @Override
                 public void onDrawerClosed(View drawerView) {
@@ -144,8 +161,29 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                 }
             };
 
-            ((DrawerLayout) view).addDrawerListener(actionBarDrawerToggle);
+            drawerLayout.addDrawerListener(actionBarDrawerToggle);
             actionBarDrawerToggle.syncState();
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (isSideBarLeft) {
+                        if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                            drawerLayout.closeDrawer(Gravity.LEFT);
+                        } else {
+                            drawerLayout.openDrawer(Gravity.LEFT);
+                        }
+                    } else {
+                        if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                            drawerLayout.closeDrawer(Gravity.RIGHT);
+                        } else {
+                            drawerLayout.openDrawer(Gravity.RIGHT);
+                        }
+                    }
+
+                }
+            });
         }
 //        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, getSliderView()).commit();
     }
@@ -159,21 +197,24 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     private Toolbar getToolbar() {
         Toolbar toolbar = new Toolbar(this);
         toolbar.setLayoutParams(new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 50)));
-        toolbar.setBackgroundColor(Color.parseColor("#3F51B5"));
+        toolbar.setBackgroundColor(Color.parseColor(primaryColor));
         toolbar.setId(R.id.toolbar);
         toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat_Light);
         toolbar.getContext().setTheme(R.style.ThemeOverlay_AppCompat_Dark_ActionBar);
         return toolbar;
     }
 
-    private DrawerLayout setDrawableLayout(LinearLayout layout) {
+    private DrawerLayout setDrawableLayout(LinearLayout layout, JSONObject sidebarJSON) {
+        JSONArray menuArray = sidebarJSON.optJSONArray("menu");
+        int width = sidebarJSON.optInt("width");
+        String align = sidebarJSON.optString("align");
         DrawerLayout drawerLayout = new DrawerLayout(this);
         DrawerLayout.LayoutParams layoutParams = new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         drawerLayout.setLayoutParams(layoutParams);
         drawerLayout.setId(R.id.drawable);
         layout.addView(getFrameLayout());
         drawerLayout.addView(layout);
-        drawerLayout.addView(getNavigationView());
+        drawerLayout.addView(getNavigationView(width, align, menuArray));
         return drawerLayout;
     }
 
@@ -196,37 +237,32 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         return frameLayout;
     }
 
-    private void updateMenusItemOfNavigationView(NavigationView navigationView) {
-        Menu menu = navigationView.getMenu();
-        for (int i = 0; i < 10; i++) {
-            menu.add(R.string.app_name);
-        }
-    }
 
-    private NavigationView getNavigationView() {
+    private NavigationView getNavigationView(int width, String align, JSONArray menuArray) {
+        Utils.log(BaseMainActivity.class, "width = " + width + " align" + align + " menuArray = " + menuArray);
         NavigationView navigationView = new NavigationView(this);
-        navigationView.setMinimumWidth(Utils.pxFromDp(this, 300));
-        DrawerLayout.LayoutParams navLayout = new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.MATCH_PARENT, Gravity.START);
+        isSideBarLeft = align.equals("left");
+        DrawerLayout.LayoutParams navLayout = new DrawerLayout.LayoutParams(width, DrawerLayout.LayoutParams.MATCH_PARENT, isSideBarLeft ? Gravity.START : Gravity.END);
         navigationView.setLayoutParams(navLayout);
         navigationView.setBackgroundColor(Color.parseColor("#F5F5F5"));
         navigationView.setItemTextColor(myColorStateList);
         navigationView.setId(R.id.navview);
-        updateMenusItemOfNavigationView(navigationView);
+        getMenuFromJSONArray(navigationView.getMenu(), menuArray, Menu.FIRST);
         return navigationView;
     }
 
 
-    private BottomNavigationView getBottomSheetNavigation() {
+    private BottomNavigationView getBottomSheetNavigation(JSONArray menuArray) {
+        Utils.log(BaseMainActivity.class, "bottomsheetArray = " + menuArray.length());
         BottomNavigationView bottomNavigationView = new BottomNavigationView(this);
         bottomNavigationView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 50)));
         bottomNavigationView.setId(R.id.bottomsheet);
+        bottomNavigationView.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        getMenuFromJSONArray(bottomNavigationView.getMenu(), menuArray, BOTTOMSHEET);
         bottomNavigationView.setItemTextColor(myColorStateList);
         bottomNavigationView.setItemIconTintList(myColorStateList);
-        bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.h_blue_500));
-        Menu menu = bottomNavigationView.getMenu();
-        menu.add(0, Menu.FIRST, Menu.NONE, "TEXT");
-        menu.add(0, Menu.FIRST + 1, Menu.NONE, "Sample");
-        MenuItem menuItem = menu.findItem(Menu.FIRST);
+
+        Utils.removeShiftMode(bottomNavigationView);
         return bottomNavigationView;
     }
 
@@ -272,18 +308,23 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         Log.d("BaseMain", "actionBarArray =" + actionBarArray.length());
         menu.clear();
-        for (int i = 0; i < actionBarArray.length(); i++) {
-            JSONObject menuJSON = actionBarArray.optJSONObject(i);
-            menu.add(0, ACTIONBAR + i, 1000 + i, menuJSON.optString("title"));
-            MenuItem menuItem = menu.findItem(ACTIONBAR + i);
-            if (menuJSON.optBoolean("showalways")) {
+        menu = getMenuFromJSONArray(menu, actionBarArray, ACTIONBAR);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private Menu getMenuFromJSONArray(Menu menu, JSONArray jsonArray, int MENUSTART) {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject menuJSON = jsonArray.optJSONObject(i);
+            menu.add(0, MENUSTART + i, 1000 + i, menuJSON.optString("title"));
+            MenuItem menuItem = menu.findItem(MENUSTART + i);
+            if (menuJSON.has("showalways") && menuJSON.optBoolean("showalways")) {
                 menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
             if (menuJSON.has("icon") && !TextUtils.isEmpty(menuJSON.optString("icon"))) {
                 new LoadIcon(menuItem, menuJSON.optString("icon")).execute();
             }
         }
-        return super.onPrepareOptionsMenu(menu);
+        return menu;
     }
 
     @Override
@@ -306,8 +347,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                     new int[]{-android.R.attr.state_checked}, //2
             },
             new int[]{
-                    R.color.h_grey_500, //1
-                    R.color.h_red_500, //2
+                    Color.parseColor("#727272"), //1
+                    R.color.h_green_500, //2
             }
     );
 }
