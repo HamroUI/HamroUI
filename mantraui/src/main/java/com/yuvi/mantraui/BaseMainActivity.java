@@ -19,9 +19,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -222,6 +226,74 @@ public abstract class BaseMainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.sliderlayout, sliderView, "slider").commit();
             mLayout.addView(sliderLayout);
         }
+
+        if (homeJSON.has("modules")) {
+            JSONArray modulesArray = homeJSON.optJSONArray("modules");
+            for (int i = 0; i < modulesArray.length(); i++) {
+                JSONObject typeObject = modulesArray.optJSONObject(i);
+
+                CardView cardView = new CardView(this);
+                cardView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                cardView.setUseCompatPadding(true);
+                cardView.setCardElevation(Utils.pxFromDp(this, 2));
+                cardView.setCardBackgroundColor(Color.parseColor("#F5F5F4"));
+
+                LinearLayout modulesLayout = new LinearLayout(this);
+                modulesLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                modulesLayout.setOrientation(LinearLayout.VERTICAL);
+                modulesLayout.setPadding(Utils.pxFromDp(this, 8), Utils.pxFromDp(this, 8), Utils.pxFromDp(this, 8), Utils.pxFromDp(this, 8));
+
+                LinearLayout titleLayout = new LinearLayout(this);
+                titleLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 40)));
+                titleLayout.setOrientation(LinearLayout.HORIZONTAL);
+                titleLayout.setGravity(Gravity.CENTER_VERTICAL);
+
+                TextView tv_title = new TextView(this);
+                LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+                titleParams.weight = 1;
+                tv_title.setLayoutParams(titleParams);
+                tv_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                tv_title.setTextColor(Color.parseColor("#212121"));
+                tv_title.setText(typeObject.optString("type"));
+                titleLayout.addView(tv_title, 0);
+
+                if (typeObject.optBoolean("showall")) {
+                    TextView tv_showall = new TextView(this);
+                    LinearLayout.LayoutParams showallParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    tv_showall.setLayoutParams(showallParams);
+                    tv_showall.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    tv_showall.setTextColor(Color.parseColor("#727272"));
+                    tv_showall.setText("SHOW ALL");
+                    titleLayout.addView(tv_showall, 1);
+                }
+
+                RecyclerView recyclerView = new RecyclerView(this);
+                recyclerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                View view = null;
+                if (typeObject.optString("type").equals("news")) {
+
+                }
+                BaseHomeAdapter adapter = new BaseHomeAdapter(new JSONArray()) {
+                    @Override
+                    public int getItemView() {
+                        return 0;
+                    }
+
+                    @Override
+                    public void bindView(View view, JSONObject jsonObject) {
+                        super.bindView(view, jsonObject);
+                    }
+                };
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setAdapter(adapter);
+                modulesLayout.addView(titleLayout, 0);
+                modulesLayout.addView(recyclerView, 1);
+                cardView.addView(modulesLayout);
+                mLayout.addView(cardView);
+            }
+        }
+
         frameLayout.addView(mLayout);
     }
 
