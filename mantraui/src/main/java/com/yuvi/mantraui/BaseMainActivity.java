@@ -30,9 +30,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.yuvi.mantraui.alert.AlertData;
+import com.yuvi.mantraui.alert.AlertView;
 import com.yuvi.mantraui.news.NewsActivity;
 import com.yuvi.mantraui.slider.SliderView;
 
@@ -101,13 +104,15 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     boolean isSideBarLeft = true;
     String primaryColor = "#3F51B5", primarrDarkColor = "#303F9F";
     String secondaryColor = "#FF4081";
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LinearLayout linearLayout = getHomeLayout();
+        linearLayout = getHomeLayout();
         Toolbar toolbar = getToolbar();
         linearLayout.addView(toolbar);
+        linearLayout.addView(getFrameLayout());
         View view = linearLayout;
         try {
             appConfigJSON = new JSONObject(Utils.readFileFromInputStream(getAppconfigFile()));
@@ -129,7 +134,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                 String key = iterator.next();
                 switch (key) {
                     case "sidebar":
-                        view = setDrawableLayout(linearLayout, appConfigJSON.optJSONObject("sidebar"));
+                        view = setDrawableLayout(appConfigJSON.optJSONObject("sidebar"));
                         break;
                     case "home":
                         manageHome(appConfigJSON.optJSONObject("home"));
@@ -191,9 +196,33 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     }
 
     private void manageHome(JSONObject homeJSON) {
+        // Manage the actionbar
         if (homeJSON.has("actionbar")) {
             actionBarArray = homeJSON.optJSONArray("actionbar");
         }
+        LinearLayout mLayout = new LinearLayout(this);
+        mLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mLayout.setOrientation(LinearLayout.VERTICAL);
+        mLayout.setId(R.id.home);
+
+        FrameLayout frameLayout = (FrameLayout) linearLayout.findViewById(R.id.container);
+        Utils.log(BaseMainActivity.class, "tag = " + frameLayout.getTag());
+        if (homeJSON.has("alert") && homeJSON.optBoolean("alert")) {
+            AlertView alertView = new AlertView(this);
+            alertView.setBackgroundColor(Color.parseColor(secondaryColor));
+            mLayout.addView(alertView);
+            alertView.setTextColor(Color.parseColor("#F5F5F5"));
+            alertView.setData(new AlertData("SampleProject test", ""));
+        }
+        if (homeJSON.has("slider") && homeJSON.optBoolean("slider")) {
+            LinearLayout sliderLayout = new LinearLayout(this);
+            sliderLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 150)));
+            sliderLayout.setId(R.id.sliderlayout);
+            SliderView sliderView = getSliderView();
+            getSupportFragmentManager().beginTransaction().add(R.id.sliderlayout, sliderView, "slider").commit();
+            mLayout.addView(sliderLayout);
+        }
+        frameLayout.addView(mLayout);
     }
 
     private Toolbar getToolbar() {
@@ -206,7 +235,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         return toolbar;
     }
 
-    private DrawerLayout setDrawableLayout(LinearLayout layout, JSONObject sidebarJSON) {
+    private DrawerLayout setDrawableLayout(JSONObject sidebarJSON) {
         JSONArray menuArray = sidebarJSON.optJSONArray("menu");
         int width = sidebarJSON.optInt("width");
         String align = sidebarJSON.optString("align");
@@ -214,8 +243,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         DrawerLayout.LayoutParams layoutParams = new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         drawerLayout.setLayoutParams(layoutParams);
         drawerLayout.setId(R.id.drawable);
-        layout.addView(getFrameLayout());
-        drawerLayout.addView(layout);
+        drawerLayout.addView(linearLayout);
         drawerLayout.addView(getNavigationView(width, align, menuArray));
         return drawerLayout;
     }
@@ -279,7 +307,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         return bottomNavigationView;
     }
 
-    private Fragment getSliderView() {
+    private SliderView getSliderView() {
         SliderView view = new SliderView();
         return view;
     }
@@ -333,7 +361,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                 SubMenu subMenu = menu.addSubMenu(menuJSON.optString("submenu"));
                 for (int j = 0; j < itemArray.length(); j++) {
                     JSONObject itemMenuJSON = itemArray.optJSONObject(j);
-                    subMenu.add(0, (MENUSTART +(i*100)) + j,  i*100+j, itemMenuJSON.optString("title"));
+                    subMenu.add(0, (MENUSTART + (i * 100)) + j, i * 100 + j, itemMenuJSON.optString("title"));
                     MenuItem menuItem = subMenu.findItem(MENUSTART + (MENUSTART * (i + 1)) + j);
                     if (itemMenuJSON.has("showalways") && itemMenuJSON.optBoolean("showalways")) {
                         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);

@@ -28,6 +28,7 @@ public class AlertView extends LinearLayout {
 
     public AlertView(Context context) {
         super(context);
+        init();
     }
 
     public AlertView(Context context, @Nullable AttributeSet attrs) {

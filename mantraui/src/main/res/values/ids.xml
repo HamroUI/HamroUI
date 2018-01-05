@@ -6,4 +6,6 @@
     <item name="navview" type="id"/>
     <item name="bottomsheet" type="id"/>
     <item name="toolbar" type="id"/>
+    <item name="home" type="id"/>
+    <item name="sliderlayout" type="id"/>
 </resources>
