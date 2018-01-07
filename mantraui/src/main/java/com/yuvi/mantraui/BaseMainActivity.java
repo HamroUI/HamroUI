@@ -274,6 +274,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                 if (typeObject.optString("type").equals("news")) {
 
                 }
+                //TODO need to workout to parse the homemodules layout json
+
                 BaseHomeAdapter adapter = new BaseHomeAdapter(new JSONArray()) {
                     @Override
                     public int getItemView() {
@@ -285,6 +287,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                         super.bindView(view, jsonObject);
                     }
                 };
+
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
                 recyclerView.setAdapter(adapter);
                 modulesLayout.addView(titleLayout, 0);
