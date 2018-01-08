@@ -33,6 +33,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,6 +42,7 @@ import com.bumptech.glide.request.target.Target;
 import com.yuvi.mantraui.alert.AlertData;
 import com.yuvi.mantraui.alert.AlertView;
 import com.yuvi.mantraui.news.NewsActivity;
+import com.yuvi.mantraui.news.NewsViewHolder;
 import com.yuvi.mantraui.slider.SliderView;
 
 import org.json.JSONArray;
@@ -230,7 +232,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         if (homeJSON.has("modules")) {
             JSONArray modulesArray = homeJSON.optJSONArray("modules");
             for (int i = 0; i < modulesArray.length(); i++) {
-                JSONObject typeObject = modulesArray.optJSONObject(i);
+                final JSONObject typeObject = modulesArray.optJSONObject(i);
+                Utils.log(BaseMainActivity.class, "modules type : " + typeObject.toString());
 
                 CardView cardView = new CardView(this);
                 cardView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -269,26 +272,31 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
                 RecyclerView recyclerView = new RecyclerView(this);
                 recyclerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-                View view = null;
-                if (typeObject.optString("type").equals("news")) {
-
-                }
                 //TODO need to workout to parse the homemodules layout json
-
-                BaseHomeAdapter adapter = new BaseHomeAdapter(new JSONArray()) {
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+                boolean isVertical = true;
+                if (typeObject.has("orientation") && TextUtils.equals(typeObject.optString("orientation"), "horizontal")) {
+                    layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                    isVertical = false;
+                }
+                BaseHomeAdapter adapter = new BaseHomeAdapter(Utils.getSampleJSONArray(), isVertical) {
                     @Override
                     public int getItemView() {
-                        return 0;
+                        return Utils.layoutMap.get(typeObject.optString("layout"));
                     }
 
                     @Override
                     public void bindView(View view, JSONObject jsonObject) {
                         super.bindView(view, jsonObject);
+                        TextView tv_title = view.findViewById(R.id.tv_title);
+                        ImageView thumbNail = view.findViewById(R.id.thubnail);
+                        TextView tv_desc = view.findViewById(R.id.tv_desc);
+                        tv_title.setText(jsonObject.optString("title"));
+                        tv_desc.setText(jsonObject.optString("description"));
+                        Utils.loadImageWithGlide(BaseMainActivity.this, jsonObject.optString("url"), thumbNail, null);
                     }
                 };
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(adapter);
                 modulesLayout.addView(titleLayout, 0);
                 modulesLayout.addView(recyclerView, 1);

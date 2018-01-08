@@ -114,28 +114,8 @@
         "max": 5,
         "showall": true,
         "link": "sp://news",
-        "orientation": "horizontal"
-      },
-      {
-        "type": "videos",
-        "max": 5,
-        "showall": true,
-        "link": "sp://videos",
-        "orientation": "vertical"
-      },
-      {
-        "type": "gallery",
-        "max": 5,
-        "showall": true,
-        "link": "sp://gallery",
-        "orientation": "horizontal"
-      },
-      {
-        "type": "audio",
-        "max": 5,
-        "showall": true,
-        "link": "sp://news",
-        "orientation": "vertical"
+        "orientation": "horizontal",
+        "layout":"news_type_1"
       }
     ]
   },

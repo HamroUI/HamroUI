@@ -22,11 +22,13 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 /**
@@ -34,6 +36,10 @@ import java.util.TimeZone;
  */
 
 public class Utils {
+    public static HashMap<String, Integer> layoutMap = new HashMap<String, Integer>(){{
+        put("news_type_1", R.layout.layout_type_news_1);
+        put("news_type_2", R.layout.layout_type_news_2);
+    }};
     public static void log(Class<?> mClass, String message) {
         if (BuildConfig.DEBUG) {
             Log.d(mClass.getSimpleName(), message);
@@ -256,6 +262,21 @@ public class Utils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static JSONArray getSampleJSONArray(){
+        JSONArray jsonArray = new JSONArray();
+        try{
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("title", "test title");
+            jsonObject.put("description", "testDescription");
+            jsonObject.put("url", "https://img.youtube.com/vi/P2Dac91J0DU/mqdefault.jpg");
+            jsonArray.put(jsonObject);
+            jsonArray.put(jsonArray.optJSONObject(0));
+            jsonArray.put(jsonArray.optJSONObject(0));
+            jsonArray.put(jsonArray.optJSONObject(0));
+        }catch (Exception e){}
+        return jsonArray;
     }
 
 }
