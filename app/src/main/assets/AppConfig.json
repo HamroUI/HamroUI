@@ -10,6 +10,7 @@
   "sidebar": {
     "width": 300,
     "align": "left",
+    "header":"https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
     "menu": [
       {
         "submenu": "Main",
@@ -67,9 +68,9 @@
     "actionbar": [
       {
         "title": "refresh",
-        "showalways": true,
+        "showalways": false,
         /*forcefully shows the icon in actionbar*/
-        "icon": "https://d30y9cdsu7xlg0.cloudfront.net/png/17241-200.png",
+        "icon": "",
         "link": ""
       },
       {
@@ -110,12 +111,20 @@
     ],
     "modules": [
       {
-        "type": "news",
+        "type": "videos",
         "max": 5,
         "showall": true,
         "link": "sp://news",
         "orientation": "horizontal",
-        "layout":"news_type_1"
+        "layout":"videos_type_1"
+      },
+      {
+        "type": "news",
+        "max": 5,
+        "showall": true,
+        "link": "sp://news",
+        "orientation": "vertical",
+        "layout":"news_type_2"
       }
     ]
   },

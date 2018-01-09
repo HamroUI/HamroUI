@@ -1,9 +1,5 @@
 package com.yuvi.mantraui;
 
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,12 +7,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.transition.Slide;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -35,25 +29,23 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.yuvi.mantraui.alert.AlertData;
 import com.yuvi.mantraui.alert.AlertView;
-import com.yuvi.mantraui.news.NewsActivity;
-import com.yuvi.mantraui.news.NewsViewHolder;
+import com.yuvi.mantraui.home.BaseHomeAdapter;
 import com.yuvi.mantraui.slider.SliderView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.lang.reflect.Constructor;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by yubaraj on 12/31/17.
@@ -206,6 +198,9 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         if (homeJSON.has("actionbar")) {
             actionBarArray = homeJSON.optJSONArray("actionbar");
         }
+        NestedScrollView scrollView = new NestedScrollView(this);
+        scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
         LinearLayout mLayout = new LinearLayout(this);
         mLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mLayout.setOrientation(LinearLayout.VERTICAL);
@@ -213,6 +208,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
         FrameLayout frameLayout = (FrameLayout) linearLayout.findViewById(R.id.container);
         Utils.log(BaseMainActivity.class, "tag = " + frameLayout.getTag());
+
         if (homeJSON.has("alert") && homeJSON.optBoolean("alert")) {
             AlertView alertView = new AlertView(this);
             alertView.setBackgroundColor(Color.parseColor(secondaryColor));
@@ -274,12 +270,10 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                 recyclerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 //TODO need to workout to parse the homemodules layout json
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-                boolean isVertical = true;
                 if (typeObject.has("orientation") && TextUtils.equals(typeObject.optString("orientation"), "horizontal")) {
                     layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-                    isVertical = false;
                 }
-                BaseHomeAdapter adapter = new BaseHomeAdapter(Utils.getSampleJSONArray(), isVertical) {
+                BaseHomeAdapter adapter = new BaseHomeAdapter(Utils.getSampleJSONArray()) {
                     @Override
                     public int getItemView() {
                         return Utils.layoutMap.get(typeObject.optString("layout"));
@@ -289,11 +283,15 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                     public void bindView(View view, JSONObject jsonObject) {
                         super.bindView(view, jsonObject);
                         TextView tv_title = view.findViewById(R.id.tv_title);
-                        ImageView thumbNail = view.findViewById(R.id.thubnail);
-                        TextView tv_desc = view.findViewById(R.id.tv_desc);
                         tv_title.setText(jsonObject.optString("title"));
-                        tv_desc.setText(jsonObject.optString("description"));
-                        Utils.loadImageWithGlide(BaseMainActivity.this, jsonObject.optString("url"), thumbNail, null);
+                        ImageView thumbNail = view.findViewById(R.id.thubnail);
+                        Utils.loadImageWithGlide(getApplicationContext(), jsonObject.optString("url"), thumbNail, null);
+
+                        if (TextUtils.equals(typeObject.optString("type"), "news")) {
+                            TextView tv_desc = view.findViewById(R.id.tv_desc);
+                        } else if (TextUtils.equals(typeObject.optString("type"), "videos")) {
+                            TextView tv_date = view.findViewById(R.id.tv_date);
+                        }
                     }
                 };
                 recyclerView.setLayoutManager(layoutManager);
@@ -304,8 +302,8 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                 mLayout.addView(cardView);
             }
         }
-
-        frameLayout.addView(mLayout);
+        scrollView.addView(mLayout);
+        frameLayout.addView(scrollView);
     }
 
     private Toolbar getToolbar() {
@@ -322,12 +320,17 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         JSONArray menuArray = sidebarJSON.optJSONArray("menu");
         int width = sidebarJSON.optInt("width");
         String align = sidebarJSON.optString("align");
+        String header = "";
+        if (sidebarJSON.has("header")) {
+            header = sidebarJSON.optString("header");
+        }
+
         DrawerLayout drawerLayout = new DrawerLayout(this);
         DrawerLayout.LayoutParams layoutParams = new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         drawerLayout.setLayoutParams(layoutParams);
         drawerLayout.setId(R.id.drawable);
         drawerLayout.addView(linearLayout);
-        drawerLayout.addView(getNavigationView(width, align, menuArray));
+        drawerLayout.addView(getNavigationView(width, align, header, menuArray));
         return drawerLayout;
     }
 
@@ -351,7 +354,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     }
 
 
-    private NavigationView getNavigationView(float width, String align, JSONArray menuArray) {
+    private NavigationView getNavigationView(float width, String align, String header, JSONArray menuArray) {
         Utils.log(BaseMainActivity.class, "width = " + width + " align" + align + " menuArray = " + menuArray);
         NavigationView navigationView = new NavigationView(this);
         navigationView.setId(R.id.navview);
@@ -361,6 +364,11 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         navigationView.setBackgroundColor(Color.parseColor("#F5F5F5"));
         navigationView.getContext().setTheme(R.style.NavigationViewStyle);
         navigationView.setItemTextColor(navColorStateList);
+        if (!TextUtils.isEmpty(header)) {
+            View view = getLayoutInflater().inflate(R.layout.layout_nav_header, null);
+            navigationView.addHeaderView(view);
+            Utils.loadImageWithGlide(this, header, (ImageView) view.findViewById(R.id.iv_nav_header), (ProgressBar) view.findViewById(R.id.prgbar));
+        }
         getMenuFromJSONArray(navigationView.getMenu(), menuArray, Menu.FIRST);
         return navigationView;
     }

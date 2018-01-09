@@ -39,6 +39,8 @@ public class Utils {
     public static HashMap<String, Integer> layoutMap = new HashMap<String, Integer>(){{
         put("news_type_1", R.layout.layout_type_news_1);
         put("news_type_2", R.layout.layout_type_news_2);
+        put("videos_type_1", R.layout.layout_type_videos_1);
+        put("videos_type_2", R.layout.layout_type_videos_2);
     }};
     public static void log(Class<?> mClass, String message) {
         if (BuildConfig.DEBUG) {
