@@ -36,6 +36,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.yuvi.mantraui.alert.AlertData;
 import com.yuvi.mantraui.alert.AlertView;
+import com.yuvi.mantraui.gridmenu.GridMenu;
+import com.yuvi.mantraui.gridmenu.GridMenuView;
 import com.yuvi.mantraui.home.BaseHomeAdapter;
 import com.yuvi.mantraui.slider.SliderView;
 
@@ -46,6 +48,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by yubaraj on 12/31/17.
@@ -223,6 +226,27 @@ public abstract class BaseMainActivity extends AppCompatActivity {
             SliderView sliderView = getSliderView();
             getSupportFragmentManager().beginTransaction().add(R.id.sliderlayout, sliderView, "slider").commit();
             mLayout.addView(sliderLayout);
+        }
+        if (homeJSON.has("grid") && homeJSON.optJSONObject("grid") != null) {
+            JSONObject gridJSON = homeJSON.optJSONObject("grid");
+            GridMenuView gridMenuView = null;
+            if (gridJSON.has("type")) {
+                if (TextUtils.equals(gridJSON.optString("type"), "grid")) {
+                    int horizontalCount = 2;
+                    if (gridJSON.has("max_horizontal")) {
+                        horizontalCount = gridJSON.optInt("max_horizontal");
+                        gridMenuView = new GridMenuView(this, horizontalCount);
+                    }
+                } else if (TextUtils.equals(gridJSON.optString("type"), "horizontal")) {
+                    gridMenuView = new GridMenuView(this);
+                }
+            }
+            if (gridMenuView != null) {
+                JSONArray menuArray = gridJSON.optJSONArray("menu");
+                List<GridMenu> gridMenuList = GridMenu.toList(menuArray);
+                gridMenuView.updateGridMenu(gridMenuList, false);
+                mLayout.addView(gridMenuView);
+            }
         }
 
         if (homeJSON.has("modules")) {

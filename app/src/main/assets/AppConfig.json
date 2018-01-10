@@ -10,7 +10,7 @@
   "sidebar": {
     "width": 300,
     "align": "left",
-    "header":"https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+    "header": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
     "menu": [
       {
         "submenu": "Main",
@@ -89,26 +89,35 @@
     ],
     "alert": true,
     "slider": true,
-    "grid": [
-      {
-        "title": "news",
-        /*grid menu title for eg news*/
-        "icon": "iconurl",
-        /*valid icon url*/
-        "link": "sp://news"
-        /*deeplink of the page to be opened when clicked*/
-      },
-      {
-        "title": "vidoes",
-        "icon": "iconurl",
-        "link": "sp://videos"
-      },
-      {
-        "title": "gallery",
-        "icon": "iconurl",
-        "link": "sp://gallery"
-      }
-    ],
+    "grid": {
+      "type": "grid",
+      "max_horizontal": "2",
+      "menu": [
+        {
+          "title": "news",
+          /*grid menu title for eg news*/
+          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+          /*valid icon url*/
+          "link": "sp://news"
+          /*deeplink of the page to be opened when clicked*/
+        },
+        {
+          "title": "vidoes",
+          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+          "link": "sp://videos"
+        },
+        {
+          "title": "gallery",
+          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+          "link": "sp://gallery"
+        },
+        {
+          "title": "gallery",
+          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+          "link": "sp://gallery"
+        }
+      ]
+    },
     "modules": [
       {
         "type": "videos",
@@ -116,7 +125,7 @@
         "showall": true,
         "link": "sp://news",
         "orientation": "horizontal",
-        "layout":"videos_type_1"
+        "layout": "videos_type_1"
       },
       {
         "type": "news",
@@ -124,7 +133,7 @@
         "showall": true,
         "link": "sp://news",
         "orientation": "vertical",
-        "layout":"news_type_2"
+        "layout": "news_type_2"
       }
     ]
   },

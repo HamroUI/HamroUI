@@ -7,7 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
 import com.yuvi.mantraui.R;
+import com.yuvi.mantraui.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ public class GridMenuView extends RecyclerView {
     List<GridMenu> gridMenuList;
     OnGridMenuSelectedListener listener;
     LayoutManager layoutManager;
+    boolean isGrid = false;
 
     public GridMenuView(Context context) {
         super(context);
@@ -30,6 +34,7 @@ public class GridMenuView extends RecyclerView {
     public GridMenuView(Context context, int spanCount) {
         super(context);
         this.layoutManager = new GridLayoutManager(context, spanCount);
+        this.isGrid = true;
         init();
     }
 
@@ -40,7 +45,11 @@ public class GridMenuView extends RecyclerView {
         this.setAdapter(new Adapter<ViewHolder>() {
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new GridMenuViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gridmenu, parent, false));
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gridmenu, parent, false);
+                if(isGrid){
+                    view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                }
+                return new GridMenuViewHolder(view);
             }
 
             @Override
