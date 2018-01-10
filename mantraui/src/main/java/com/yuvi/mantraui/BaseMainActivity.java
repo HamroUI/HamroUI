@@ -1,9 +1,12 @@
 package com.yuvi.mantraui;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,6 +41,7 @@ import com.yuvi.mantraui.alert.AlertData;
 import com.yuvi.mantraui.alert.AlertView;
 import com.yuvi.mantraui.gridmenu.GridMenu;
 import com.yuvi.mantraui.gridmenu.GridMenuView;
+import com.yuvi.mantraui.gridmenu.OnGridMenuSelectedListener;
 import com.yuvi.mantraui.home.BaseHomeAdapter;
 import com.yuvi.mantraui.slider.SliderView;
 
@@ -54,7 +58,7 @@ import java.util.List;
  * Created by yubaraj on 12/31/17.
  */
 
-public abstract class BaseMainActivity extends AppCompatActivity {
+public abstract class BaseMainActivity extends AppCompatActivity implements OnGridMenuSelectedListener {
     //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
@@ -98,6 +102,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 //
 //    }
 
+
     JSONObject appConfigJSON;
     JSONArray actionBarArray = new JSONArray();
     int ACTIONBAR = 100;
@@ -106,10 +111,22 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     String primaryColor = "#3F51B5", primarrDarkColor = "#303F9F";
     String secondaryColor = "#FF4081";
     LinearLayout linearLayout;
+    Pref pref;
+    String packageName = "";
+
+    @Override
+    public void onSelected(GridMenu menu) {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(menu.link)));
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pref = new Pref(this);
         linearLayout = getHomeLayout();
         Toolbar toolbar = getToolbar();
         linearLayout.addView(toolbar);
@@ -117,6 +134,13 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         View view = linearLayout;
         try {
             appConfigJSON = new JSONObject(Utils.readFileFromInputStream(getAppconfigFile()));
+            if(appConfigJSON.has("pkgname") && !TextUtils.isEmpty(appConfigJSON.optString("pkgname"))){
+                packageName = appConfigJSON.optString("pkgname");
+                pref.setPreferences("pkgname", packageName);
+            }
+            if(appConfigJSON.has("baseurl") && !TextUtils.isEmpty(appConfigJSON.optString("baseurl"))){
+                pref.setPreferences("baseurl", appConfigJSON.optString("baseurl"));
+            }
             if (appConfigJSON.has("primarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("primarycolor"))) {
                 primaryColor = appConfigJSON.optString("primarycolor");
                 appConfigJSON.remove("primarycolor");
@@ -143,6 +167,18 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                     case "bottomsheet":
                         JSONArray bottomsheetArray = appConfigJSON.optJSONArray("bottomsheet");
                         linearLayout.addView(getBottomSheetNavigation(bottomsheetArray));
+                        break;
+                    case "modulesconfig":
+                        float version = appConfigJSON.optLong("version");
+                        if (!pref.containsKey("version") || (pref.containsKey("version") && pref.getFloatPreference("version") < version)) {
+                           JSONObject modulesconfigJSON = appConfigJSON.optJSONObject("modulesconfig");
+                           Iterator<String> configKeys = modulesconfigJSON.keys();
+                           while (configKeys.hasNext()){
+                               String configKey = configKeys.next();
+                               pref.setPreferences(configKey, modulesconfigJSON.optString(configKey));
+                           }
+                           pref.setFloatPreferences("version", version);
+                        }
                         break;
                 }
             }
@@ -242,6 +278,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                 }
             }
             if (gridMenuView != null) {
+                gridMenuView.setOnGridMenuSelectedListener(this);
                 JSONArray menuArray = gridJSON.optJSONArray("menu");
                 List<GridMenu> gridMenuList = GridMenu.toList(menuArray);
                 gridMenuView.updateGridMenu(gridMenuList, false);

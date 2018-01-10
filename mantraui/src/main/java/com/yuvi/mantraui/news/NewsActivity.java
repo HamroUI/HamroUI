@@ -9,7 +9,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.yuvi.mantraui.AdapterModel;
+import com.yuvi.mantraui.Pref;
 import com.yuvi.mantraui.R;
+import com.yuvi.mantraui.Utils;
 
 import org.json.JSONObject;
 
@@ -26,36 +28,45 @@ public class NewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
         RecyclerView rv_news = findViewById(R.id.rv_news);
-        String packageName = getIntent().getStringExtra("pn");
-        String confingJSON = getIntent().getStringExtra("nc");
-        String url = getIntent().getStringExtra("url");
+        Pref pref = new Pref(this);
+
+        String newsConfig = pref.getPreferences("NewsActivity");
+        String packageName = pref.getPreferences("pkgname");
+        String url = pref.getPreferences("baseurl");
+
+        Utils.log(NewsActivity.class, "packageName = " + packageName + " url = " + url + " newsConfig = " + newsConfig);
         HashMap<String, String> newsMap = new HashMap<>();
+
         try {
-            JSONObject mJSON = new JSONObject(confingJSON);
-            Iterator<String> keys = mJSON.keys();
+            JSONObject newsConfigJSON = new JSONObject(newsConfig);
+            JSONObject requestJSON = newsConfigJSON.optJSONObject("request");
+            Iterator<String> keys = requestJSON.keys();
+
             while (keys.hasNext()) {
                 String key = keys.next();
-                newsMap.put(key, mJSON.optString(key));
+                newsMap.put(key, requestJSON.optString(key));
             }
+            AdapterModel model = new AdapterModel(newsMap, url, packageName, newsConfigJSON.optBoolean("hasPagination"));
+            NewsAdapter adapter = new NewsAdapter(this, model){
+                @Override
+                protected void onFailed(String message) {
+                    super.onFailed(message);
+                    Log.d("NewsActivity", "Failed, Message = " + message);
+                }
+
+                @Override
+                protected void onLoadingMoreComplete() {
+                    super.onLoadingMoreComplete();
+                    Toast.makeText(getApplicationContext(), "No more news", Toast.LENGTH_SHORT).show();
+                }
+            };
+            rv_news.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            rv_news.setAdapter(adapter);
+            adapter.setOnLoadMoreListener(rv_news);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        AdapterModel model = new AdapterModel(newsMap, url, packageName, true);
-        NewsAdapter adapter = new NewsAdapter(this, model){
-            @Override
-            protected void onFailed(String message) {
-                super.onFailed(message);
-                Log.d("NewsActivity", "Failed, Message = " + message);
-            }
 
-            @Override
-            protected void onLoadingMoreComplete() {
-                super.onLoadingMoreComplete();
-                Toast.makeText(getApplicationContext(), "No more news", Toast.LENGTH_SHORT).show();
-            }
-        };
-        rv_news.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        rv_news.setAdapter(adapter);
-        adapter.setOnLoadMoreListener(rv_news);
+
     }
 }

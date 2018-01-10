@@ -1,11 +1,12 @@
 {
   "pkgname": "",
+  "version":100000,
   "primarydark": "",
   "primarycolor": "",
   "secondarycolor": "",
   "banneradd": "admob_key",
   "fullscreenkey": "admob_key",
-  "baseurl": "",
+  "baseurl": "http://aa.hamroapi.com/v1",
   "youtubeAPIKey": "",
   "sidebar": {
     "width": 300,

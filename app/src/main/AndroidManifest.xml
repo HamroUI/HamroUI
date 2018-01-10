@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mantraideas.samplproject">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,13 +23,83 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.yuvi.mantraui.news.NewsActivity">
+
+        <activity
+            android:name="com.yuvi.mantraui.news.NewsActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
+            <intent-filter android:label="productdetail">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="news"
+                    android:scheme="sp" />
+            </intent-filter>
+
 
         </activity>
-        <activity android:name="com.yuvi.mantraui.video.VideoListActivity"/>
-        <activity android:name="com.yuvi.mantraui.video.PlayerActivity"/>
-        <activity android:name="com.yuvi.mantraui.gallery.GalleryActivity"/>
-        <activity android:name="com.yuvi.mantraui.audio.AudioActivity"/>
+        <activity
+            android:name="com.yuvi.mantraui.video.VideoListActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
+            <intent-filter android:label="videolist">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="videolist"
+                    android:scheme="sp" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.yuvi.mantraui.video.PlayerActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
+
+            <intent-filter android:label="player">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="player"
+                    android:scheme="sp" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.yuvi.mantraui.gallery.GalleryActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
+            <intent-filter android:label="Gallery">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="gallery"
+                    android:scheme="sp" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.yuvi.mantraui.audio.AudioActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
+            <intent-filter android:label="productdetail">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="audiolist"
+                    android:scheme="sp" />
+            </intent-filter>
+        </activity>
+
         <service android:name="com.yuvi.mantraui.audio.MediaPlayerService" />
     </application>
 
