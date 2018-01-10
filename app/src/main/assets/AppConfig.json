@@ -91,7 +91,7 @@
     "alert": true,
     "slider": true,
     "grid": {
-      "type": "grid",
+      "type": "horizontal",
       "max_horizontal": "2",
       "menu": [
         {
@@ -133,8 +133,8 @@
         "max": 5,
         "showall": true,
         "link": "sp://news",
-        "orientation": "vertical",
-        "layout": "news_type_2"
+        "orientation": "horizontal",
+        "layout": "news_type_1"
       }
     ]
   },
@@ -169,10 +169,10 @@
       },
       "url": "",
       "hasPagination": true,
-      "persist": false,
+      "persist": true,
       "loginrequired": false,
       "bookmark": true,
-      "showbanneraddon": "bottom",
+      "showbanneraddon": "top",
       "hasFullScreen": {
         "event": "backpressed",
         "afterClick": 0,
