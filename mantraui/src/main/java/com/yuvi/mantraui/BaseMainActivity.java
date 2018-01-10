@@ -132,13 +132,19 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         linearLayout.addView(toolbar);
         linearLayout.addView(getFrameLayout());
         View view = linearLayout;
+        boolean isAppconfigUpdated = false;
         try {
             appConfigJSON = new JSONObject(Utils.readFileFromInputStream(getAppconfigFile()));
-            if(appConfigJSON.has("pkgname") && !TextUtils.isEmpty(appConfigJSON.optString("pkgname"))){
+            if (appConfigJSON.has("version") && appConfigJSON.optInt("version") > pref.getIntPreferences("version")) {
+                pref.clearAll();
+                pref.setIntPreferences("version", appConfigJSON.optInt("version"));
+                isAppconfigUpdated = true;
+            }
+            if (appConfigJSON.has("pkgname") && !TextUtils.isEmpty(appConfigJSON.optString("pkgname"))) {
                 packageName = appConfigJSON.optString("pkgname");
                 pref.setPreferences("pkgname", packageName);
             }
-            if(appConfigJSON.has("baseurl") && !TextUtils.isEmpty(appConfigJSON.optString("baseurl"))){
+            if (appConfigJSON.has("baseurl") && !TextUtils.isEmpty(appConfigJSON.optString("baseurl"))) {
                 pref.setPreferences("baseurl", appConfigJSON.optString("baseurl"));
             }
             if (appConfigJSON.has("primarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("primarycolor"))) {
@@ -169,15 +175,14 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                         linearLayout.addView(getBottomSheetNavigation(bottomsheetArray));
                         break;
                     case "modulesconfig":
-                        float version = appConfigJSON.optLong("version");
-                        if (!pref.containsKey("version") || (pref.containsKey("version") && pref.getFloatPreference("version") < version)) {
-                           JSONObject modulesconfigJSON = appConfigJSON.optJSONObject("modulesconfig");
-                           Iterator<String> configKeys = modulesconfigJSON.keys();
-                           while (configKeys.hasNext()){
-                               String configKey = configKeys.next();
-                               pref.setPreferences(configKey, modulesconfigJSON.optString(configKey));
-                           }
-                           pref.setFloatPreferences("version", version);
+                        Utils.log(BaseMainActivity.class, "isAppconfigUpdated = " + isAppconfigUpdated);
+                        if (isAppconfigUpdated) {
+                            JSONObject modulesconfigJSON = appConfigJSON.optJSONObject("modulesconfig");
+                            Iterator<String> configKeys = modulesconfigJSON.keys();
+                            while (configKeys.hasNext()) {
+                                String configKey = configKeys.next();
+                                pref.setPreferences(configKey, modulesconfigJSON.optString(configKey));
+                            }
                         }
                         break;
                 }

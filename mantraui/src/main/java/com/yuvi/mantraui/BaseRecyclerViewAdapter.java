@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.mantraideas.simplehttp.datamanager.dmmodel.DataRequest;
 import com.mantraideas.simplehttp.datamanager.dmmodel.DataRequestPair;
 import com.mantraideas.simplehttp.datamanager.dmmodel.Method;
 import com.mantraideas.simplehttp.datamanager.dmmodel.Response;
+import com.mantraideas.simplehttp.datamanager.util.DmUtilities;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,12 +34,14 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     int start = 0;
     AdapterModel model;
     Handler handler = new Handler();
+    Pref pref;
 
     protected int TYPE_PROGRESS = 1, TYPE_DATA = 2;
 
     public BaseRecyclerViewAdapter(Context context, AdapterModel model) {
         this.model = model;
         this.context = context;
+        pref = new Pref(context);
     }
 
     @Override
@@ -74,6 +78,18 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     }
 
     public void queryData() {
+        if (model.persist && start == 0) {
+            String savedData = pref.getPreferences(DmUtilities.getSha1Hex(model.requestMap.toString()));
+            if (!TextUtils.isEmpty(savedData)) {
+                Utils.log(BaseRecyclerViewAdapter.class, "savedData = " + savedData);
+                try {
+                    jsonArray = new JSONArray(savedData);
+                    notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         DataRequestPair requestPair = DataRequestPair.create();
         for (String key : model.requestMap.keySet()) {
             requestPair.put(key, model.requestMap.get(key));
@@ -91,10 +107,14 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
         requestManager.addOnDataRecieveListner(this);
         requestManager.sync();
         loading = true;
+
+        if (start == 0 && jsonArray.length() == 0) {
+            showLoadingProgress();
+        }
     }
 
     public void setOnLoadMoreListener(RecyclerView recyclerView) {
-        if(model.hasPagination) {
+        if (model.hasPagination) {
             if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
                 final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
                         .getLayoutManager();
@@ -116,7 +136,7 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
                     }
                 });
             }
-        }else {
+        } else {
             Log.w("BaseRecyclerViewAdapter", "set pagination to true in AdapterModel to enable the loadmore ");
         }
     }
@@ -139,6 +159,14 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
                     Utils.log(BaseRecyclerViewAdapter.class, "progressBar removed");
                 }
                 JSONArray mArray = new JSONArray(object.toString());
+                if (start == 0 && mArray.length() > 0) {
+                    if (model.persist) {
+                        pref.setPreferences(DmUtilities.getSha1Hex(model.requestMap.toString()), mArray.toString());
+                        Utils.log(BaseRecyclerViewAdapter.class, "dataSaved");
+                        jsonArray = new JSONArray();
+                    }
+                    hideLoadingProgress("");
+                }
                 loading = false;
                 hasMoreData = (mArray.length() > 9);
                 start += mArray.length();
@@ -151,11 +179,13 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
             } catch (Exception e) {
                 onFailed(e.getMessage());
                 e.printStackTrace();
+                hideLoadingProgress(e.getMessage());
             }
 
         } else {
             Toast.makeText(context, response.getMessage(), Toast.LENGTH_SHORT).show();
             onFailed(response.getMessage());
+            hideLoadingProgress(response.getMessage());
         }
 
     }
@@ -165,6 +195,14 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     }
 
     protected void onLoadingMoreComplete() {
+
+    }
+
+    protected void showLoadingProgress() {
+
+    }
+
+    protected void hideLoadingProgress(String mesg) {
 
     }
 

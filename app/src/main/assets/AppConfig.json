@@ -1,6 +1,6 @@
 {
   "pkgname": "",
-  "version":100000,
+  "version": 100000,
   "primarydark": "",
   "primarycolor": "",
   "secondarycolor": "",
@@ -169,19 +169,15 @@
       },
       "url": "",
       "hasPagination": true,
-      "persist": true,
+      "persist": false,
       "loginrequired": false,
       "bookmark": true,
-      "hasbanneradd": [
-        true,
-        "top"
-      ],
-      "hasFullScreen": [
-        true,
-        "backpressed",
-        0,
-        0
-      ]
+      "showbanneraddon": "bottom",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 0,
+        "withDelay": 0
+      }
     },
     "GalleryActivity": {
       "request": {
@@ -194,16 +190,12 @@
       "persist": true,
       "loginrequired": false,
       "bookmark": true,
-      "hasbanneradd": [
-        true,
-        "bottom"
-      ],
-      "hasFullScreen": [
-        true,
-        "onopen",
-        1,
-        4000
-      ]
+      "showbanneraddon": "bottom",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 0,
+        "withDelay": 4000
+      }
     },
     "VideoListActivity": {
       "request": {
@@ -216,16 +208,12 @@
       "persist": true,
       "loginrequired": false,
       "bookmark": true,
-      "hasbanneradd": [
-        true,
-        "bottom"
-      ],
-      "hasFullScreen": [
-        true,
-        "onopen",
-        1,
-        3000
-      ]
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 2,
+        "withDelay": 0
+      }
     }
   }
 }
