@@ -50,7 +50,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="videolist"
+                    android:host="videos"
                     android:scheme="sp" />
             </intent-filter>
         </activity>

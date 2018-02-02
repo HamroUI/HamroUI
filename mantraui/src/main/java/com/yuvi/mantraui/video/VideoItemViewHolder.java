@@ -26,9 +26,11 @@ public class VideoItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindView(JSONObject jsonObject){
+        Utils.log(this.getClass(), "data = " + jsonObject.toString());
         tv_title.setText(jsonObject.optString("name"));
         tv_date.setText(Utils.getRelativeTime(jsonObject.optString("published_date"), "yyyy-MM-dd"));
         String imageUrl = Utils.getUrlFromYoutubeKey(jsonObject.optString("youtubeID"));
+        Utils.log(this.getClass(), "imageUrl = " + imageUrl + " publisheddate = " + jsonObject.optString("published_date"));
         Utils.loadImageWithGlide(itemView.getContext(), imageUrl, iv_thumbnail, prgbar);
     }
 }

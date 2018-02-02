@@ -1,6 +1,6 @@
 {
   "pkgname": "",
-  "version": 100000,
+  "version": 100002,
   "primarydark": "",
   "primarycolor": "",
   "secondarycolor": "",
@@ -199,13 +199,13 @@
     },
     "VideoListActivity": {
       "request": {
-        "action": "videos",
+        "action": "get_videos",
         "start": "0",
         "limit": "10"
       },
-      "url": "",
+      "url": "http://vs.hamroapi.com/v4/",
       "hasPagination": true,
-      "persist": true,
+      "persist": false,
       "loginrequired": false,
       "bookmark": true,
       "showbanneraddon": "top",

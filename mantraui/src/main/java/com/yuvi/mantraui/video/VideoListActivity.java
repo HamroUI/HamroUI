@@ -1,55 +1,35 @@
 package com.yuvi.mantraui.video;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubeApiServiceUtil;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubeIntents;
-import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.yuvi.mantraui.AdapterModel;
+import com.yuvi.mantraui.BaseActivity;
 import com.yuvi.mantraui.OnItemClickListener;
 import com.yuvi.mantraui.R;
-import com.yuvi.mantraui.Utils;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Created by yubaraj on 12/25/17.
  */
 
-public class VideoListActivity extends AppCompatActivity implements OnItemClickListener {
+public class VideoListActivity extends BaseActivity implements OnItemClickListener {
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video);
-        String packageName = getIntent().getStringExtra("pn");
-        String confingJSON = getIntent().getStringExtra("nc");
-        String url = getIntent().getStringExtra("url");
-        HashMap<String, String> videoMap = new HashMap<>();
-        try {
-            JSONObject mJSON = new JSONObject(confingJSON);
-            Iterator<String> keys = mJSON.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                videoMap.put(key, mJSON.optString(key));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        RecyclerView rv_video = findViewById(R.id.rv_video);
-        AdapterModel model = new AdapterModel(videoMap, url, packageName, true);
+    protected void addwithBaseOnCreate(Bundle savedInstanceState, FrameLayout frameLayout, AdapterModel model) {
+        super.addwithBaseOnCreate(savedInstanceState, frameLayout, model);
+        setTitle("Videos");
+        View view = getLayoutInflater().inflate(R.layout.activity_video, null);
+        frameLayout.addView(view);
+
+        RecyclerView rv_video = view.findViewById(R.id.rv_video);
         VideoAdapter adapter = new VideoAdapter(getApplicationContext(), model) {
             @Override
             protected void onLoadingMoreComplete() {
@@ -67,6 +47,12 @@ public class VideoListActivity extends AppCompatActivity implements OnItemClickL
         rv_video.setAdapter(adapter);
         adapter.setOnLoadMoreListener(rv_video);
         adapter.setOnItemCLickListener(this);
+    }
+
+    @Override
+    protected void errorOnCreated(String error) {
+        super.errorOnCreated(error);
+        toast(error);
     }
 
     @Override
