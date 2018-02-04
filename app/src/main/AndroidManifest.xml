@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
@@ -99,6 +100,38 @@
                     android:scheme="sp" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.yuvi.mantraui.simplelist.SimpleListActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
+            <intent-filter android:label="Simple List">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="simplelist"
+                    android:scheme="sp" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.yuvi.mantraui.simplelist.SimpleListDescActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter android:label="list Detail">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="listdetail"
+                    android:scheme="sp" />
+            </intent-filter>
+        </activity>
+
 
         <service android:name="com.yuvi.mantraui.audio.MediaPlayerService" />
     </application>

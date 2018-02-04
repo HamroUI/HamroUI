@@ -152,7 +152,7 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
 
     @Override
     public void onDataRecieved(Response response, Object object) {
-        if (response == Response.OK) {
+        if (response == Response.OK && (object != null)) {
             try {
                 if (jsonArray.length() > 0 && jsonArray.optJSONObject(jsonArray.length() - 1) == null) {
                     jsonArray = Utils.remove(jsonArray, jsonArray.length() - 1);

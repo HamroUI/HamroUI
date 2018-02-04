@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -29,7 +30,8 @@ import java.util.Iterator;
 public class BaseActivity extends AppCompatActivity {
     protected Pref pref;
     String packageName, url;
-    boolean persist = false;
+    boolean persist = false, hasPagination = false;
+    String label = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,30 +40,29 @@ public class BaseActivity extends AppCompatActivity {
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         pref = new Pref(this);
+        this.label = this.getClass().getSimpleName();
 
         FrameLayout frameLayout = new FrameLayout(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
         frameLayout.setLayoutParams(layoutParams);
         setContentView(linearLayout);
 
-        String newsConfig = pref.getPreferences(this.getClass().getSimpleName());
+        String config = pref.getPreferences(this.getClass().getSimpleName());
 
         packageName = pref.getPreferences("pkgname");
         url = pref.getPreferences("baseurl");
 
         Utils.log(BaseActivity.class, this.getClass().getSimpleName());
-//        String newsConfig = pref.getPreferences("NewsActivity");
         String packageName = pref.getPreferences("pkgname");
         String url = pref.getPreferences("baseurl");
-        boolean persist = false;
-        Utils.log(NewsActivity.class, "packageName = " + packageName + " url = " + url + " newsConfig = " + newsConfig);
+        Utils.log(NewsActivity.class, "packageName = " + packageName + " url = " + url + " newsConfig = " + config);
         HashMap<String, String> newsMap = new HashMap<>();
         String showBannerAddOn = "";
         try {
-            JSONObject newsConfigJSON = new JSONObject(newsConfig);
-            JSONObject requestJSON = newsConfigJSON.optJSONObject("request");
-            if (DmUtilities.isNetworkConnected(this) && newsConfigJSON.has("showbanneraddon") && !TextUtils.isEmpty(newsConfigJSON.optString("showbanneraddon"))) {
-                showBannerAddOn = newsConfigJSON.optString("showbanneraddon");
+            JSONObject configJSON = new JSONObject(config);
+            JSONObject requestJSON = configJSON.optJSONObject("request");
+            if (DmUtilities.isNetworkConnected(this) && configJSON.has("showbanneraddon") && !TextUtils.isEmpty(configJSON.optString("showbanneraddon"))) {
+                showBannerAddOn = configJSON.optString("showbanneraddon");
                 MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
                 AdView mAdView = new AdView(this);
                 mAdView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -80,11 +81,17 @@ public class BaseActivity extends AppCompatActivity {
                 linearLayout.addView(frameLayout);
             }
 
-            if (newsConfigJSON.has("url") && !TextUtils.isEmpty(newsConfigJSON.optString("url"))) {
-                url = newsConfigJSON.optString("url");
+            if (configJSON.has("url") && !TextUtils.isEmpty(configJSON.optString("url"))) {
+                url = configJSON.optString("url");
             }
-            if (newsConfigJSON.has("persist")) {
-                persist = newsConfigJSON.optBoolean("persist");
+            if (configJSON.has("persist")) {
+                persist = configJSON.optBoolean("persist");
+            }
+            if (configJSON.has("label")) {
+                label = configJSON.optString("label");
+            }
+            if (configJSON.has("hasPagination")) {
+                hasPagination = configJSON.optBoolean("hasPagination", false);
             }
             Iterator<String> keys = requestJSON.keys();
 
@@ -92,7 +99,8 @@ public class BaseActivity extends AppCompatActivity {
                 String key = keys.next();
                 newsMap.put(key, requestJSON.optString(key));
             }
-            AdapterModel model = new AdapterModel(newsMap, url, packageName, newsConfigJSON.optBoolean("hasPagination"), persist);
+
+            AdapterModel model = new AdapterModel(label, newsMap, url, packageName, hasPagination, persist);
 
             addwithBaseOnCreate(savedInstanceState, frameLayout, model);
         } catch (Exception e) {
@@ -107,6 +115,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void addwithBaseOnCreate(Bundle savedInstanceState, FrameLayout frameLayout, AdapterModel model) {
 
     }
+
 
     protected void errorOnCreated(String error) {
 
@@ -124,5 +133,7 @@ public class BaseActivity extends AppCompatActivity {
     public void toast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
+
 
 }

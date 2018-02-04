@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class AdapterModel {
     public HashMap<String, String> requestMap;
-    public String url, packageName;
+    public String url, packageName, label;
     public boolean hasPagination = false;
     public boolean persist = false;
 
@@ -21,11 +21,12 @@ public class AdapterModel {
         this.hasPagination = hasPagination;
     }
 
-    public AdapterModel(HashMap<String, String> requestMap, String url, String packageName, boolean hasPagination, boolean persist) {
+    public AdapterModel(String label, HashMap<String, String> requestMap, String url, String packageName, boolean hasPagination, boolean persist) {
         this.requestMap = requestMap;
         this.url = url;
         this.packageName = packageName;
         this.hasPagination = hasPagination;
         this.persist = persist;
+        this.label = label;
     }
 }

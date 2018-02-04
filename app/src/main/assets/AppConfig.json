@@ -113,9 +113,9 @@
           "link": "sp://gallery"
         },
         {
-          "title": "gallery",
+          "title": "Kathas",
           "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-          "link": "sp://gallery"
+          "link": "sp://simplelist"
         }
       ]
     },
@@ -198,6 +198,25 @@
       }
     },
     "VideoListActivity": {
+      "request": {
+        "action": "get_videos",
+        "start": "0",
+        "limit": "10"
+      },
+      "url": "http://vs.hamroapi.com/v4/",
+      "hasPagination": true,
+      "persist": false,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 2,
+        "withDelay": 0
+      }
+    },
+    "SimpleListActivity": {
+      "label": "Katha",
       "request": {
         "action": "get_videos",
         "start": "0",
