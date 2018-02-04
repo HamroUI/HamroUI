@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -51,6 +52,8 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.net.URI;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -58,7 +61,7 @@ import java.util.List;
  * Created by yubaraj on 12/31/17.
  */
 
-public abstract class BaseMainActivity extends AppCompatActivity implements OnGridMenuSelectedListener {
+public abstract class BaseMainActivity extends AppCompatActivity implements OnGridMenuSelectedListener, NavigationView.OnNavigationItemSelectedListener {
     //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
@@ -113,6 +116,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     LinearLayout linearLayout;
     Pref pref;
     String packageName = "";
+    HashMap<Integer, String> menuMap = new HashMap<>();
 
     @Override
     public void onSelected(GridMenu menu) {
@@ -436,6 +440,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             Utils.loadImageWithGlide(this, header, (ImageView) view.findViewById(R.id.iv_nav_header), (ProgressBar) view.findViewById(R.id.prgbar));
         }
         getMenuFromJSONArray(navigationView.getMenu(), menuArray, Menu.FIRST);
+        navigationView.setNavigationItemSelectedListener(this);
         return navigationView;
     }
 
@@ -459,6 +464,12 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         getMenuFromJSONArray(bottomNavigationView.getMenu(), menuArray, BOTTOMSHEET);
         bottomNavigationView.setItemTextColor(myColorStateList);
         bottomNavigationView.setItemIconTintList(myColorStateList);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                return handleMenu(item);
+            }
+        });
 
         Utils.removeShiftMode(bottomNavigationView);
         return bottomNavigationView;
@@ -518,8 +529,12 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 SubMenu subMenu = menu.addSubMenu(menuJSON.optString("submenu"));
                 for (int j = 0; j < itemArray.length(); j++) {
                     JSONObject itemMenuJSON = itemArray.optJSONObject(j);
-                    subMenu.add(0, (MENUSTART + (i * 100)) + j, i * 100 + j, itemMenuJSON.optString("title"));
-                    MenuItem menuItem = subMenu.findItem(MENUSTART + (MENUSTART * (i + 1)) + j);
+                    subMenu.add(0, ++MENUSTART, 100 + MENUSTART, itemMenuJSON.optString("title"));
+
+                    if (menuJSON.has("link") && !TextUtils.isEmpty(menuJSON.optString("link"))) {
+                        menuMap.put(MENUSTART, menuJSON.optString("link"));
+                    }
+                    MenuItem menuItem = subMenu.findItem(MENUSTART);
                     if (itemMenuJSON.has("showalways") && itemMenuJSON.optBoolean("showalways")) {
                         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                     }
@@ -528,8 +543,12 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                     }
                 }
             } else {
-                menu.add(Menu.NONE, MENUSTART + i, 1000 + i, menuJSON.optString("title"));
-                MenuItem menuItem = menu.findItem(MENUSTART + i);
+                menu.add(Menu.NONE, ++MENUSTART, 1000 + i, menuJSON.optString("title"));
+                MenuItem menuItem = menu.findItem(MENUSTART);
+
+                if (menuJSON.has("link") && !TextUtils.isEmpty(menuJSON.optString("link"))) {
+                    menuMap.put(MENUSTART, menuJSON.optString("link"));
+                }
                 if (menuJSON.has("showalways") && menuJSON.optBoolean("showalways")) {
                     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 }
@@ -543,15 +562,32 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         return menu;
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return handleMenu(item);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        return handleMenu(item);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    private boolean handleMenu(MenuItem item){
+        boolean isHandled = false;
+        if(menuMap.containsKey(item.getItemId())){
+            String link = menuMap.get(item.getItemId());
+            try{
+                startActivity(new Intent(Intent.ACTION_VIEW)
+                        .setData(Uri.parse(link)));
+                isHandled = true;
+            }catch (ActivityNotFoundException e){e.printStackTrace();}catch (Exception e){e.printStackTrace();}
+        }
+        return isHandled;
     }
 
     public abstract InputStream getAppconfigFile();

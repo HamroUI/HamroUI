@@ -104,7 +104,7 @@ public class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    protected void addwithBaseOnCreate(Bundle savedInstanceState, FrameLayout rl, AdapterModel model) {
+    protected void addwithBaseOnCreate(Bundle savedInstanceState, FrameLayout frameLayout, AdapterModel model) {
 
     }
 
