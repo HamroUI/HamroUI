@@ -1,6 +1,7 @@
 package com.yuvi.mantraui.news;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,9 @@ import com.yuvi.mantraui.AdapterModel;
 import com.yuvi.mantraui.BaseRecyclerViewAdapter;
 import com.yuvi.mantraui.ProgressBarViewHolder;
 import com.yuvi.mantraui.R;
+import com.yuvi.mantraui.simplelist.SimpleWebViewActivity;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -37,9 +41,20 @@ public class NewsAdapter extends BaseRecyclerViewAdapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof NewsViewHolder) {
-            ((NewsViewHolder) holder).bindView(getData(position));
+            final JSONObject data = getData(position);
+            ((NewsViewHolder) holder).bindView(data);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(), SimpleWebViewActivity.class)
+                            .putExtra("title", data.optString("title"))
+                            .putExtra("link", data.optString("link"))
+                            .putExtra("source", data.optString("source"))
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                }
+            });
         }
     }
 }
