@@ -117,7 +117,7 @@
         </activity>
 
         <activity
-            android:name="com.yuvi.mantraui.simplelist.SimpleListDescActivity"
+            android:name="com.yuvi.mantraui.simplelist.SimpleWebViewActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter android:label="list Detail">
@@ -127,7 +127,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="listdetail"
+                    android:host="webview"
                     android:scheme="sp" />
             </intent-filter>
         </activity>

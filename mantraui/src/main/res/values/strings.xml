@@ -6,6 +6,17 @@
     <string name="news">News</string>
     <string name="videos">Videos</string>
 
+    <!--More page-->
+    <string name="setting">Settings</string>
+    <string name="rateus">Rate Us</string>
+    <string name="copyline">Copy Link</string>
+    <string name="share">Share</string>
+    <string name="mesg_open_in_browser">Open in browser</string>
+    <string name="refresh">Refresh</string>
+    <string name="mesg_refreshing">Refreshing</string>
+    <string name="mesg_share_link_to">Share Link to</string>
+    <string name="mesg_copied_clipboard">Copied to clipboard</string>
+
     <!--Youtube-->
     <string name="player_error">Error initializing YouTube player: %s</string>
     <string name="seek_to">Jump To</string>

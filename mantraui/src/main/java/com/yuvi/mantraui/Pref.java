@@ -15,6 +15,10 @@ public class Pref {
 
     Context ctx;
     SharedPreferences preferences;
+    public static final String KEY_ADMOB_ID = "admobid";
+    public static final String KEY_BANNER_ID = "bannerid";
+    public static final String KEY_INTERESTIAL_ID = "interstialid";
+    public static final String KEY_YOUTUBE_ID = "youtubeid";
 
     public Pref(Context ctx) {
         this.ctx = ctx;

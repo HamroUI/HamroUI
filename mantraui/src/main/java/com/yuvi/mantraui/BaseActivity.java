@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,13 +62,21 @@ public class BaseActivity extends AppCompatActivity {
         try {
             JSONObject configJSON = new JSONObject(config);
             JSONObject requestJSON = configJSON.optJSONObject("request");
-            if (DmUtilities.isNetworkConnected(this) && configJSON.has("showbanneraddon") && !TextUtils.isEmpty(configJSON.optString("showbanneraddon"))) {
+            String admob_id = pref.getPreferences(Pref.KEY_ADMOB_ID);
+            String banneradd_id = pref.getPreferences(Pref.KEY_BANNER_ID);
+
+            if (DmUtilities.isNetworkConnected(this)
+                    && !TextUtils.isEmpty(admob_id)
+                    && !TextUtils.isEmpty(banneradd_id)
+                    && configJSON.has("showbanneraddon")
+                    && !TextUtils.isEmpty(configJSON.optString("showbanneraddon"))) {
+
                 showBannerAddOn = configJSON.optString("showbanneraddon");
-                MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+                MobileAds.initialize(this, admob_id);
                 AdView mAdView = new AdView(this);
                 mAdView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 mAdView.setAdSize(AdSize.SMART_BANNER);
-                mAdView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+                mAdView.setAdUnitId(banneradd_id);
                 AdRequest adRequest = new AdRequest.Builder().build();
                 mAdView.loadAd(adRequest);
                 if (TextUtils.equals(showBannerAddOn, "top")) {
@@ -78,6 +87,7 @@ public class BaseActivity extends AppCompatActivity {
                     linearLayout.addView(mAdView, 1);
                 }
             } else {
+                Log.w("Adview", "check internet connection or admobid or bannerid is missing in config");
                 linearLayout.addView(frameLayout);
             }
 
@@ -133,7 +143,6 @@ public class BaseActivity extends AppCompatActivity {
     public void toast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
 
 
 }

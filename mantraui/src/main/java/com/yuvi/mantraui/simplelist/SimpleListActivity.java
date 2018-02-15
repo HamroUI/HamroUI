@@ -92,7 +92,7 @@ public class SimpleListActivity extends BaseActivity implements OnItemClickListe
 
     @Override
     public void onItemClicked(JSONObject dataJSON) {
-        startActivity(new Intent(this, SimpleListDescActivity.class)
+        startActivity(new Intent(this, SimpleWebViewActivity.class)
                 .putExtra("title", dataJSON.optString("title"))
                 .putExtra("desc", dataJSON.optString("description")));
     }

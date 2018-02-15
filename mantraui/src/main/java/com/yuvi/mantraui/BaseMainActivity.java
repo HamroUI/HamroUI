@@ -62,50 +62,6 @@ import java.util.List;
  */
 
 public abstract class BaseMainActivity extends AppCompatActivity implements OnGridMenuSelectedListener, NavigationView.OnNavigationItemSelectedListener {
-    //    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        // AlertView
-//        AlertData alertData = new AlertData("this is alert test", "");
-//        AlertView alertView = findViewById(R.id.alertview);
-//        alertView.setData(alertData);
-//        alertView.setCloseIconColor(Color.parseColor("#FFFFFF"));
-//
-//        // testNewsActivity
-//        findViewById(R.id.btn_news).setOnClickListener(v -> {
-//            String pn = MainActivity.this.getPackageName();
-//            String url = "http://aa.hamroapi.com/v1";
-//            String nc = "{\"action\":\"news\",\"start\":\"0\", \"limit\":\"10\"}";
-//            startActivity(new Intent(getApplicationContext(), NewsActivity.class)
-//                    .putExtra("pn", pn)
-//                    .putExtra("url", url)
-//                    .putExtra("nc", nc));
-//        });
-//
-//        // testVideoActivity
-//        findViewById(R.id.btn_videos).setOnClickListener(v -> {
-//            String pn = MainActivity.this.getPackageName();
-//            String url = "http://vs.hamroapi.com/v4";
-//            String nc = "{\"action\":\"get_videos\",\"start\":\"0\", \"limit\":\"10\"}";
-//            startActivity(new Intent(getApplicationContext(), VideoListActivity.class)
-//                    .putExtra("pn", pn)
-//                    .putExtra("url", url)
-//                    .putExtra("nc", nc));
-//        });
-//
-//        // testAudio
-//         findViewById(R.id.btn_audio).setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), AudioActivity.class)));
-//
-//        //testGallery
-//        findViewById(R.id.btn_gallery).setOnClickListener(v -> {
-//            startActivity(new Intent(MainActivity.this, GalleryActivity.class));
-//        });
-//
-//    }
-
-
     JSONObject appConfigJSON;
     JSONArray actionBarArray = new JSONArray();
     int ACTIONBAR = 100;
@@ -163,8 +119,21 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 primarrDarkColor = appConfigJSON.optString("primarydark");
                 appConfigJSON.remove(primarrDarkColor);
             }
+            if (appConfigJSON.has("admob_id")) {
+                pref.setPreferences(Pref.KEY_ADMOB_ID, appConfigJSON.optString("admob_id"));
+            }
 
+            if (appConfigJSON.has("banner_id")) {
+                pref.setPreferences(Pref.KEY_BANNER_ID, appConfigJSON.optString("banner_id"));
+            }
+            if (appConfigJSON.has("fullscreen_id")) {
+                pref.setPreferences(Pref.KEY_INTERESTIAL_ID, appConfigJSON.optString("fullscreen_id"));
+            }
+            if (appConfigJSON.has("youtubeAPIKey")) {
+                pref.setPreferences(Pref.KEY_YOUTUBE_ID, appConfigJSON.optString("youtubeAPIKey"));
+            }
             Iterator<String> iterator = appConfigJSON.keys();
+
             while (iterator.hasNext()) {
                 String key = iterator.next();
                 switch (key) {
@@ -238,7 +207,6 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 }
             });
         }
-//        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, getSliderView()).commit();
     }
 
     private void manageHome(JSONObject homeJSON) {
@@ -313,27 +281,30 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 modulesLayout.setPadding(Utils.pxFromDp(this, 8), Utils.pxFromDp(this, 8), Utils.pxFromDp(this, 8), Utils.pxFromDp(this, 8));
 
                 LinearLayout titleLayout = new LinearLayout(this);
-                titleLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 40)));
-                titleLayout.setOrientation(LinearLayout.HORIZONTAL);
-                titleLayout.setGravity(Gravity.CENTER_VERTICAL);
+                if (!typeObject.has("show_header") || typeObject.optBoolean("show_header")) {
+                    titleLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 40)));
+                    titleLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    titleLayout.setGravity(Gravity.CENTER_VERTICAL);
+                    TextView tv_title = new TextView(this);
+                    LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    titleParams.weight = 1;
+                    tv_title.setLayoutParams(titleParams);
+                    tv_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    tv_title.setTextColor(Color.parseColor("#212121"));
+                    tv_title.setText(typeObject.optString("title"));
+                    titleLayout.addView(tv_title, 0);
+                    Utils.log(this.getClass(), "showall = " + typeObject.optString("showall"));
 
-                TextView tv_title = new TextView(this);
-                LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-                titleParams.weight = 1;
-                tv_title.setLayoutParams(titleParams);
-                tv_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                tv_title.setTextColor(Color.parseColor("#212121"));
-                tv_title.setText(typeObject.optString("type"));
-                titleLayout.addView(tv_title, 0);
-
-                if (typeObject.optBoolean("showall")) {
-                    TextView tv_showall = new TextView(this);
-                    LinearLayout.LayoutParams showallParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    tv_showall.setLayoutParams(showallParams);
-                    tv_showall.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                    tv_showall.setTextColor(Color.parseColor("#727272"));
-                    tv_showall.setText("SHOW ALL");
-                    titleLayout.addView(tv_showall, 1);
+                    if (typeObject.optBoolean("showall")) {
+                        Utils.log(this.getClass(), "Showall is enabled");
+                        TextView tv_showall = new TextView(this);
+                        LinearLayout.LayoutParams showallParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        tv_showall.setLayoutParams(showallParams);
+                        tv_showall.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        tv_showall.setTextColor(Color.parseColor("#727272"));
+                        tv_showall.setText("SHOW ALL");
+                        titleLayout.addView(tv_showall, 1);
+                    }
                 }
 
                 RecyclerView recyclerView = new RecyclerView(this);
@@ -577,15 +548,19 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         super.onBackPressed();
     }
 
-    private boolean handleMenu(MenuItem item){
+    private boolean handleMenu(MenuItem item) {
         boolean isHandled = false;
-        if(menuMap.containsKey(item.getItemId())){
+        if (menuMap.containsKey(item.getItemId())) {
             String link = menuMap.get(item.getItemId());
-            try{
+            try {
                 startActivity(new Intent(Intent.ACTION_VIEW)
                         .setData(Uri.parse(link)));
                 isHandled = true;
-            }catch (ActivityNotFoundException e){e.printStackTrace();}catch (Exception e){e.printStackTrace();}
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return isHandled;
     }

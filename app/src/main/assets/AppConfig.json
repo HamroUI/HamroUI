@@ -1,14 +1,15 @@
 {
-  "pkgname": "",
-  "version": 100002,
-  "primarydark": "",
-  "primarycolor": "",
-  "secondarycolor": "",
-  "banneradd": "admob_key",
-  "fullscreenkey": "admob_key",
+  "pkgname": "com.mantraideas.samplproject",
+  "version": 100000,
+  "primarydark": "#303F9F",
+  "primarycolor": "#3F51B5",
+  "secondarycolor": "#FF4081",
+  "admob_id":"ca-app-pub-3940256099942544~3347511713",
+  "banner_id": "ca-app-pub-3940256099942544/6300978111",
+  "fullscreen_id": "",
   "baseurl": "http://aa.hamroapi.com/v1",
-  "youtubeAPIKey": "",
-  "sidebar": {
+  "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
+  /*"sidebar": {
     "width": 300,
     "align": "left",
     "header": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
@@ -64,7 +65,7 @@
         ]
       }
     ]
-  },
+  },*/
   "home": {
     "actionbar": [
       {
@@ -96,11 +97,11 @@
       "menu": [
         {
           "title": "news",
-          /*grid menu title for eg news*/
+         /* grid menu title for eg news*/
           "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
           /*valid icon url*/
           "link": "sp://news"
-          /*deeplink of the page to be opened when clicked*/
+         /* deeplink of the page to be opened when clicked*/
         },
         {
           "title": "vidoes",
@@ -122,23 +123,27 @@
     "modules": [
       {
         "type": "videos",
+        "title":"Videos",
         "max": 5,
         "showall": true,
+        "show_header":true,
         "link": "sp://news",
         "orientation": "horizontal",
         "layout": "videos_type_1"
       },
       {
-        "type": "news",
+        "type": "simplelist",
+        "title":"SachchiKathas",
         "max": 5,
-        "showall": true,
-        "link": "sp://news",
-        "orientation": "horizontal",
-        "layout": "news_type_1"
+        "showall":false,
+        "show_header":false,
+        "link": "sp://webview",
+        "orientation": "vertical",
+        "layout": "news_type_2"
       }
     ]
   },
-  "bottomsheet": [
+ /* "bottomsheet": [
     {
       "title": "news",
       "icon": "",
@@ -159,7 +164,7 @@
       "icon": "",
       "link": "sp://videos"
     }
-  ],
+  ],*/
   "modulesconfig": {
     "NewsActivity": {
       "request": {

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.google.android.youtube.player.YouTubeIntents;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
+import com.yuvi.mantraui.Pref;
 import com.yuvi.mantraui.R;
 
 
@@ -29,6 +31,7 @@ public class PlayerActivity extends YouTubeBaseActivity implements YouTubePlayer
     private static final int RECOVERY_REQUEST = 1;
     private YouTubePlayerView youTubeView;
     String yId = "";
+    Pref pref;
 
 
     @Override
@@ -38,9 +41,14 @@ public class PlayerActivity extends YouTubeBaseActivity implements YouTubePlayer
         youTubeView = findViewById(R.id.youtube_view);
 
         yId = getIntent().getStringExtra("yid");
-
-        //API Key
-        youTubeView.initialize(getString(R.string.youtubekey), this);
+        pref = new Pref(this);
+        String youtubeAPIKey = pref.getPreferences(Pref.KEY_YOUTUBE_ID);
+        if (!TextUtils.isEmpty(youtubeAPIKey)) {
+            //API Key
+            youTubeView.initialize(youtubeAPIKey, this);
+        } else {
+            Log.w("Player", "Youtube id is missing in app config");
+        }
 
     }
 
