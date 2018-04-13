@@ -61,7 +61,7 @@ import java.util.List;
  * Created by yubaraj on 12/31/17.
  */
 
-public abstract class BaseMainActivity extends AppCompatActivity implements OnGridMenuSelectedListener, NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseMainActivity extends AppCompatActivity implements OnGridMenuSelectedListener/*, NavigationView.OnNavigationItemSelectedListener */{
     JSONObject appConfigJSON;
     JSONArray actionBarArray = new JSONArray();
     int ACTIONBAR = 100;
@@ -411,7 +411,13 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             Utils.loadImageWithGlide(this, header, (ImageView) view.findViewById(R.id.iv_nav_header), (ProgressBar) view.findViewById(R.id.prgbar));
         }
         getMenuFromJSONArray(navigationView.getMenu(), menuArray, Menu.FIRST);
-        navigationView.setNavigationItemSelectedListener(this);
+//        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                return handleMenu(item);
+            }
+        });
         return navigationView;
     }
 
@@ -533,10 +539,10 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         return menu;
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return handleMenu(item);
-    }
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//        return handleMenu(item);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
