@@ -266,11 +266,11 @@ public class Utils {
         }
     }
 
-    public static InputStream getInputStreamFromFile(Context context, String filename) {
+    public static String getInputStreamFromFile(Context context, String filename) {
         Log.d("Utilities", "filname = " + filename);
         try {
             InputStream is = context.getAssets().open(filename);
-            return is;
+            return readFileFromInputStream(is);
         } catch (Exception e) {
             e.printStackTrace();
         }

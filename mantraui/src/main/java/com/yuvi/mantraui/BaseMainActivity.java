@@ -94,7 +94,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         View view = linearLayout;
         boolean isAppconfigUpdated = false;
         try {
-            appConfigJSON = new JSONObject(Utils.readFileFromInputStream(getAppconfigFile()));
+            appConfigJSON = new JSONObject(getAppconfigFile());
             if (appConfigJSON.has("version") && appConfigJSON.optInt("version") > pref.getIntPreferences("version")) {
                 pref.clearAll();
                 pref.setIntPreferences("version", appConfigJSON.optInt("version"));
@@ -565,7 +565,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         return isHandled;
     }
 
-    public abstract InputStream getAppconfigFile();
+    public abstract String getAppconfigFile();
 
     //    The first dimension is an array of state sets, the second ist the state set itself. The colors array lists the colors for each matching state set, therefore the length of the colors array has to match the first dimension of the states array (or it will crash when the state is "used"). Here and example:
     ColorStateList myColorStateList = new ColorStateList(
