@@ -1,6 +1,6 @@
 {
   "pkgname": "com.mantraideas.samplproject",
-  "version": 1,
+  "version": 100000,
   "primarydark": "#303F9F",
   "primarycolor": "#3F51B5",
   "secondarycolor": "#FF4081",
@@ -9,6 +9,63 @@
   "fullscreen_id": "",
   "baseurl": "http://aa.hamroapi.com/v1",
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
+  /*"sidebar": {
+    "width": 300,
+    "align": "left",
+    "header": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+    "menu": [
+      {
+        "submenu": "Main",
+        "items": [
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          }
+        ]
+      },
+      {
+        "submenu": "Others",
+        "items": [
+          {
+            "title": "Share",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "Rateus",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "Setting",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "About Developer",
+            "icon": "",
+            "link": "sp://home"
+          }
+        ]
+      }
+    ]
+  },*/
   "home": {
     "actionbar": [
       {
@@ -59,7 +116,7 @@
         {
           "title": "Audio",
           "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-          "link": "sp://audiolist"
+          "link": "sp://simplelist"
         },
         {
           "title": "Lyrics",
@@ -78,8 +135,7 @@
         "link": "sp://news",
         "orientation": "horizontal",
         "layout": "videos_type_1"
-      }
-    /*,
+      },
       {
         "type": "simplelist",
         "title":"SachchiKathas",
@@ -89,7 +145,7 @@
         "link": "sp://webview",
         "orientation": "vertical",
         "layout": "news_type_2"
-      }*/
+      }
     ]
   },
  /* "bottomsheet": [
