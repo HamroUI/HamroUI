@@ -1,15 +1,21 @@
 {
-  "pkgname": "com.mantraideas.samplproject",
+  "pkgname": "com.shiv.bhajans",
   "version": 1,
   "primarydark": "#303F9F",
   "primarycolor": "#3F51B5",
   "secondarycolor": "#FF4081",
-  "admob_id":"ca-app-pub-3940256099942544~3347511713",
+  "admob_id": "ca-app-pub-3940256099942544~3347511713",
   "banner_id": "ca-app-pub-3940256099942544/6300978111",
   "fullscreen_id": "",
-  "baseurl": "http://aa.hamroapi.com/v1",
+  "baseurl": "https://vs.hamroapi.com/v6/",
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
   "home": {
+    "url":"",
+    "request": {
+      "action": "config",
+      "app_category": "bhajan_apps",
+      "category_id": "15"
+    },
     "actionbar": [
       {
         "title": "refresh",
@@ -38,14 +44,20 @@
       "type": "grid",
       "max_horizontal": "2",
       "menu": [
-       /* {
-          "title": "news",
-         *//* grid menu title for eg news*//*
-          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-          *//*valid icon url*//*
-          "link": "sp://news"
-         *//* deeplink of the page to be opened when clicked*//*
-        },*/
+        /* {
+           "title": "news",
+          */
+        /* grid menu title for eg news*/
+        /*
+                  "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+                  */
+        /*valid icon url*/
+        /*
+                  "link": "sp://news"
+                 */
+        /* deeplink of the page to be opened when clicked*/
+        /*
+                },*/
         {
           "title": "Vidoes",
           "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
@@ -71,49 +83,49 @@
     "modules": [
       {
         "type": "videos",
-        "title":"Videos",
+        "title": "Videos",
         "max": 5,
         "showall": true,
-        "show_header":true,
+        "show_header": true,
         "link": "sp://news",
         "orientation": "horizontal",
         "layout": "videos_type_1"
       }
-    /*,
-      {
-        "type": "simplelist",
-        "title":"SachchiKathas",
-        "max": 5,
-        "showall":false,
-        "show_header":false,
-        "link": "sp://webview",
-        "orientation": "vertical",
-        "layout": "news_type_2"
-      }*/
+      /*,
+        {
+          "type": "simplelist",
+          "title":"SachchiKathas",
+          "max": 5,
+          "showall":false,
+          "show_header":false,
+          "link": "sp://webview",
+          "orientation": "vertical",
+          "layout": "news_type_2"
+        }*/
     ]
   },
- /* "bottomsheet": [
-    {
-      "title": "news",
-      "icon": "",
-      "link": "sp://news"
-    },
-    {
-      "title": "audio",
-      "icon": "",
-      "link": "sp://audio"
-    },
-    {
-      "title": "gallery",
-      "icon": "",
-      "link": "sp://gallery"
-    },
-    {
-      "title": "videos",
-      "icon": "",
-      "link": "sp://videos"
-    }
-  ],*/
+  /* "bottomsheet": [
+     {
+       "title": "news",
+       "icon": "",
+       "link": "sp://news"
+     },
+     {
+       "title": "audio",
+       "icon": "",
+       "link": "sp://audio"
+     },
+     {
+       "title": "gallery",
+       "icon": "",
+       "link": "sp://gallery"
+     },
+     {
+       "title": "videos",
+       "icon": "",
+       "link": "sp://videos"
+     }
+   ],*/
   "modulesconfig": {
     "NewsActivity": {
       "request": {

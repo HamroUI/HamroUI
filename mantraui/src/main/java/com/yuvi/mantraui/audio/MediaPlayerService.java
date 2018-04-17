@@ -14,13 +14,15 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.session.MediaSessionManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v7.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -69,6 +71,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     //AudioPlayer notification ID
     private static final int NOTIFICATION_ID = 101;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initMediaSession() throws RemoteException {
         if (mediaSessionManager != null) return; //mediaSessionManager exists
 
@@ -196,14 +199,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 R.drawable.ic_action_close); //replace with your own image
 
         // Create a new Notification
-        android.support.v4.app.NotificationCompat.Builder notificationBuilder =  new NotificationCompat.Builder(this)
+        android.support.v4.app.NotificationCompat.Builder notificationBuilder =  new NotificationCompat.Builder(this, "1000")
                 .setShowWhen(false)
                 // Set the Notification style
-                .setStyle(new NotificationCompat.MediaStyle()
-                        // Attach our MediaSession token
-                        .setMediaSession(mediaSession.getSessionToken())
-                        // Show our playback controls in the compact notification view.
-                        .setShowActionsInCompactView(0, 1, 2))
+//                .setStyle(new NotificationCompat.se
+//                        // Attach our MediaSession token
+//                        .setMediaSession(mediaSession.getSessionToken())
+//                        // Show our playback controls in the compact notification view.
+//                        .setShowActionsInCompactView(0, 1, 2))
                 // Set the Notification color
                 .setColor(Color.RED)
                 // Set the large and small icons
@@ -388,6 +391,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     //The system calls this method when an activity, requests the service be started
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {

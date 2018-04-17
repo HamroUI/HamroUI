@@ -1,5 +1,8 @@
 package com.yuvi.mantraui;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -56,12 +59,13 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by yubaraj on 12/31/17.
  */
 
-public abstract class BaseMainActivity extends AppCompatActivity implements OnGridMenuSelectedListener/*, NavigationView.OnNavigationItemSelectedListener */{
+public abstract class BaseMainActivity extends AppCompatActivity implements OnGridMenuSelectedListener/*, NavigationView.OnNavigationItemSelectedListener */ {
     JSONObject appConfigJSON;
     JSONArray actionBarArray = new JSONArray();
     int ACTIONBAR = 100;
@@ -73,6 +77,11 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     Pref pref;
     String packageName = "";
     HashMap<Integer, String> menuMap = new HashMap<>();
+    TreeMap<String, String> configMap = new TreeMap<>();
+    TreeMap<String, String> headerMap = new TreeMap<>();
+    JSONObject homeRequestJSON = null;
+    String homeUrl = "";
+
 
     @Override
     public void onSelected(GridMenu menu) {
@@ -142,6 +151,12 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                         break;
                     case "home":
                         manageHome(appConfigJSON.optJSONObject("home"));
+                        homeRequestJSON = appConfigJSON.optJSONObject("home").optJSONObject("request");
+                        homeUrl = appConfigJSON.optJSONObject("home").optString("url");
+                        if(TextUtils.isEmpty(homeUrl)){
+                            homeUrl =  appConfigJSON.optString("baseurl");
+                        }
+
                         break;
                     case "bottomsheet":
                         JSONArray bottomsheetArray = appConfigJSON.optJSONArray("bottomsheet");
@@ -207,6 +222,25 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 }
             });
         }
+
+        ConfigModel configModel = ViewModelProviders.of(this).get(ConfigModel.class);
+        if (homeRequestJSON != null) {
+            Iterator<String> homeJSONIterator = homeRequestJSON.keys();
+            while (homeJSONIterator.hasNext()) {
+                String reqKey = homeJSONIterator.next();
+                configMap.put(reqKey, homeRequestJSON.optString(reqKey));
+            }
+        }
+
+        headerMap.put("X-App-pkg", packageName);
+        configModel.loadConfig(this, homeUrl, headerMap, configMap);
+        configModel.getConfigData().observe(this, new Observer<ConfigModel>() {
+            @Override
+            public void onChanged(@Nullable ConfigModel configModel) {
+                Log.d("BaseMainFragment", "data is " + configModel.data);
+            }
+        });
+
     }
 
     private void manageHome(JSONObject homeJSON) {

@@ -67,6 +67,12 @@
     ]
   },*/
   "home": {
+    "url":"",
+    "request": {
+      "action": "config",
+      "app_category": "bhajan_apps",
+      "category_id": "15"
+    },
     "actionbar": [
       {
         "title": "refresh",
