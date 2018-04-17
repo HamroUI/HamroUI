@@ -97,4 +97,5 @@ public class AlertView extends LinearLayout {
         ((ImageView) this.getChildAt(1)).setColorFilter(color);
     }
 
+
 }

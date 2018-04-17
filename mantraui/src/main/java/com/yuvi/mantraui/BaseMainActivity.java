@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -81,6 +82,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     TreeMap<String, String> headerMap = new TreeMap<>();
     JSONObject homeRequestJSON = null;
     String homeUrl = "";
+    AlertView alertView = null;
 
 
     @Override
@@ -238,8 +240,26 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             @Override
             public void onChanged(@Nullable ConfigModel configModel) {
                 Log.d("BaseMainFragment", "data is " + configModel.data);
+                if(configModel.success){
+                   updateView(configModel.data);
+                }else {
+                    Toast.makeText(getApplicationContext(), configModel.data, Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+    }
+
+    private void updateView(String config){
+        try{
+            JSONObject configJSON = new JSONObject(config);
+            String alert = configJSON.optString("alert");
+            String alert_link = configJSON.optString("alert_link");
+            if(!TextUtils.isEmpty(alert) && alertView != null){
+               alertView.setData(new AlertData(alert, alert_link));
+            }
+
+        }catch (Exception e){e.printStackTrace();}
 
     }
 
@@ -260,7 +280,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         Utils.log(BaseMainActivity.class, "tag = " + frameLayout.getTag());
 
         if (homeJSON.has("alert") && homeJSON.optBoolean("alert")) {
-            AlertView alertView = new AlertView(this);
+            alertView = new AlertView(this);
             alertView.setBackgroundColor(Color.parseColor(secondaryColor));
             mLayout.addView(alertView);
             alertView.setTextColor(Color.parseColor("#F5F5F5"));
