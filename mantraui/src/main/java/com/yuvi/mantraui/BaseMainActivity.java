@@ -83,6 +83,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     JSONObject homeRequestJSON = null;
     String homeUrl = "";
     AlertView alertView = null;
+    HashMap<String, RecyclerView> moduelsMap = new HashMap<>();
 
 
     @Override
@@ -245,6 +246,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 }else {
                     Toast.makeText(getApplicationContext(), configModel.data, Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
@@ -257,6 +259,12 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             String alert_link = configJSON.optString("alert_link");
             if(!TextUtils.isEmpty(alert) && alertView != null){
                alertView.setData(new AlertData(alert, alert_link));
+            }
+            for(String key : moduelsMap.keySet()){
+                if(configJSON.has(key)){
+                    JSONArray jsonArray = configJSON.optJSONArray(key);
+                    ((BaseHomeAdapter)moduelsMap.get(key).getAdapter()).updateData(jsonArray, false);
+                }
             }
 
         }catch (Exception e){e.printStackTrace();}
@@ -365,9 +373,11 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 recyclerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 //TODO need to workout to parse the homemodules layout json
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+
                 if (typeObject.has("orientation") && TextUtils.equals(typeObject.optString("orientation"), "horizontal")) {
                     layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
                 }
+
                 BaseHomeAdapter adapter = new BaseHomeAdapter(Utils.getSampleJSONArray()) {
                     @Override
                     public int getItemView() {
@@ -380,7 +390,8 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                         TextView tv_title = view.findViewById(R.id.tv_title);
                         tv_title.setText(jsonObject.optString("title"));
                         ImageView thumbNail = view.findViewById(R.id.thubnail);
-                        Utils.loadImageWithGlide(getApplicationContext(), jsonObject.optString("url"), thumbNail, null);
+                        Utils.log(BaseMainActivity.this.getClass(),  jsonObject.optString("img"));
+                        Utils.loadImageWithGlide(getApplicationContext(), jsonObject.optString("img"), thumbNail, null);
 
                         if (TextUtils.equals(typeObject.optString("type"), "news")) {
                             TextView tv_desc = view.findViewById(R.id.tv_desc);
@@ -391,6 +402,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 };
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(adapter);
+                moduelsMap.put(typeObject.optString("type"), recyclerView);
                 modulesLayout.addView(titleLayout, 0);
                 modulesLayout.addView(recyclerView, 1);
                 cardView.addView(modulesLayout);

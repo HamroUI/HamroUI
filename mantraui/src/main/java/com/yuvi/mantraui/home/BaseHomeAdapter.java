@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.yuvi.mantraui.Utils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,6 +20,15 @@ public abstract class BaseHomeAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public BaseHomeAdapter(JSONArray jsonArray) {
         this.jsonArray = jsonArray;
+    }
+
+    public void updateData(JSONArray mJsonArray, boolean append){
+        if(append){
+            Utils.concatJSONArray(jsonArray, mJsonArray);
+        }else{
+            this.jsonArray = mJsonArray;
+        }
+        notifyDataSetChanged();
     }
 
     @Override
