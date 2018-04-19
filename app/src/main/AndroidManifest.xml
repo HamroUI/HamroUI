@@ -73,6 +73,22 @@
         </activity>
 
         <activity
+            android:name="com.yuvi.mantraui.video.VideoDetailActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
+
+            <intent-filter android:label="videodetail">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="videodetail"
+                    android:scheme="sp" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name="com.yuvi.mantraui.gallery.GalleryActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
             <intent-filter android:label="Gallery">

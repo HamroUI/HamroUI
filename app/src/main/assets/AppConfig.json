@@ -87,7 +87,7 @@
         "max": 5,
         "showall": true,
         "show_header": true,
-        "link": "sp://news",
+        "link": "sp://videodetail",
         "orientation": "horizontal",
         "layout": "videos_type_1"
       }

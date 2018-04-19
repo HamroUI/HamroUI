@@ -22,10 +22,10 @@ public abstract class BaseHomeAdapter extends RecyclerView.Adapter<RecyclerView.
         this.jsonArray = jsonArray;
     }
 
-    public void updateData(JSONArray mJsonArray, boolean append){
-        if(append){
+    public void updateData(JSONArray mJsonArray, boolean append) {
+        if (append) {
             Utils.concatJSONArray(jsonArray, mJsonArray);
-        }else{
+        } else {
             this.jsonArray = mJsonArray;
         }
         notifyDataSetChanged();
@@ -39,7 +39,14 @@ public abstract class BaseHomeAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        bindView(holder.itemView, jsonArray.optJSONObject(position));
+        final JSONObject data = jsonArray.optJSONObject(position);
+        bindView(holder.itemView, data);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OnClick(data);
+            }
+        });
     }
 
     @Override
@@ -60,4 +67,7 @@ public abstract class BaseHomeAdapter extends RecyclerView.Adapter<RecyclerView.
 
     }
 
+    public void OnClick(JSONObject jsonObject) {
+
+    }
 }

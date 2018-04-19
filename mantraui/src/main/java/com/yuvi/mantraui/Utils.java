@@ -77,6 +77,7 @@ public class Utils {
         return jsonArray;
 
     }
+
     public static void listAllActivities(Context context) throws PackageManager.NameNotFoundException
     {
         // [^.]\w+$  -> regex to get only activity name

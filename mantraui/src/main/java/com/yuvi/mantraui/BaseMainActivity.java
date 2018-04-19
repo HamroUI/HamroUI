@@ -157,8 +157,8 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                         manageHome(appConfigJSON.optJSONObject("home"));
                         homeRequestJSON = appConfigJSON.optJSONObject("home").optJSONObject("request");
                         homeUrl = appConfigJSON.optJSONObject("home").optString("url");
-                        if(TextUtils.isEmpty(homeUrl)){
-                            homeUrl =  appConfigJSON.optString("baseurl");
+                        if (TextUtils.isEmpty(homeUrl)) {
+                            homeUrl = appConfigJSON.optString("baseurl");
                         }
 
                         break;
@@ -241,10 +241,10 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         configModel.getConfigData().observe(this, new Observer<ConfigModel>() {
             @Override
             public void onChanged(@Nullable ConfigModel configModel) {
-                Log.d("BaseMainFragment", "data is " + configModel.data);
-                if(configModel.success){
-                   updateView(configModel.data);
-                }else {
+//                Log.d("BaseMainFragment", "data is " + configModel.data);
+                if (configModel.success) {
+                    updateView(configModel.data);
+                } else {
                     Toast.makeText(getApplicationContext(), configModel.data, Toast.LENGTH_SHORT).show();
                 }
 
@@ -253,22 +253,24 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
 
     }
 
-    private void updateView(String config){
-        try{
+    private void updateView(String config) {
+        try {
             JSONObject configJSON = new JSONObject(config);
             String alert = configJSON.optString("alert");
             String alert_link = configJSON.optString("alert_link");
-            if(!TextUtils.isEmpty(alert) && alertView != null){
-               alertView.setData(new AlertData(alert, alert_link));
+            if (!TextUtils.isEmpty(alert) && alertView != null) {
+                alertView.setData(new AlertData(alert, alert_link));
             }
-            for(String key : moduelsMap.keySet()){
-                if(configJSON.has(key)){
+            for (String key : moduelsMap.keySet()) {
+                if (configJSON.has(key)) {
                     JSONArray jsonArray = configJSON.optJSONArray(key);
-                    ((BaseHomeAdapter)moduelsMap.get(key).getAdapter()).updateData(jsonArray, false);
+                    ((BaseHomeAdapter) moduelsMap.get(key).getAdapter()).updateData(jsonArray, false);
                 }
             }
 
-        }catch (Exception e){e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -391,12 +393,27 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                         TextView tv_title = view.findViewById(R.id.tv_title);
                         tv_title.setText(jsonObject.optString("title"));
                         ImageView thumbNail = view.findViewById(R.id.thubnail);
-                        Utils.log(BaseMainActivity.this.getClass(),  jsonObject.optString("img"));
+                        Utils.log(BaseMainActivity.this.getClass(), jsonObject.optString("img"));
                         Utils.loadImageWithGlide(getApplicationContext(), jsonObject.optString("img"), thumbNail, null);
                         TextView tv_desc = view.findViewById(R.id.tv_desc);
                         TextView tv_date = view.findViewById(R.id.tv_date);
                         tv_date.setText(jsonObject.optString("published_date"));
                         tv_desc.setText(Html.fromHtml(jsonObject.optString("description")));
+                    }
+
+                    @Override
+                    public void OnClick(JSONObject jsonObject) {
+                        try {
+//                            String data = jsonObject.toString();
+//                            String uri = typeObject.optString("link") + "?data=" + data;
+//                            Utils.log(BaseMainActivity.this.getClass(), "onclicked uri = " + uri);
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(typeObject.optString("link")))
+                                    .putExtra("data", jsonObject.toString())
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 };
                 recyclerView.setLayoutManager(layoutManager);
