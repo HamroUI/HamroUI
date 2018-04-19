@@ -34,7 +34,7 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/tv_desc"
+        android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
@@ -45,5 +45,20 @@
         android:text="titl"
         android:textColor="#727272"
         android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:maxLines="2"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:visibility="gone"
+        android:text="titl"
+        android:textColor="#727272"
+        android:textSize="14sp" />
+
 
 </LinearLayout>

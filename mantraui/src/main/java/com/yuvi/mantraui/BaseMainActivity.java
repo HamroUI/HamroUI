@@ -24,6 +24,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -392,12 +393,10 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                         ImageView thumbNail = view.findViewById(R.id.thubnail);
                         Utils.log(BaseMainActivity.this.getClass(),  jsonObject.optString("img"));
                         Utils.loadImageWithGlide(getApplicationContext(), jsonObject.optString("img"), thumbNail, null);
-
-                        if (TextUtils.equals(typeObject.optString("type"), "news")) {
-                            TextView tv_desc = view.findViewById(R.id.tv_desc);
-                        } else if (TextUtils.equals(typeObject.optString("type"), "videos")) {
-                            TextView tv_date = view.findViewById(R.id.tv_date);
-                        }
+                        TextView tv_desc = view.findViewById(R.id.tv_desc);
+                        TextView tv_date = view.findViewById(R.id.tv_date);
+                        tv_date.setText(jsonObject.optString("published_date"));
+                        tv_desc.setText(Html.fromHtml(jsonObject.optString("description")));
                     }
                 };
                 recyclerView.setLayoutManager(layoutManager);
