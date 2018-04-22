@@ -8,22 +8,31 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.yuvi.mantraui.AdapterModel;
+import com.yuvi.mantraui.BaseActivity;
 
 /**
  * Created by yubaraj on 12/28/17.
  */
 
-public class AudioActivity extends AppCompatActivity {
+public class AudioActivity extends BaseActivity {
     private MediaPlayerService player;
     boolean serviceBound = false;
     public static final String Broadcast_PLAY_NEW_AUDIO = "com.yuvi.mantraui.audio.PlayNewAudio";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void addwithBaseOnCreate(Bundle savedInstanceState, FrameLayout frameLayout, AdapterModel model) {
         playAudio("https://upload.wikimedia.org/wikipedia/commons/6/6c/Grieg_Lyric_Pieces_Kobold.ogg");
     }
+
+//    @Override
+//    protected void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//    }
 
     //Binding this Client to the AudioPlayer Service
     private ServiceConnection serviceConnection = new ServiceConnection() {
