@@ -368,6 +368,13 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                         tv_showall.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                         tv_showall.setTextColor(Color.parseColor("#727272"));
                         tv_showall.setText("SHOW ALL");
+                        tv_showall.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(typeObject.optString("showall_link")))
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            }
+                        });
                         titleLayout.addView(tv_showall, 1);
                     }
                 }
