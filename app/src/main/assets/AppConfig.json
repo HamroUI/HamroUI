@@ -1,5 +1,5 @@
 {
-  "pkgname": "com.shiv.bhajans",
+  "pkgname": "com.sample.app",
   "version": 1,
   "primarydark": "#303F9F",
   "primarycolor": "#3F51B5",
@@ -13,7 +13,7 @@
     "url":"",
     "request": {
       "action": "config",
-      "app_category": "bhajan_apps",
+      "app_category": "sample",
       "category_id": "15"
     },
     "actionbar": [
@@ -40,24 +40,24 @@
     ],
     "alert": true,
     "slider": false,
-    "grid": {
+   /* "grid": {
       "type": "grid",
       "max_horizontal": "2",
       "menu": [
-        /* {
+        *//* {
            "title": "news",
-          */
-        /* grid menu title for eg news*/
-        /*
+          *//*
+        *//* grid menu title for eg news*//*
+        *//*
                   "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-                  */
-        /*valid icon url*/
-        /*
+                  *//*
+        *//*valid icon url*//*
+        *//*
                   "link": "sp://news"
-                 */
-        /* deeplink of the page to be opened when clicked*/
-        /*
-                },*/
+                 *//*
+        *//* deeplink of the page to be opened when clicked*//*
+        *//*
+                },*//*
         {
           "title": "Vidoes",
           "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
@@ -79,7 +79,7 @@
           "link": "sp://simplelist"
         }
       ]
-    },
+    },*/
     "modules": [
       {
         "type": "videos",
@@ -90,6 +90,26 @@
         "link": "sp://videodetail",
         "orientation": "horizontal",
         "layout": "videos_type_1"
+      },
+      {
+        "type": "gallery",
+        "title": "Gallery",
+        "max": 5,
+        "showall": true,
+        "show_header": true,
+        "link": "sp://gallery",
+        "orientation": "horizontal",
+        "layout": "gallery_type_1"
+      },
+      {
+        "type": "news",
+        "title": "News",
+        "max": 5,
+        "showall": true,
+        "show_header": true,
+        "link": "sp://news",
+        "orientation": "vertical",
+        "layout": "news_type_2"
       }
       /*,
         {
@@ -128,6 +148,24 @@
    ],*/
   "modulesconfig": {
     "NewsActivity": {
+      "request": {
+        "action": "news",
+        "start": "0",
+        "limit": "10"
+      },
+      "url": "",
+      "hasPagination": true,
+      "persist": true,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 0,
+        "withDelay": 0
+      }
+    },
+    "AudioActivity": {
       "request": {
         "action": "news",
         "start": "0",

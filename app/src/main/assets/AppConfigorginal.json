@@ -195,6 +195,24 @@
         "withDelay": 0
       }
     },
+    "AudioActivity": {
+      "request": {
+        "action": "news",
+        "start": "0",
+        "limit": "10"
+      },
+      "url": "",
+      "hasPagination": true,
+      "persist": true,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 0,
+        "withDelay": 0
+      }
+    },
     "GalleryActivity": {
       "request": {
         "action": "get_photo",

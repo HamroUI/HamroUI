@@ -42,6 +42,7 @@ public class Utils {
         put("news_type_2", R.layout.layout_type_news_2);
         put("videos_type_1", R.layout.layout_type_videos_1);
         put("videos_type_2", R.layout.layout_type_videos_2);
+        put("gallery_type_1", R.layout.layout_type_gallery_1);
     }};
 
 

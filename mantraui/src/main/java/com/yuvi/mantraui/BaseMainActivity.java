@@ -391,14 +391,19 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                     public void bindView(View view, JSONObject jsonObject) {
                         super.bindView(view, jsonObject);
                         TextView tv_title = view.findViewById(R.id.tv_title);
-                        tv_title.setText(jsonObject.optString("title"));
+                        tv_title.setText(jsonObject.optString("name"));
                         ImageView thumbNail = view.findViewById(R.id.thubnail);
                         Utils.log(BaseMainActivity.this.getClass(), jsonObject.optString("img"));
                         Utils.loadImageWithGlide(getApplicationContext(), jsonObject.optString("img"), thumbNail, null);
                         TextView tv_desc = view.findViewById(R.id.tv_desc);
                         TextView tv_date = view.findViewById(R.id.tv_date);
-                        tv_date.setText(jsonObject.optString("published_date"));
-                        tv_desc.setText(Html.fromHtml(jsonObject.optString("description")));
+
+                        if (jsonObject.has("published_date")) {
+                            tv_date.setText(jsonObject.optString("published_date"));
+                        }
+                        if (jsonObject.has("description")) {
+                            tv_desc.setText(Html.fromHtml(jsonObject.optString("description")));
+                        }
                     }
 
                     @Override
