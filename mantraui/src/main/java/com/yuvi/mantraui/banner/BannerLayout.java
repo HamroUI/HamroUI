@@ -1,5 +1,6 @@
 package com.yuvi.mantraui.banner;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,6 +23,7 @@ public class BannerLayout extends LinearLayout {
     public BannerLayout(Context context) {
         super(context);
         init();
+        this.setVisibility(GONE);
     }
 
     private void init() {
@@ -42,14 +45,21 @@ public class BannerLayout extends LinearLayout {
     public void addBanner(final Banner banner) {
         this.banner = banner;
         Utils.log(this.getClass(), "image = " + banner.getImage());
-
-        Utils.loadImageWithGlide(getContext(), banner.getImage(), (ImageView) this.findViewById(R.id.bannerimage), null);
+        if (!TextUtils.isEmpty(banner.getImage()) && banner.getActive() == 1) {
+            this.setVisibility(VISIBLE);
+            Utils.loadImageWithGlide(getContext(), banner.getImage(), (ImageView) this.findViewById(R.id.bannerimage), null);
+        }
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(banner.url)) {
-                    getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(banner.url))
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    try {
+                        getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(banner.getUrl()))
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    } catch (ActivityNotFoundException e) {
+                        e.printStackTrace();
+                        Log.w("BannerLayout", "Invalid url " + banner.getUrl());
+                    }
                 }
             }
         });
