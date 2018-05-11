@@ -40,6 +40,7 @@
     ],
     "alert": true,
     "slider": false,
+    "banner":true,
    /* "grid": {
       "type": "grid",
       "max_horizontal": "2",

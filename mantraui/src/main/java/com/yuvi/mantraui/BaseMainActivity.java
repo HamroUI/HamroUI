@@ -45,6 +45,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.yuvi.mantraui.alert.AlertData;
 import com.yuvi.mantraui.alert.AlertView;
+import com.yuvi.mantraui.banner.Banner;
+import com.yuvi.mantraui.banner.BannerLayout;
 import com.yuvi.mantraui.gridmenu.GridMenu;
 import com.yuvi.mantraui.gridmenu.GridMenuView;
 import com.yuvi.mantraui.gridmenu.OnGridMenuSelectedListener;
@@ -85,6 +87,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     String homeUrl = "";
     AlertView alertView = null;
     HashMap<String, RecyclerView> moduelsMap = new HashMap<>();
+    BannerLayout bannerLayout = null;
 
 
     @Override
@@ -264,6 +267,12 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             if (!TextUtils.isEmpty(alert) && alertView != null) {
                 alertView.setData(new AlertData(alert, alert_link));
             }
+            if (configJSON.has("banner")) {
+                JSONObject jsonObject = configJSON.optJSONObject("banner");
+                Banner banner = Banner.instance().toObject(jsonObject);
+                if (bannerLayout != null)
+                    bannerLayout.addBanner(banner);
+            }
             for (String key : moduelsMap.keySet()) {
                 if (configJSON.has(key)) {
                     JSONArray jsonArray = configJSON.optJSONArray(key);
@@ -307,6 +316,11 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             SliderView sliderView = getSliderView();
             getSupportFragmentManager().beginTransaction().add(R.id.sliderlayout, sliderView, "slider").commit();
             mLayout.addView(sliderLayout);
+        }
+        if (homeJSON.has("banner") && homeJSON.optBoolean("banner")) {
+            Utils.log(this.getClass(), "hasBanner");
+            bannerLayout = new BannerLayout(this);
+            mLayout.addView(bannerLayout);
         }
         if (homeJSON.has("grid") && homeJSON.optJSONObject("grid") != null) {
             JSONObject gridJSON = homeJSON.optJSONObject("grid");
