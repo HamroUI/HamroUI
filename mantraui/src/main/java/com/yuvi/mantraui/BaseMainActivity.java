@@ -73,7 +73,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     int ACTIONBAR = 100;
     int BOTTOMSHEET = 1000;
     boolean isSideBarLeft = true;
-    String primaryColor = "#3F51B5", primarrDarkColor = "#303F9F";
+    String primaryColor = "#F44336", primarrDarkColor = "#303F9F";
     String secondaryColor = "#FF4081";
     LinearLayout linearLayout;
     Pref pref;
@@ -121,8 +121,11 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 pref.setPreferences("baseurl", appConfigJSON.optString("baseurl"));
             }
             if (appConfigJSON.has("primarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("primarycolor"))) {
+                Utils.log(this.getClass(), "assign color = " + appConfigJSON.optString("primarycolor"));
                 primaryColor = appConfigJSON.optString("primarycolor");
+                Utils.log(this.getClass(), "assigned color = " + primaryColor);
                 appConfigJSON.remove("primarycolor");
+                toolbar.setBackgroundColor(Color.parseColor(primaryColor));
             }
             if (appConfigJSON.has("secondarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("secondarycolor"))) {
                 secondaryColor = appConfigJSON.optString("secondarycolor");
@@ -444,6 +447,8 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     private Toolbar getToolbar() {
         Toolbar toolbar = new Toolbar(this);
         toolbar.setLayoutParams(new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 50)));
+        Utils.log(this.getClass(), "primarycolor = " + primaryColor);
+
         toolbar.setBackgroundColor(Color.parseColor(primaryColor));
         toolbar.setId(R.id.toolbar);
         toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat_Light);
