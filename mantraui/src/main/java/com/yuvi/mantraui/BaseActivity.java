@@ -57,7 +57,7 @@ public class BaseActivity extends AppCompatActivity {
         String packageName = pref.getPreferences("pkgname");
         String url = pref.getPreferences("baseurl");
         Utils.log(NewsActivity.class, "packageName = " + packageName + " url = " + url + " newsConfig = " + config);
-        HashMap<String, String> newsMap = new HashMap<>();
+        HashMap<String, String> requestMap = new HashMap<>();
         String showBannerAddOn = "";
         try {
             JSONObject configJSON = new JSONObject(config);
@@ -107,10 +107,10 @@ public class BaseActivity extends AppCompatActivity {
 
             while (keys.hasNext()) {
                 String key = keys.next();
-                newsMap.put(key, requestJSON.optString(key));
+                requestMap.put(key, requestJSON.optString(key));
             }
 
-            AdapterModel model = new AdapterModel(label, newsMap, url, packageName, hasPagination, persist);
+            AdapterModel model = new AdapterModel(label, requestMap, url, packageName, hasPagination, persist);
 
             addwithBaseOnCreate(savedInstanceState, frameLayout, model);
         } catch (Exception e) {

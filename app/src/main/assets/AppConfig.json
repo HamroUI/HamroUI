@@ -11,7 +11,7 @@
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
   "home": {
     "persist":true,
-    "showbanneraddon": "bottom",
+    "showbanneraddon": "top",
     "url":"",
     "request": {
       "action": "config",
@@ -191,12 +191,12 @@
     },
     "GalleryActivity": {
       "request": {
-        "action": "get_photo",
+        "action": "gallery",
         "start": "0",
         "limit": "10"
       },
       "url": "",
-      "hasPagination": true,
+      "hasPagination": false,
       "persist": true,
       "loginrequired": false,
       "bookmark": true,

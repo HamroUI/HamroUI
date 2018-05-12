@@ -38,16 +38,16 @@ public class NewsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindView(JSONObject newsJSON) {
-        String imageUrl = newsJSON.optString("image");
+        String imageUrl = newsJSON.optString("img");
         if (TextUtils.isEmpty(imageUrl)) {
             cv_image.setVisibility(View.GONE);
         } else {
             cv_image.setVisibility(View.VISIBLE);
             Utils.loadImageWithGlide(itemView.getContext(), imageUrl, iv_image, prgbar);
         }
-        tv_news_title.setText(newsJSON.optString("title"));
+        tv_news_title.setText(newsJSON.optString("name"));
         tv_news_desc.setText(Html.fromHtml(newsJSON.optString("description")));
-        tv_news_date.setText(newsJSON.optString("pubDate"));
+        tv_news_date.setText(newsJSON.optString("published_date"));
 
     }
 

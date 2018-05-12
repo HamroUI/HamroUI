@@ -148,6 +148,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.yuvi.mantraui.gallery.GalleryDetailActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout"/>
+
 
         <service android:name="com.yuvi.mantraui.audio.MediaPlayerService" />
     </application>
