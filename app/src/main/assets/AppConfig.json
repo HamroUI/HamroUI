@@ -11,6 +11,7 @@
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
   "home": {
     "persist":true,
+    "showbanneraddon": "bottom",
     "url":"",
     "request": {
       "action": "config",

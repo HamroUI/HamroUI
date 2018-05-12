@@ -1,5 +1,6 @@
 package com.yuvi.mantraui;
 
+import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
@@ -43,6 +44,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.mantraideas.simplehttp.datamanager.util.DmUtilities;
 import com.yuvi.mantraui.alert.AlertData;
 import com.yuvi.mantraui.alert.AlertView;
 import com.yuvi.mantraui.banner.Banner;
@@ -262,9 +268,9 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             }
         });
 
-        if(persistHome && pref.containsKey("home")){
+        if (persistHome && pref.containsKey("home")) {
             String fromPref = pref.getPreferences("home");
-            if(!TextUtils.isEmpty(fromPref)){
+            if (!TextUtils.isEmpty(fromPref)) {
                 updateView(fromPref);
             }
         }
@@ -472,6 +478,38 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         }
         scrollView.addView(mLayout);
         frameLayout.addView(scrollView);
+
+        if (homeJSON.has("showbanneraddon") && DmUtilities.isNetworkConnected(this)) {
+            String alignment = homeJSON.optString("showbanneraddon");
+            String admob_id = pref.getPreferences(Pref.KEY_ADMOB_ID);
+            String banneradd_id = pref.getPreferences(Pref.KEY_BANNER_ID);
+            if (!TextUtils.isEmpty(admob_id) && !TextUtils.isEmpty(banneradd_id)) {
+                MobileAds.initialize(this, admob_id);
+                AdView mAdView = new AdView(this);
+                mAdView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                mAdView.setAdSize(AdSize.SMART_BANNER);
+                mAdView.setAdUnitId(banneradd_id);
+                AdRequest adRequest = new AdRequest.Builder().build();
+                mAdView.loadAd(adRequest);
+
+                if (TextUtils.equals(alignment, "top")) {
+                    mLayout.addView(mAdView, 1);
+                } else if (TextUtils.equals(alignment, "bottom")) {
+                    // this blank view is added to maintain the margin
+                    // to manage the space occupied by the admob add
+
+                    View view = new View(this);
+                    view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this,50)));
+                    mLayout.addView(view);
+
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.WRAP_CONTENT);
+                    params.gravity = Gravity.BOTTOM;
+                    mAdView.setLayoutParams(params);
+                    frameLayout.addView(mAdView);
+                }
+            }
+        }
     }
 
     private Toolbar getToolbar() {
