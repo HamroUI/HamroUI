@@ -88,6 +88,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     AlertView alertView = null;
     HashMap<String, RecyclerView> moduelsMap = new HashMap<>();
     BannerLayout bannerLayout = null;
+    boolean persistHome = false;
 
 
     @Override
@@ -249,6 +250,10 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             public void onChanged(@Nullable ConfigModel configModel) {
 //                Log.d("BaseMainFragment", "data is " + configModel.data);
                 if (configModel.success) {
+                    // save the data if the preference is enabled in the appconfig
+                    if (persistHome) {
+                        pref.setPreferences("home", configModel.data);
+                    }
                     updateView(configModel.data);
                 } else {
                     Toast.makeText(getApplicationContext(), configModel.data, Toast.LENGTH_SHORT).show();
@@ -256,6 +261,13 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
 
             }
         });
+
+        if(persistHome && pref.containsKey("home")){
+            String fromPref = pref.getPreferences("home");
+            if(!TextUtils.isEmpty(fromPref)){
+                updateView(fromPref);
+            }
+        }
 
     }
 
@@ -287,6 +299,10 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     }
 
     private void manageHome(JSONObject homeJSON) {
+        // check need to persist or not?
+        if (homeJSON.has("persist")) {
+            persistHome = homeJSON.optBoolean("persist");
+        }
         // Manage the actionbar
         if (homeJSON.has("actionbar")) {
             actionBarArray = homeJSON.optJSONArray("actionbar");

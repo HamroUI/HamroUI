@@ -10,6 +10,7 @@
   "baseurl": "https://vs.hamroapi.com/v6/",
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
   "home": {
+    "persist":true,
     "url":"",
     "request": {
       "action": "config",
