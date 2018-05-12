@@ -460,6 +460,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
 //                            Utils.log(BaseMainActivity.this.getClass(), "onclicked uri = " + uri);
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(typeObject.optString("link")))
                                     .putExtra("data", jsonObject.toString())
+                                    .putExtra("fromApp", true)
                                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
                         } catch (Exception e) {

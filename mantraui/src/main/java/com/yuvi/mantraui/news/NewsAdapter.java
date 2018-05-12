@@ -48,10 +48,9 @@ public class NewsAdapter extends BaseRecyclerViewAdapter<RecyclerView.ViewHolder
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(), SimpleWebViewActivity.class)
-                            .putExtra("title", data.optString("title"))
-                            .putExtra("link", data.optString("link"))
-                            .putExtra("source", data.optString("source"))
+                    holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(), NewsDetailActivity.class)
+                            .putExtra("data", data.toString())
+                            .putExtra("fromApp", true)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 }
             });

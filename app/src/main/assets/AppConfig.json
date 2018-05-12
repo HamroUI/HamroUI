@@ -11,7 +11,7 @@
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
   "home": {
     "persist":true,
-    "showbanneraddon": "top",
+    "showbanneraddon": "bottom",
     "url":"",
     "request": {
       "action": "config",
@@ -113,7 +113,7 @@
         "showall": true,
         "showall_link":"sp://news",
         "show_header": true,
-        "link": "sp://news",
+        "link": "sp://newsdetail",
         "orientation": "vertical",
         "layout": "news_type_2"
       }
@@ -158,6 +158,23 @@
         "action": "news",
         "start": "0",
         "limit": "10"
+      },
+      "url": "",
+      "hasPagination": true,
+      "persist": true,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 0,
+        "withDelay": 0
+      }
+    },
+    "NewsDetailActivity": {
+      "request": {
+        "action": "news",
+        "id": "1"
       },
       "url": "",
       "hasPagination": true,

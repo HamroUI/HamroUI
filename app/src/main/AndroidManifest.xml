@@ -71,7 +71,21 @@
                     android:scheme="sp" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.yuvi.mantraui.news.NewsDetailActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
 
+            <intent-filter android:label="News Detail">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="newsdetail"
+                    android:scheme="sp" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.yuvi.mantraui.video.VideoDetailActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
@@ -150,7 +164,7 @@
 
         <activity
             android:name="com.yuvi.mantraui.gallery.GalleryDetailActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout"/>
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout" />
 
 
         <service android:name="com.yuvi.mantraui.audio.MediaPlayerService" />
