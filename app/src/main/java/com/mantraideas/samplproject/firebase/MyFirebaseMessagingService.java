@@ -17,7 +17,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.mantraideas.samplproject.MainActivity;
 import com.mantraideas.samplproject.R;
 
-import java.lang.annotation.Target;
 import java.util.Random;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -62,7 +61,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder = new android.support.v4.app.NotificationCompat.Builder(this);
+        mBuilder = new android.support.v4.app.NotificationCompat.Builder(this, "100");
         mBuilder.setContentTitle(title)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)

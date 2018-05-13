@@ -3,20 +3,16 @@ package com.mantraideas.samplproject;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.yuvi.mantraui.Utils;
 
-import java.util.HashMap;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -51,19 +47,16 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
-            findPreference("notification").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    boolean result = (Boolean) newValue;
-                    if (result) {
-                        FirebaseMessaging.getInstance().subscribeToTopic("subscribe");
-                        toast("You will recieve all updates notices");
-                    } else {
-                        FirebaseMessaging.getInstance().unsubscribeFromTopic("subscribe");
-                        toast("Notice updates disabled");
-                    }
-                    return true;
+            findPreference("notification").setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean result = (Boolean) newValue;
+                if (result) {
+                    FirebaseMessaging.getInstance().subscribeToTopic("subscribe");
+                    toast("You will recieve all updates notices");
+                } else {
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic("subscribe");
+                    toast("Notice updates disabled");
                 }
+                return true;
             });
         }
         private void toast(String message) {
