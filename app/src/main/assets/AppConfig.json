@@ -10,6 +10,7 @@
   "baseurl": "https://vs.hamroapi.com/v6/",
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
   "main_deeplink": "sp://main",
+  "disclaimer": "This is the disclaimer text for the testing purpose of the app. This app is build by mantraideas pvt ltd and all the rights reserve to the mantra ideas pvt ltd",
   "home": {
     "persist": true,
     "showbanneraddon": "bottom",

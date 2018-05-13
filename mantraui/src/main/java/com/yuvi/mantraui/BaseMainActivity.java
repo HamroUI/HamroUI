@@ -125,7 +125,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             }
             if (appConfigJSON.has("pkgname") && !TextUtils.isEmpty(appConfigJSON.optString("pkgname"))) {
                 packageName = appConfigJSON.optString("pkgname");
-                pref.setPreferences("pkgname", packageName);
+                pref.setPreferences(Pref.KEY_PACKAGE_NAME, packageName);
             }
             if (appConfigJSON.has("main_deeplink") && TextUtils.isEmpty(appConfigJSON.optString("main_deeplink"))) {
                 pref.setPreferences(Pref.KEY_MAIN_DEEPLINK, appConfigJSON.optString("main_deeplink"));
@@ -158,8 +158,12 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             if (appConfigJSON.has("fullscreen_id")) {
                 pref.setPreferences(Pref.KEY_INTERESTIAL_ID, appConfigJSON.optString("fullscreen_id"));
             }
+
             if (appConfigJSON.has("youtubeAPIKey")) {
                 pref.setPreferences(Pref.KEY_YOUTUBE_ID, appConfigJSON.optString("youtubeAPIKey"));
+            }
+            if(appConfigJSON.has("disclaimer") && !TextUtils.isEmpty(appConfigJSON.optString("disclaimer"))){
+                pref.setPreferences(Pref.KEY_DISCLAIMER, appConfigJSON.optString("disclaimer"));
             }
             Iterator<String> iterator = appConfigJSON.keys();
 

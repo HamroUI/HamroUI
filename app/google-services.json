@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "216187649378",
+    "firebase_url": "https://sampleproject-6ed8a.firebaseio.com",
+    "project_id": "sampleproject-6ed8a",
+    "storage_bucket": "sampleproject-6ed8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216187649378:android:4f2801a61fd7a9b3",
+        "android_client_info": {
+          "package_name": "com.mantraideas.samplproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216187649378-fmj8eb95lqtd5s5d3qcujkko082946pq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZu7-4bq2PyXeWhnoq2MJVfRLYfrET5tc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
