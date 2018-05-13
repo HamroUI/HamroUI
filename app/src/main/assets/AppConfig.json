@@ -27,20 +27,27 @@
         "showalways": false,
         /*forcefully shows the icon in actionbar*/
         "icon": "",
-        "link": "sp://deeplink?action=rateus"
+        "link": "sp://rateus"
       },
       {
-        "title": "share",
-        "showalways": false,
-        /* if false shows in popupmenu*/
-        "icon": "sp://deeplink?action=share",
-        "link": ""
-      },
-      {
-        "title": "disclaimer",
+        "title": "Disclaimer",
         "showalways": false,
         "icon": "",
-        "link": "sp://deeplink?action=disclaimer"
+        "link": "sp://disclaimer"
+      },
+      {
+        "title": "Share App",
+        "showalways": false,
+        /* if false shows in popupmenu*/
+        "icon": "",
+        "link": "sp://share"
+      },
+      {
+        "title": "Setting",
+        "showalways": false,
+        /* if false shows in popupmenu*/
+        "icon": "",
+        "link": "sp://setting"
       }
     ],
     "alert": true,
