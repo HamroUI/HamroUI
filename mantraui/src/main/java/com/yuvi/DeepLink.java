@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
+
 import com.yuvi.mantraui.Pref;
 import com.yuvi.mantraui.Utils;
 
@@ -34,7 +35,7 @@ public class DeepLink {
                 return;
             case "disclaimer":
                 String message = pref.getPreferences(Pref.KEY_DISCLAIMER);
-                showDialog("Discalimer", message, "", "");
+                showDialog("Discalimer", message, "", "", 0);
                 break;
             case "setting":
                 try {
@@ -49,7 +50,7 @@ public class DeepLink {
             case "checkforupdate":
                 String mesg = Uri.parse(deeplink).getQueryParameter("mesg");
                 String link = "market://details?id=" + pref.getPreferences(Pref.KEY_PACKAGE_NAME);
-                showDialog("New Updates available", mesg, "Check for update", link);
+                showDialog("New Updates available", mesg, "Check for update", link, 5000);
                 break;
             default:
                 appCompatActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(deeplink))
@@ -59,7 +60,10 @@ public class DeepLink {
 
     }
 
-    private void showDialog(String title, String message, String actionName, final String link) {
+    private void showDialog(String title, String message, String actionName, final String link, final int cacheTime) {
+        if(pref.getFloatPreference(Pref.KEY_CACHE_TIME) + cacheTime < System.currentTimeMillis()){
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(appCompatActivity);
         builder.setTitle(title);
         builder.setMessage(Html.fromHtml(message));
@@ -72,7 +76,14 @@ public class DeepLink {
                 }
             });
 
-            builder.setNegativeButton("Cancel", null);
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (cacheTime > 0) {
+                        pref.setFloatPreferences(Pref.KEY_CACHE_TIME, System.currentTimeMillis());
+                    }
+                }
+            });
         }
         builder.create().show();
 

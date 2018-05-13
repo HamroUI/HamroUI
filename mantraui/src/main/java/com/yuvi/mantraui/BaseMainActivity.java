@@ -302,6 +302,17 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 if (bannerLayout != null)
                     bannerLayout.addBanner(banner);
             }
+            if(configJSON.has("versionCode") && configJSON.has("versionInfo") && configJSON.has("versionName")){
+                int versionCode = configJSON.optInt("versionCode");
+                String versionInfo = configJSON.optString("versionInfo");
+                String versionName = configJSON.optString("versionName");
+
+                if(versionCode > Utils.getVersioncode(this)){
+                    DeepLink deepLink = new DeepLink(this);
+                    deepLink.manageDeeplink("sp://checkforupdate?mesg="+ versionInfo);
+                }
+            }
+
             for (String key : moduelsMap.keySet()) {
                 if (configJSON.has(key)) {
                     JSONArray jsonArray = configJSON.optJSONArray(key);

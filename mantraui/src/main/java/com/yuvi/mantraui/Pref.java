@@ -23,6 +23,7 @@ public class Pref {
     public static final String KEY_DISCLAIMER = "disclaimer";
     public static final String KEY_PACKAGE_NAME = "pkgname";
     public static final String KEY_SETTING_LINK = "settinglink";
+    public static final String KEY_CACHE_TIME = "cachetime";
 
 
     public Pref(Context ctx) {
