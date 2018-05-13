@@ -8,5 +8,5 @@
     <item name="toolbar" type="id"/>
     <item name="home" type="id"/>
     <item name="sliderlayout" type="id"/>
-    <item name="bannerimage" type="id"/>
+    <item name="banner" type="id"/>
 </resources>

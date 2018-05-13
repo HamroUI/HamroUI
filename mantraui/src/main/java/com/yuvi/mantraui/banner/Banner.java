@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class Banner {
 
-    String name, image, url;
+    String name, html, url;
     int active;
 
     private Banner() {
@@ -17,7 +17,7 @@ public class Banner {
 
     public Banner toObject(JSONObject jsonObject) {
         this.name = jsonObject.optString("name");
-        this.image = jsonObject.optString("img");
+        this.html = jsonObject.optString("html");
         this.url = jsonObject.optString("url");
         this.active = jsonObject.optInt("active");
         return this;
@@ -31,12 +31,12 @@ public class Banner {
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
+    public String getHtml() {
+        return html;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setHtml(String image) {
+        this.html = image;
     }
 
     public String getUrl() {

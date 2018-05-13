@@ -65,6 +65,7 @@ public class AlertView extends LinearLayout {
                 AlertView.this.setVisibility(GONE);
             }
         });
+        this.setVisibility(GONE);
     }
 
     public void setData(final AlertData data) {
@@ -85,6 +86,8 @@ public class AlertView extends LinearLayout {
                     }
                 }
             });
+
+            this.setVisibility(VISIBLE);
         }
     }
 

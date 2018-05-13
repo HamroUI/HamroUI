@@ -12,9 +12,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.mantraideas.simplehttp.datamanager.util.DmUtilities;
 import com.yuvi.mantraui.news.NewsActivity;
@@ -33,10 +35,16 @@ public class BaseActivity extends AppCompatActivity {
     String packageName, url;
     boolean persist = false, hasPagination = false;
     String label = "";
+    JSONObject fullScreenAddJSON = null;
+    private InterstitialAd mInterstitialAd;
+    boolean hasFullScreenAd = false;
+    int afterClick = 0;
+    //TODO need to work more in full screen add
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -59,11 +67,13 @@ public class BaseActivity extends AppCompatActivity {
         Utils.log(NewsActivity.class, "packageName = " + packageName + " url = " + url + " newsConfig = " + config);
         HashMap<String, String> requestMap = new HashMap<>();
         String showBannerAddOn = "";
+
         try {
             JSONObject configJSON = new JSONObject(config);
             JSONObject requestJSON = configJSON.optJSONObject("request");
             String admob_id = pref.getPreferences(Pref.KEY_ADMOB_ID);
             String banneradd_id = pref.getPreferences(Pref.KEY_BANNER_ID);
+            String fullScreenId = pref.getPreferences(Pref.KEY_INTERESTIAL_ID);
 
             if (DmUtilities.isNetworkConnected(this)
                     && !TextUtils.isEmpty(admob_id)
@@ -103,6 +113,34 @@ public class BaseActivity extends AppCompatActivity {
             if (configJSON.has("hasPagination")) {
                 hasPagination = configJSON.optBoolean("hasPagination", false);
             }
+
+            if (configJSON.has("hasFullScreen")) {
+                fullScreenAddJSON = configJSON.optJSONObject("hasFullScreen");
+                mInterstitialAd = new InterstitialAd(this);
+                mInterstitialAd.setAdUnitId(fullScreenId);
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                mInterstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdClosed() {
+                        // Code to be executed when when the interstitial ad is closed.
+                        BaseActivity.super.finish();
+                    }
+
+                    @Override
+                    public void onAdLoaded() {
+                        super.onAdLoaded();
+                        Log.d("BaseActivity", "AddLoaded");
+                    }
+
+                    @Override
+                    public void onAdOpened() {
+                        super.onAdOpened();
+                        Log.d("BaseActivity", "AddOpened");
+                    }
+                });
+                afterClick = pref.getIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount");
+            }
+
             Iterator<String> keys = requestJSON.keys();
 
             while (keys.hasNext()) {
@@ -144,5 +182,28 @@ public class BaseActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void finish() {
+        Utils.log(getClass(), "afterClick = " + afterClick + " fromAppConfig = " + fullScreenAddJSON.optInt("afterClick") + " fromPref = " + pref.getIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount"));
+        if (afterClick > fullScreenAddJSON.optInt("afterClick")) {
+            pref.setIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount", 0);
+        }
+        Utils.log(this.getClass(), "loadAdd = " + (fullScreenAddJSON != null && afterClick == fullScreenAddJSON.optInt("afterClick")));
+        Utils.log(getClass(), "addLoaded = " + mInterstitialAd.isLoaded());
 
+        if (fullScreenAddJSON != null && afterClick == fullScreenAddJSON.optInt("afterClick") && mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+            afterClick = 0;
+            pref.setIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount", 0);
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+            super.finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        pref.setIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount", ++afterClick);
+        super.onBackPressed();
+    }
 }
