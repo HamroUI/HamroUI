@@ -57,9 +57,10 @@ public class VideoListActivity extends BaseActivity implements OnItemClickListen
 
     @Override
     public void onItemClicked(JSONObject dataJSON) {
-        String youtubeID = dataJSON.optString("youtubeID");
-        startActivity(new Intent(getApplicationContext(), PlayerActivity.class)
-                .putExtra("yid", youtubeID)
+//        String youtubeID = dataJSON.optString("youtubeID");
+        startActivity(new Intent(getApplicationContext(), VideoDetailActivity.class)
+                .putExtra("fromApp", true)
+                .putExtra("data", dataJSON.toString())
         );
     }
 }

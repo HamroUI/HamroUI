@@ -19,6 +19,7 @@ public class Pref {
     public static final String KEY_BANNER_ID = "bannerid";
     public static final String KEY_INTERESTIAL_ID = "interstialid";
     public static final String KEY_YOUTUBE_ID = "youtubeid";
+    public static final String KEY_MAIN_DEEPLINK = "sp://main";
 
     public Pref(Context ctx) {
         this.ctx = ctx;

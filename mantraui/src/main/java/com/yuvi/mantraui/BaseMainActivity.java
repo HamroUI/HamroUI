@@ -127,6 +127,9 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 packageName = appConfigJSON.optString("pkgname");
                 pref.setPreferences("pkgname", packageName);
             }
+            if (appConfigJSON.has("main_deeplink") && TextUtils.isEmpty(appConfigJSON.optString("main_deeplink"))) {
+                pref.setPreferences(Pref.KEY_MAIN_DEEPLINK, appConfigJSON.optString("main_deeplink"));
+            }
             if (appConfigJSON.has("baseurl") && !TextUtils.isEmpty(appConfigJSON.optString("baseurl"))) {
                 pref.setPreferences("baseurl", appConfigJSON.optString("baseurl"));
             }
@@ -411,6 +414,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                             @Override
                             public void onClick(View v) {
                                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(typeObject.optString("showall_link")))
+                                        .putExtra("fromApp", true)
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             }
                         });
@@ -500,7 +504,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                     // to manage the space occupied by the admob add
 
                     View view = new View(this);
-                    view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this,50)));
+                    view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 50)));
                     mLayout.addView(view);
 
                     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
@@ -728,7 +732,8 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             String link = menuMap.get(item.getItemId());
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW)
-                        .setData(Uri.parse(link)));
+                        .setData(Uri.parse(link))
+                .putExtra("fromApp", true));
                 isHandled = true;
             } catch (ActivityNotFoundException e) {
                 e.printStackTrace();

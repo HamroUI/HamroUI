@@ -1,5 +1,9 @@
 package com.yuvi.mantraui;
 
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -37,9 +41,11 @@ public class BaseActivity extends AppCompatActivity {
     String label = "";
     JSONObject fullScreenAddJSON = null;
     private InterstitialAd mInterstitialAd;
-    boolean hasFullScreenAd = false;
     int afterClick = 0;
     //TODO need to work more in full screen add
+
+    public boolean fromApp = true;
+    ProgressDialog pd = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +56,10 @@ public class BaseActivity extends AppCompatActivity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         pref = new Pref(this);
         this.label = this.getClass().getSimpleName();
+
+        fromApp = getIntent().hasExtra("fromApp") && getIntent().getBooleanExtra("fromApp", true);
+
+        Utils.log(getClass(), "FromApp = " + fromApp);
 
         FrameLayout frameLayout = new FrameLayout(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
@@ -115,6 +125,7 @@ public class BaseActivity extends AppCompatActivity {
             }
 
             if (configJSON.has("hasFullScreen")) {
+                afterClick = pref.getIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount");
                 fullScreenAddJSON = configJSON.optJSONObject("hasFullScreen");
                 mInterstitialAd = new InterstitialAd(this);
                 mInterstitialAd.setAdUnitId(fullScreenId);
@@ -138,7 +149,6 @@ public class BaseActivity extends AppCompatActivity {
                         Log.d("BaseActivity", "AddOpened");
                     }
                 });
-                afterClick = pref.getIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount");
             }
 
             Iterator<String> keys = requestJSON.keys();
@@ -169,6 +179,19 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
+    public void showProgressDialog(String message) {
+        if (pd == null)
+            pd = new ProgressDialog(this);
+        pd.setMessage(message);
+        pd.show();
+
+    }
+
+    public void hideProgressDialog() {
+        if (pd != null)
+            pd.dismiss();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -185,9 +208,11 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void finish() {
         Utils.log(getClass(), "afterClick = " + afterClick + " fromAppConfig = " + fullScreenAddJSON.optInt("afterClick") + " fromPref = " + pref.getIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount"));
+
         if (fullScreenAddJSON != null && afterClick > fullScreenAddJSON.optInt("afterClick")) {
-            pref.setIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount", 0);
+            afterClick = fullScreenAddJSON.optInt("afterClick");
         }
+
         Utils.log(this.getClass(), "loadAdd = " + (fullScreenAddJSON != null && afterClick == fullScreenAddJSON.optInt("afterClick")));
         Utils.log(getClass(), "addLoaded = " + mInterstitialAd.isLoaded());
 
@@ -197,8 +222,32 @@ public class BaseActivity extends AppCompatActivity {
             pref.setIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount", 0);
         } else {
             Log.d("TAG", "The interstitial wasn't loaded yet.");
-            super.finish();
+            if (fromApp) {
+                super.finish();
+            } else {
+                try {
+                    String main_deeplink = pref.getPreferences(Pref.KEY_MAIN_DEEPLINK);
+                    if (TextUtils.isEmpty(main_deeplink)) {
+                        toast("Main deeplink is missing");
+                        super.finish();
+                    } else {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(pref.getPreferences(Pref.KEY_MAIN_DEEPLINK))));
+                    }
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                    toast("Activity not found");
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sp://main")));
+                    super.finish();
+                }
+            }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        hideProgressDialog();
+        super.onStop();
+
     }
 
     @Override

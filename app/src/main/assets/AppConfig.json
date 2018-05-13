@@ -9,10 +9,11 @@
   "fullscreen_id": "ca-app-pub-3940256099942544/1033173712",
   "baseurl": "https://vs.hamroapi.com/v6/",
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
+  "main_deeplink": "sp://main",
   "home": {
-    "persist":true,
+    "persist": true,
     "showbanneraddon": "bottom",
-    "url":"",
+    "url": "",
     "request": {
       "action": "config",
       "app_category": "sample",
@@ -42,54 +43,68 @@
     ],
     "alert": true,
     "slider": false,
-    "banner":true,
-   /* "grid": {
-      "type": "grid",
-      "max_horizontal": "2",
-      "menu": [
-        *//* {
-           "title": "news",
-          *//*
-        *//* grid menu title for eg news*//*
-        *//*
-                  "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-                  *//*
-        *//*valid icon url*//*
-        *//*
-                  "link": "sp://news"
-                 *//*
-        *//* deeplink of the page to be opened when clicked*//*
-        *//*
-                },*//*
-        {
-          "title": "Vidoes",
-          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-          "link": "sp://videos"
-        },
-        {
-          "title": "gallery",
-          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-          "link": "sp://gallery"
-        },
-        {
-          "title": "Audio",
-          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-          "link": "sp://audiolist"
-        },
-        {
-          "title": "Lyrics",
-          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-          "link": "sp://simplelist"
-        }
-      ]
-    },*/
+    "banner": true,
+    /* "grid": {
+       "type": "grid",
+       "max_horizontal": "2",
+       "menu": [
+         */
+    /* {
+               "title": "news",
+              */
+    /*
+            */
+    /* grid menu title for eg news*/
+    /*
+            */
+    /*
+                      "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+                      */
+    /*
+            */
+    /*valid icon url*/
+    /*
+            */
+    /*
+                      "link": "sp://news"
+                     */
+    /*
+            */
+    /* deeplink of the page to be opened when clicked*/
+    /*
+            */
+    /*
+                    },*/
+    /*
+            {
+              "title": "Vidoes",
+              "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+              "link": "sp://videos"
+            },
+            {
+              "title": "gallery",
+              "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+              "link": "sp://gallery"
+            },
+            {
+              "title": "Audio",
+              "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+              "link": "sp://audiolist"
+            },
+            {
+              "title": "Lyrics",
+              "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+              "link": "sp://simplelist"
+            }
+          ]
+        },*/
     "modules": [
       {
         "type": "videos",
         "title": "Videos",
         "max": 5,
         "showall": true,
-        "showall_link":"sp://videos",
+        "showall_link": "sp://videos",
         "show_header": true,
         "link": "sp://videodetail",
         "orientation": "horizontal",
@@ -100,7 +115,7 @@
         "title": "Gallery",
         "max": 5,
         "showall": true,
-        "showall_link":"sp://gallery",
+        "showall_link": "sp://gallery",
         "show_header": true,
         "link": "sp://gallery",
         "orientation": "horizontal",
@@ -111,7 +126,7 @@
         "title": "News",
         "max": 5,
         "showall": true,
-        "showall_link":"sp://news",
+        "showall_link": "sp://news",
         "show_header": true,
         "link": "sp://newsdetail",
         "orientation": "vertical",
@@ -229,6 +244,25 @@
         "action": "get_videos",
         "start": "0",
         "limit": "10"
+      },
+      "url": "http://vs.hamroapi.com/v4/",
+      "hasPagination": true,
+      "persist": false,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 2,
+        "withDelay": 0
+      }
+    },
+    "VideoDetailActivity": {
+      "request": {
+        "action": "get_videos",
+        "start": "0",
+        "limit": "10",
+        "id": "0"
       },
       "url": "http://vs.hamroapi.com/v4/",
       "hasPagination": true,
