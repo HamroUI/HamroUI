@@ -49,6 +49,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.mantraideas.simplehttp.datamanager.util.DmUtilities;
+import com.yuvi.DeepLink;
 import com.yuvi.mantraui.alert.AlertData;
 import com.yuvi.mantraui.alert.AlertView;
 import com.yuvi.mantraui.banner.Banner;
@@ -737,11 +738,16 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         boolean isHandled = false;
         if (menuMap.containsKey(item.getItemId())) {
             String link = menuMap.get(item.getItemId());
+            Utils.log(getClass(), "Handlemenu :: menuLink = " + link);
+
             try {
-                startActivity(new Intent(Intent.ACTION_VIEW)
-                        .setData(Uri.parse(link))
-                .putExtra("fromApp", true));
+//                startActivity(new Intent(Intent.ACTION_VIEW)
+//                        .setData(Uri.parse(link))
+//                .putExtra("fromApp", true));
+                DeepLink deepLink = new DeepLink(this);
+                deepLink.manageDeeplink(link);
                 isHandled = true;
+
             } catch (ActivityNotFoundException e) {
                 e.printStackTrace();
             } catch (Exception e) {

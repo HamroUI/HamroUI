@@ -229,21 +229,21 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.yuvi.mantraui.DeeplinkActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
+        <!--<activity-->
+            <!--android:name="com.yuvi.mantraui.DeeplinkActivity"-->
+            <!--android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">-->
 
-            <intent-filter android:label="Deeplink">
-                <action android:name="android.intent.action.VIEW" />
+            <!--<intent-filter android:label="Deeplink">-->
+                <!--<action android:name="android.intent.action.VIEW" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
 
-                <data
-                    android:host="deeplink"
-                    android:scheme="sp" />
-            </intent-filter>
-        </activity>
+                <!--<data-->
+                    <!--android:host="deeplink"-->
+                    <!--android:scheme="sp" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
 
 
         <service android:name="com.yuvi.mantraui.audio.MediaPlayerService" />

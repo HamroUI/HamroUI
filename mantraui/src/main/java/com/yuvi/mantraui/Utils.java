@@ -122,10 +122,10 @@ public class Utils {
     }
 
 
-    public static void shareApp(Context context) {
-        context.startActivity(Intent.createChooser(getDefaultShareIntent("Practical Answers Android App",
+    public static void shareApp(Context context, String packageName) {
+        context.startActivity(Intent.createChooser(getDefaultShareIntent("Thanks for sharing",
                 "http://play.google.com/store/apps/details?id="
-                        + context.getPackageName()), "Share this App"));
+                        + packageName), "Share this App").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     public static Intent getDefaultShareIntent(String title, String content) {
