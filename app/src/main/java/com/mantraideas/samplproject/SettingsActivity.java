@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.yuvi.mantraui.Utils;
 
 import java.util.HashMap;
@@ -56,10 +57,10 @@ public class SettingsActivity extends AppCompatActivity {
                     boolean result = (Boolean) newValue;
                     if (result) {
                         FirebaseMessaging.getInstance().subscribeToTopic("subscribe");
-                        toast(getString(com.yuvi.mantraui.R.string.mesg_notification_subscribed));
+                        toast("You will recieve all updates notices");
                     } else {
                         FirebaseMessaging.getInstance().unsubscribeFromTopic("subscribe");
-                        toast(getString(com.yuvi.mantraui.R.string.mesg_notification_unsubscribed));
+                        toast("Notice updates disabled");
                     }
                     return true;
                 }

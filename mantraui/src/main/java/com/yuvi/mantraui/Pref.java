@@ -19,9 +19,10 @@ public class Pref {
     public static final String KEY_BANNER_ID = "bannerid";
     public static final String KEY_INTERESTIAL_ID = "interstialid";
     public static final String KEY_YOUTUBE_ID = "youtubeid";
-    public static final String KEY_MAIN_DEEPLINK = "sp://main";
+    public static final String KEY_MAIN_DEEPLINK = "mainlink";
     public static final String KEY_DISCLAIMER = "disclaimer";
     public static final String KEY_PACKAGE_NAME = "pkgname";
+    public static final String KEY_SETTING_LINK = "settinglink";
 
 
     public Pref(Context ctx) {

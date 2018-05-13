@@ -130,6 +130,9 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             if (appConfigJSON.has("main_deeplink") && TextUtils.isEmpty(appConfigJSON.optString("main_deeplink"))) {
                 pref.setPreferences(Pref.KEY_MAIN_DEEPLINK, appConfigJSON.optString("main_deeplink"));
             }
+            if (appConfigJSON.has("setting_link") && TextUtils.isEmpty(appConfigJSON.optString("setting_link"))) {
+                pref.setPreferences(Pref.KEY_SETTING_LINK, appConfigJSON.optString("setting_link"));
+            }
             if (appConfigJSON.has("baseurl") && !TextUtils.isEmpty(appConfigJSON.optString("baseurl"))) {
                 pref.setPreferences("baseurl", appConfigJSON.optString("baseurl"));
             }

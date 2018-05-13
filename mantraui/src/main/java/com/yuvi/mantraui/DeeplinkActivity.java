@@ -1,5 +1,6 @@
 package com.yuvi.mantraui;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -34,6 +35,10 @@ public class DeeplinkActivity extends AppCompatActivity {
                 showDialog("Discalimer", message, "", "");
                 break;
             case "setting":
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(pref.getPreferences(Pref.KEY_SETTING_LINK))));
+                }catch (ActivityNotFoundException e){e.printStackTrace();}
+                finish();
                 break;
             case "aboutus":
                 break;
@@ -67,5 +72,16 @@ public class DeeplinkActivity extends AppCompatActivity {
             });
         }
         builder.create().show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(pref.getPreferences(Pref.KEY_MAIN_DEEPLINK))));
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+            finish();
+        }
     }
 }

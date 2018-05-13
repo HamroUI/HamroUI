@@ -10,6 +10,7 @@
   "baseurl": "https://vs.hamroapi.com/v6/",
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
   "main_deeplink": "sp://main",
+  "setting_link":"sp://setting",
   "disclaimer": "This is the disclaimer text for the testing purpose of the app. This app is build by mantraideas pvt ltd and all the rights reserve to the mantra ideas pvt ltd",
   "home": {
     "persist": true,
@@ -22,24 +23,24 @@
     },
     "actionbar": [
       {
-        "title": "refresh",
+        "title": "Rate Us",
         "showalways": false,
         /*forcefully shows the icon in actionbar*/
         "icon": "",
-        "link": ""
+        "link": "sp://deeplink?action=\"rateus\""
       },
       {
         "title": "share",
         "showalways": false,
         /* if false shows in popupmenu*/
-        "icon": "",
+        "icon": "sp://deeplink?action=\"share\"",
         "link": ""
       },
       {
         "title": "disclaimer",
         "showalways": false,
         "icon": "",
-        "link": ""
+        "link": "sp://deeplink?action=\"disclaimer\""
       }
     ],
     "alert": true,
