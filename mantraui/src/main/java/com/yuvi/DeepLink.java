@@ -35,7 +35,7 @@ public class DeepLink {
                 return;
             case "disclaimer":
                 String message = pref.getPreferences(Pref.KEY_DISCLAIMER);
-                showDialog("Discalimer", message, "", "", 0);
+                showDialog("Discalimer", message, "", "","", 0);
                 break;
             case "setting":
                 try {
@@ -48,9 +48,10 @@ public class DeepLink {
             case "aboutus":
                 break;
             case "checkforupdate":
+                Utils.log(getClass(), "Checkforupdate is called");
                 String mesg = Uri.parse(deeplink).getQueryParameter("mesg");
                 String link = "market://details?id=" + pref.getPreferences(Pref.KEY_PACKAGE_NAME);
-                showDialog("New Updates available", mesg, "Check for update", link, 5000);
+                showDialog("New Updates available", mesg, "UPDATE","LATER", link, 5000);
                 break;
             default:
                 appCompatActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(deeplink))
@@ -60,10 +61,12 @@ public class DeepLink {
 
     }
 
-    private void showDialog(String title, String message, String actionName, final String link, final int cacheTime) {
-        if(pref.getFloatPreference(Pref.KEY_CACHE_TIME) + cacheTime < System.currentTimeMillis()){
+    private void showDialog(String title, String message, String actionName, final String cancelName, final String link, final float cacheTime) {
+        if(System.currentTimeMillis() < pref.getFloatPreference(Pref.KEY_CACHE_TIME) + cacheTime){
+            Utils.log(getClass(), "AlertDialog not called, cacheTime = " + pref.getFloatPreference(Pref.KEY_CACHE_TIME) + cacheTime + " systemTime = " + System.currentTimeMillis());
             return;
         }
+        Utils.log(getClass(), "AlertDialog called, cacheTime = " + pref.getFloatPreference(Pref.KEY_CACHE_TIME) + cacheTime + " systemTime = " + System.currentTimeMillis());
         AlertDialog.Builder builder = new AlertDialog.Builder(appCompatActivity);
         builder.setTitle(title);
         builder.setMessage(Html.fromHtml(message));
@@ -76,7 +79,7 @@ public class DeepLink {
                 }
             });
 
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(cancelName, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (cacheTime > 0) {

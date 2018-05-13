@@ -96,7 +96,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     HashMap<String, RecyclerView> moduelsMap = new HashMap<>();
     BannerLayout bannerLayout = null;
     boolean persistHome = false;
-
+    boolean checkForUpdateShown = false;
 
     @Override
     public void onSelected(GridMenu menu) {
@@ -302,14 +302,17 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 if (bannerLayout != null)
                     bannerLayout.addBanner(banner);
             }
-            if(configJSON.has("versionCode") && configJSON.has("versionInfo") && configJSON.has("versionName")){
-                int versionCode = configJSON.optInt("versionCode");
+            if(configJSON.has("versionCode") && configJSON.has("versionInfo") && configJSON.has("versionName") && !checkForUpdateShown && DmUtilities.isNetworkConnected(this)){
+//                int versionCode = configJSON.optInt("versionCode");
+                int versionCode = 2;
                 String versionInfo = configJSON.optString("versionInfo");
                 String versionName = configJSON.optString("versionName");
 
+                Utils.log(getClass(), "updateView :: versionCode = " + Utils.getVersioncode(this));
                 if(versionCode > Utils.getVersioncode(this)){
                     DeepLink deepLink = new DeepLink(this);
                     deepLink.manageDeeplink("sp://checkforupdate?mesg="+ versionInfo);
+                    checkForUpdateShown = true;
                 }
             }
 
