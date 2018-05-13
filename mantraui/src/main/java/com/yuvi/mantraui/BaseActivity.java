@@ -185,7 +185,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void finish() {
         Utils.log(getClass(), "afterClick = " + afterClick + " fromAppConfig = " + fullScreenAddJSON.optInt("afterClick") + " fromPref = " + pref.getIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount"));
-        if (afterClick > fullScreenAddJSON.optInt("afterClick")) {
+        if (fullScreenAddJSON != null && afterClick > fullScreenAddJSON.optInt("afterClick")) {
             pref.setIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount", 0);
         }
         Utils.log(this.getClass(), "loadAdd = " + (fullScreenAddJSON != null && afterClick == fullScreenAddJSON.optInt("afterClick")));

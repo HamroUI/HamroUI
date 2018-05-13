@@ -33,11 +33,14 @@ public class BannerLayout extends LinearLayout {
         LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(layoutParams);
         this.setOrientation(VERTICAL);
+        this.performClick();
 
         WebView wv_banner = new WebView(getContext());
         wv_banner.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Utils.pxFromDp(getContext(), 75)));
 //        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
         wv_banner.setId(R.id.banner);
+        wv_banner.performClick();
+
         this.addView(wv_banner);
     }
 
@@ -55,7 +58,6 @@ public class BannerLayout extends LinearLayout {
 //            String html = "<img style=\"height:100%;\" src=\"http://cdn.hamroapi.com/res/app/1526180579032-10.jpg\" />";
             webView.loadDataWithBaseURL(null, banner.getHtml(), "text/html", "UTF-8", null);
         }
-
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
