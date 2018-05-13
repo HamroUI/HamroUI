@@ -117,7 +117,7 @@
         "showall": true,
         "showall_link": "sp://gallery",
         "show_header": true,
-        "link": "sp://gallery",
+        "link": "sp://gallerydetail",
         "orientation": "horizontal",
         "layout": "gallery_type_1"
       },

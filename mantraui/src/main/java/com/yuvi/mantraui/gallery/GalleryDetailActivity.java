@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.yuvi.mantraui.R;
 import com.yuvi.mantraui.Utils;
@@ -30,10 +31,16 @@ public class GalleryDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_slider);
+        setContentView(R.layout.activity_gallery_detail);
         pager = findViewById(R.id.pager);
-        String pos = getIntent().getStringExtra("pos");
+        String pos = "0";
+        if(getIntent().hasExtra("pos")) {
+            pos = getIntent().getStringExtra("pos");
+        }
         String data = getIntent().getStringExtra("data");
+        if(data.startsWith("{") && data.endsWith("}")){
+            data = "[" + data + "]";
+        }
         SliderIndicator indicator = findViewById(R.id.sliderIndicator);
         final List<SliderModel> sliderModels = new ArrayList<>();
 //        String data = "[\n" +
@@ -68,6 +75,14 @@ public class GalleryDetailActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        findViewById(R.id.fab_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
 
