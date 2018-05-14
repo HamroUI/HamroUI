@@ -303,8 +303,8 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                     bannerLayout.addBanner(banner);
             }
             if(configJSON.has("versionCode") && configJSON.has("versionInfo") && configJSON.has("versionName") && !checkForUpdateShown && DmUtilities.isNetworkConnected(this)){
-//                int versionCode = configJSON.optInt("versionCode");
-                int versionCode = 2;
+                int versionCode = configJSON.optInt("versionCode");
+//                int versionCode = 2;
                 String versionInfo = configJSON.optString("versionInfo");
                 String versionName = configJSON.optString("versionName");
 
