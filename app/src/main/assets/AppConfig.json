@@ -250,11 +250,11 @@
     },
     "VideoListActivity": {
       "request": {
-        "action": "get_videos",
+        "action": "videos",
         "start": "0",
         "limit": "10"
       },
-      "url": "http://vs.hamroapi.com/v4/",
+      "url": "",
       "hasPagination": true,
       "persist": false,
       "loginrequired": false,
@@ -268,12 +268,10 @@
     },
     "VideoDetailActivity": {
       "request": {
-        "action": "get_videos",
-        "start": "0",
-        "limit": "10",
+        "action": "videos",
         "id": "0"
       },
-      "url": "http://vs.hamroapi.com/v4/",
+      "url": "",
       "hasPagination": true,
       "persist": false,
       "loginrequired": false,

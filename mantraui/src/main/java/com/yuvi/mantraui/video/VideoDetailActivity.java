@@ -36,7 +36,6 @@ import org.json.JSONObject;
 public class VideoDetailActivity extends BaseActivity {
     WebView wv;
     ImageView banner, playButton;
-    boolean fromApp = true;
     String videoID = "";
 
     @Override
