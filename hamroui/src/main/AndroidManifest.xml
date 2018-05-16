@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yuvi.mantraui" >
+    package="com.yuvi.hamroui" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

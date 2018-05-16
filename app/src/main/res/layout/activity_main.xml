@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context="com.mantraideas.samplproject.MainActivity">
 
-    <com.yuvi.mantraui.alert.AlertView
+    <com.yuvi.hamroui.alert.AlertView
         android:id="@+id/alertview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/sliderview"
-        android:name="com.yuvi.mantraui.slider.SliderView"
+        android:name="com.yuvi.hamroui.slider.SliderView"
         android:layout_width="match_parent"
         android:layout_height="150dp" />
 

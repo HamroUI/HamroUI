@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.yuvi.mantraui.Utils;
+import com.yuvi.hamroui.Utils;
 
 
 public class SettingsActivity extends AppCompatActivity {

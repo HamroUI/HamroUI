@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.yuvi.mantraui.Pref;
+import com.yuvi.hamroui.Pref;
 
 import io.fabric.sdk.android.Fabric;
 

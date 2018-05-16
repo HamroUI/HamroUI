@@ -1,8 +1,8 @@
 package com.mantraideas.samplproject;
 
 
-import com.yuvi.mantraui.BaseMainActivity;
-import com.yuvi.mantraui.Utils;
+import com.yuvi.hamroui.BaseMainActivity;
+import com.yuvi.hamroui.Utils;
 
 
 

@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
 
-import com.yuvi.mantraui.Pref;
-import com.yuvi.mantraui.Utils;
+import com.yuvi.hamroui.Pref;
+import com.yuvi.hamroui.Utils;
 
 public class DeepLink {
     AppCompatActivity appCompatActivity;

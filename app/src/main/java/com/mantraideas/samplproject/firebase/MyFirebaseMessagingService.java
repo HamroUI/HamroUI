@@ -17,7 +17,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.mantraideas.samplproject.MainActivity;
 import com.mantraideas.samplproject.R;
-import com.yuvi.mantraui.video.PlayerActivity;
+import com.yuvi.hamroui.video.PlayerActivity;
 
 import java.util.Map;
 import java.util.Random;
