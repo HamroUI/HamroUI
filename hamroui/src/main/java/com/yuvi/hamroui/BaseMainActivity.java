@@ -1,8 +1,6 @@
 package com.yuvi.hamroui;
 
-import android.Manifest;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -49,7 +47,6 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.mantraideas.simplehttp.datamanager.util.DmUtilities;
-import com.yuvi.DeepLink;
 import com.yuvi.hamroui.alert.AlertData;
 import com.yuvi.hamroui.alert.AlertView;
 import com.yuvi.hamroui.banner.Banner;
@@ -64,9 +61,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;

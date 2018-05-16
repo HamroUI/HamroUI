@@ -1,5 +1,28 @@
 apply plugin: 'com.android.library'
-apply from: 'publish.gradle'
+ext {
+    bintrayRepo = 'HamroUi'
+    bintrayName = 'HamroUi'
+
+    publishedGroupId = 'com.yuvi.hamroui'
+    libraryName = 'hamroui'
+    artifact = 'hamroui'
+
+    libraryDescription = 'A Simpe json based android framework'
+
+    siteUrl = 'https://github.com/HamroUI/HamroUI.git'
+    gitUrl = 'https://github.com/HamroUI/HamroUI.git'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'coders'
+    developerName = 'yubaraj poudel'
+    developerEmail = 'yubarajpoudel708@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 
 android {
     compileSdkVersion 26
@@ -8,7 +31,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
-        versionName '1.0.0'
+        versionName "1.0.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -40,3 +63,5 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
 }
+apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/installv.gradle'
+apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/bintrayv.gradle'
