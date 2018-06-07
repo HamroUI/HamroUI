@@ -45,13 +45,28 @@ public class NewsAdapter extends BaseRecyclerViewAdapter<RecyclerView.ViewHolder
         if (holder instanceof NewsViewHolder) {
             final JSONObject data = getData(position);
             ((NewsViewHolder) holder).bindView(data);
+            final boolean openInWeb = data.has("open_in_web") && (data.optInt("open_in_web") == 1);
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(), NewsDetailActivity.class)
-                            .putExtra("data", data.toString())
-                            .putExtra("fromApp", true)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    if (openInWeb) {
+                        String title = data.optString("name");
+                        String source = data.optString("source");
+                        String link = data.optString("url");
+                        String desc = data.optString("description");
+                        holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(), SimpleWebViewActivity.class)
+                                .putExtra("title", title)
+                                .putExtra("source", source)
+                                .putExtra("link", link)
+                                .putExtra("desc", desc));
+
+                    } else {
+                        holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(), NewsDetailActivity.class)
+                                .putExtra("data", data.toString())
+                                .putExtra("fromApp", true)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    }
                 }
             });
         }
