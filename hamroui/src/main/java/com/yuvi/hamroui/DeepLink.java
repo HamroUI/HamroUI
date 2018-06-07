@@ -35,12 +35,13 @@ public class DeepLink {
                 return;
             case "disclaimer":
                 String message = pref.getPreferences(Pref.KEY_DISCLAIMER);
-                showDialog("Discalimer", message, "", "","", 0);
+                showDialog("Discalimer", message, "", "", "", 0);
                 break;
             case "setting":
                 try {
                     appCompatActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(pref.getPreferences(Pref.KEY_SETTING_LINK)))
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -51,18 +52,19 @@ public class DeepLink {
                 Utils.log(getClass(), "Checkforupdate is called");
                 String mesg = Uri.parse(deeplink).getQueryParameter("mesg");
                 String link = "market://details?id=" + pref.getPreferences(Pref.KEY_PACKAGE_NAME);
-                showDialog("New Updates available", mesg, "UPDATE","LATER", link, 5000);
+                showDialog("New Updates available", mesg, "UPDATE", "LATER", link, 5000);
                 break;
             default:
                 appCompatActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(deeplink))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 return;
         }
 
     }
 
     private void showDialog(String title, String message, String actionName, final String cancelName, final String link, final float cacheTime) {
-        if(System.currentTimeMillis() < pref.getFloatPreference(Pref.KEY_CACHE_TIME) + cacheTime){
+        if (System.currentTimeMillis() < pref.getFloatPreference(Pref.KEY_CACHE_TIME) + cacheTime) {
             Utils.log(getClass(), "AlertDialog not called, cacheTime = " + pref.getFloatPreference(Pref.KEY_CACHE_TIME) + cacheTime + " systemTime = " + System.currentTimeMillis());
             return;
         }

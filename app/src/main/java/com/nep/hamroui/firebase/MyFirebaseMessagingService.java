@@ -1,4 +1,4 @@
-package com.mantraideas.samplproject.firebase;
+package com.nep.hamroui.firebase;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,16 +8,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.Log;
 
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.mantraideas.samplproject.MainActivity;
+import com.nep.hamroui.MainActivity;
 import com.mantraideas.samplproject.R;
-import com.yuvi.hamroui.video.PlayerActivity;
 
 import java.util.Map;
 import java.util.Random;

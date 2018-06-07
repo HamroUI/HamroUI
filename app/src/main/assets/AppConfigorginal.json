@@ -9,7 +9,10 @@
   "fullscreen_id": "",
   "baseurl": "http://aa.hamroapi.com/v1",
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
-  /*"sidebar": {
+  "main_deeplink": "adarji://main",
+  "setting_link":"adarji://setting",
+  "disclaimer": "All the logos, trademarks and other symbols are the properties of their respective owners. We do not endorse or support any channel or any company. This app is distributed as is without warranty of any kind and the user may use it on his/her own risk. This apps users and third parties, agree to indemnify and hold harmless this apps creators and its agents, from any damages claimed as a result of information, resources, products or services, or third party links obtained from this app. \n\nIf anybody still finds this app harmful in any way, they must send a request/notice to the creators first to remove the discrepancy.",
+  "sidebar": {
     "width": 300,
     "align": "left",
     "header": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
@@ -65,7 +68,7 @@
         ]
       }
     ]
-  },*/
+  },
   "home": {
     "url":"",
     "request": {
@@ -77,7 +80,6 @@
       {
         "title": "refresh",
         "showalways": false,
-        /*forcefully shows the icon in actionbar*/
         "icon": "",
         "link": ""
       },
@@ -97,13 +99,14 @@
     ],
     "alert": true,
     "slider": false,
+    "banner": true,
     "grid": {
       "type": "grid",
       "max_horizontal": "2",
       "menu": [
-       /* {
-          "title": "news",
-         *//* grid menu title for eg news*//*
+        /* {
+           "title": "news",
+          *//* grid menu title for eg news*//*
           "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
           *//*valid icon url*//*
           "link": "sp://news"
@@ -138,6 +141,7 @@
         "max": 5,
         "showall": true,
         "show_header":true,
+        "showall_link": "sp://videolist",
         "link": "sp://news",
         "orientation": "horizontal",
         "layout": "videos_type_1"
@@ -148,13 +152,14 @@
         "max": 5,
         "showall":false,
         "show_header":false,
+        "showall_link": "sp://simplelist",
         "link": "sp://webview",
         "orientation": "vertical",
         "layout": "news_type_2"
       }
     ]
   },
- /* "bottomsheet": [
+  "bottomsheet": [
     {
       "title": "news",
       "icon": "",
@@ -175,7 +180,7 @@
       "icon": "",
       "link": "sp://videos"
     }
-  ],*/
+  ],
   "modulesconfig": {
     "NewsActivity": {
       "request": {
@@ -255,6 +260,41 @@
         "action": "get_videos",
         "start": "0",
         "limit": "10"
+      },
+      "url": "http://vs.hamroapi.com/v4/",
+      "hasPagination": true,
+      "persist": false,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 2,
+        "withDelay": 0
+      }
+    },
+    "CastActivity": {
+      "label": "Cast",
+      "request": {
+        "action": "artists"
+      },
+      "url": "http://vs.hamroapi.com/v4/",
+      "hasPagination": true,
+      "persist": false,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 2,
+        "withDelay": 0
+      }
+    },
+    "CastDetailActivity": {
+      "label": "CastDetail",
+      "request": {
+        "action": "artists",
+        "id":"1"
       },
       "url": "http://vs.hamroapi.com/v4/",
       "hasPagination": true,

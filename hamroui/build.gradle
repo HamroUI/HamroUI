@@ -9,13 +9,13 @@ ext {
 
     libraryDescription = 'A Simpe json based android framework'
 
-    siteUrl = 'https://github.com/HamroUI/HamroUI.git'
-    gitUrl = 'https://github.com/HamroUI/HamroUI.git'
+    siteUrl = 'https://github.com/yuviii/Hamroz.git'
+    gitUrl = 'https://github.com/yuviii/Hamroz.git'
 
     libraryVersion = '1.0.0'
 
-    developerId = 'coders'
-    developerName = 'yubaraj poudel'
+    developerId = 'yuviii'
+    developerName = 'Yubaraj Poudel'
     developerEmail = 'yubarajpoudel708@gmail.com'
 
     licenseName = 'The Apache Software License, Version 2.0'

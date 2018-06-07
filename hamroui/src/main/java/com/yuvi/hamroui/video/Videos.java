@@ -50,10 +50,10 @@ public class Videos extends ViewModel {
     }
 
 
-    public void loadVideo(AdapterModel adapterModel, Context context) {
+    public void loadVideo(final AdapterModel adapterModel, Context context) {
         final Pref pref = new Pref(context);
         String gData = pref.getPreferences("ndata");
-        if (!TextUtils.isEmpty(gData)) {
+        if (!TextUtils.isEmpty(gData) & adapterModel.persist) {
             videoData.postValue(gData);
         }
 
@@ -78,7 +78,8 @@ public class Videos extends ViewModel {
                 if (response == Response.OK) {
                     if (object != null && !TextUtils.isEmpty(object.toString())) {
                         videoData.postValue(object.toString());
-                        pref.setPreferences("nvideo", object.toString());
+                        if (adapterModel.persist)
+                            pref.setPreferences("nvideo", object.toString());
                     }
                 } else {
                     videoData.postValue("");

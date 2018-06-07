@@ -1,4 +1,4 @@
-package com.mantraideas.samplproject;
+package com.nep.hamroui;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.mantraideas.samplproject.R;
 import com.yuvi.hamroui.Utils;
 
 

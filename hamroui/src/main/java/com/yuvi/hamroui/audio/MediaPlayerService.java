@@ -199,7 +199,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 R.drawable.ic_action_close); //replace with your own image
 
         // Create a new Notification
-        android.support.v4.app.NotificationCompat.Builder notificationBuilder =  new NotificationCompat.Builder(this, "1000")
+        NotificationCompat.Builder notificationBuilder =  new NotificationCompat.Builder(this, "1000")
                 .setShowWhen(false)
                 // Set the Notification style
 //                .setStyle(new NotificationCompat.se

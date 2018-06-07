@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -77,6 +78,8 @@ public class BaseActivity extends AppCompatActivity {
         Utils.log(NewsActivity.class, "packageName = " + packageName + " url = " + url + " newsConfig = " + config);
         HashMap<String, String> requestMap = new HashMap<>();
         String showBannerAddOn = "";
+        Bundle extras = new Bundle();
+        extras.putString("max_ad_content_rating", "G");
 
         try {
             JSONObject configJSON = new JSONObject(config);
@@ -97,7 +100,7 @@ public class BaseActivity extends AppCompatActivity {
                 mAdView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 mAdView.setAdSize(AdSize.SMART_BANNER);
                 mAdView.setAdUnitId(banneradd_id);
-                AdRequest adRequest = new AdRequest.Builder().build();
+                AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build();
                 mAdView.loadAd(adRequest);
                 if (TextUtils.equals(showBannerAddOn, "top")) {
                     linearLayout.addView(mAdView, 0);
@@ -129,7 +132,7 @@ public class BaseActivity extends AppCompatActivity {
                 fullScreenAddJSON = configJSON.optJSONObject("hasFullScreen");
                 mInterstitialAd = new InterstitialAd(this);
                 mInterstitialAd.setAdUnitId(fullScreenId);
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                mInterstitialAd.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
                 mInterstitialAd.setAdListener(new AdListener() {
                     @Override
                     public void onAdClosed() {
@@ -231,12 +234,16 @@ public class BaseActivity extends AppCompatActivity {
                         toast("Main deeplink is missing");
                         super.finish();
                     } else {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(pref.getPreferences(Pref.KEY_MAIN_DEEPLINK))));
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(pref.getPreferences(Pref.KEY_MAIN_DEEPLINK)))
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     }
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
                     toast("Activity not found");
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sp://main")));
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sp://main"))
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     super.finish();
                 }
             }

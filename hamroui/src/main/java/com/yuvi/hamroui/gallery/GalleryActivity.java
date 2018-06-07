@@ -3,12 +3,14 @@ package com.yuvi.hamroui.gallery;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -73,8 +75,12 @@ public class GalleryActivity extends BaseActivity {
             BaseSimpleRecyclerViewAdapter<SliderModel, GalleryViewHolder> adapter = new BaseSimpleRecyclerViewAdapter<SliderModel, GalleryViewHolder>(sliderModelList, R.layout.layout_type_gallery_1) {
                 @Override
                 public void viewBinded(final GalleryViewHolder galleryViewHolder, SliderModel sliderModel) {
-                    if (!TextUtils.isEmpty(sliderModel.caption))
+                    Log.d("GalleryActivity", "caption = " + sliderModel.caption);
+                    if (!TextUtils.isEmpty(sliderModel.caption)) {
                         galleryViewHolder.tv_caption.setText(sliderModel.caption);
+                        galleryViewHolder.tv_caption.setTextColor(Color.parseColor("#212121"));
+                    }
+
                     Utils.loadImageWithGlide(GalleryActivity.this, sliderModel.imageUrl, galleryViewHolder.iv, null);
                     galleryViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override

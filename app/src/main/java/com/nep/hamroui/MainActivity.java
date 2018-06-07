@@ -1,4 +1,4 @@
-package com.mantraideas.samplproject;
+package com.nep.hamroui;
 
 
 import com.yuvi.hamroui.BaseMainActivity;

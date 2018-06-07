@@ -52,6 +52,15 @@ public class Utils {
         }
     }
 
+    public static String resizeImage(String url, String size) {
+        if (!url.isEmpty()) {
+            url = Uri.encode(url, "://");
+            url = "http://cdn.hamroapi.com/resize?width=" + size + "&url=" + Uri.encode(url, "://");
+
+        }
+        return url.replace("https", "http");
+    }
+
     public static int dpFromPx(Context context, float px) {
         return (int) (px / context.getResources().getDisplayMetrics().density);
     }
@@ -131,8 +140,8 @@ public class Utils {
     public static Intent getDefaultShareIntent(String title, String content) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, content);
+        intent.putExtra(Intent.EXTRA_SUBJECT, title);
+        intent.putExtra(Intent.EXTRA_TEXT, content);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
 
@@ -224,8 +233,7 @@ public class Utils {
     public static void loadImageWithGlide(Context context, String url, ImageView iv_thumbnail, final ProgressBar progressBar) {
         Glide.with(context).
                 load(url)
-                .centerCrop()
-                .placeholder(android.R.drawable.ic_menu_close_clear_cancel)
+                .placeholder(R.drawable.ic_default)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

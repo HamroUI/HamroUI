@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -91,11 +93,15 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
     BannerLayout bannerLayout = null;
     boolean persistHome = false;
     boolean checkForUpdateShown = false;
+    LinearLayout sliderLayout = null;
 
     @Override
     public void onSelected(GridMenu menu) {
         try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(menu.link)));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(menu.link))
+                    .putExtra("fromApp", true)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         } catch (ActivityNotFoundException e) {
             e.printStackTrace();
         }
@@ -106,9 +112,11 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         super.onCreate(savedInstanceState);
         pref = new Pref(this);
         linearLayout = getHomeLayout();
+        linearLayout.removeAllViews();
+
         Toolbar toolbar = getToolbar();
-        linearLayout.addView(toolbar);
-        linearLayout.addView(getFrameLayout());
+        linearLayout.addView(toolbar, 0);
+        linearLayout.addView(getFrameLayout(), 1);
         View view = linearLayout;
         boolean isAppconfigUpdated = false;
         try {
@@ -160,7 +168,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             if (appConfigJSON.has("youtubeAPIKey")) {
                 pref.setPreferences(Pref.KEY_YOUTUBE_ID, appConfigJSON.optString("youtubeAPIKey"));
             }
-            if(appConfigJSON.has("disclaimer") && !TextUtils.isEmpty(appConfigJSON.optString("disclaimer"))){
+            if (appConfigJSON.has("disclaimer") && !TextUtils.isEmpty(appConfigJSON.optString("disclaimer"))) {
                 pref.setPreferences(Pref.KEY_DISCLAIMER, appConfigJSON.optString("disclaimer"));
             }
             Iterator<String> iterator = appConfigJSON.keys();
@@ -290,22 +298,28 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             if (!TextUtils.isEmpty(alert) && alertView != null) {
                 alertView.setData(new AlertData(alert, alert_link));
             }
+            if(sliderLayout != null && configJSON.has("sliders")){
+                String data = configJSON.optString("sliders");
+                SliderView sliderView = getSliderView(data);
+                getSupportFragmentManager().beginTransaction().replace(R.id.sliderlayout, sliderView, "slider").commit();
+
+            }
             if (configJSON.has("banner")) {
                 JSONObject jsonObject = configJSON.optJSONObject("banner");
                 Banner banner = Banner.instance().toObject(jsonObject);
                 if (bannerLayout != null)
                     bannerLayout.addBanner(banner);
             }
-            if(configJSON.has("versionCode") && configJSON.has("versionInfo") && configJSON.has("versionName") && !checkForUpdateShown && DmUtilities.isNetworkConnected(this)){
+            if (configJSON.has("versionCode") && configJSON.has("versionInfo") && configJSON.has("versionName") && !checkForUpdateShown && DmUtilities.isNetworkConnected(this)) {
                 int versionCode = configJSON.optInt("versionCode");
 //                int versionCode = 2;
                 String versionInfo = configJSON.optString("versionInfo");
                 String versionName = configJSON.optString("versionName");
 
                 Utils.log(getClass(), "updateView :: versionCode = " + Utils.getVersioncode(this));
-                if(versionCode > Utils.getVersioncode(this)){
+                if (versionCode > Utils.getVersioncode(this)) {
                     DeepLink deepLink = new DeepLink(this);
-                    deepLink.manageDeeplink("sp://checkforupdate?mesg="+ versionInfo);
+                    deepLink.manageDeeplink("adarji://checkforupdate?mesg=" + versionInfo);
                     checkForUpdateShown = true;
                 }
             }
@@ -332,36 +346,42 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         if (homeJSON.has("actionbar")) {
             actionBarArray = homeJSON.optJSONArray("actionbar");
         }
-        NestedScrollView scrollView = new NestedScrollView(this);
-        scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        NestedScrollView scrollView = new NestedScrollView(this);
+//        scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         LinearLayout mLayout = new LinearLayout(this);
         mLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mLayout.setOrientation(LinearLayout.VERTICAL);
         mLayout.setId(R.id.home);
+        mLayout.removeAllViews();
 
         FrameLayout frameLayout = (FrameLayout) linearLayout.findViewById(R.id.container);
         Utils.log(BaseMainActivity.class, "tag = " + frameLayout.getTag());
 
-        if (homeJSON.has("alert") && homeJSON.optBoolean("alert")) {
+        if (homeJSON.has("alert") && homeJSON.optJSONObject("alert").optBoolean("show")) {
             alertView = new AlertView(this);
             alertView.setBackgroundColor(Color.parseColor(secondaryColor));
-            mLayout.addView(alertView);
             alertView.setTextColor(Color.parseColor("#F5F5F5"));
-            alertView.setData(new AlertData("SampleProject test", ""));
+            int weight =  homeJSON.optJSONObject("alert").optInt("weight");
+            mLayout.addView(alertView, weight);
+
         }
-        if (homeJSON.has("slider") && homeJSON.optBoolean("slider")) {
-            LinearLayout sliderLayout = new LinearLayout(this);
+
+        if (homeJSON.has("slider") && homeJSON.optJSONObject("slider").optBoolean("show")) {
+            sliderLayout = new LinearLayout(this);
             sliderLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 150)));
             sliderLayout.setId(R.id.sliderlayout);
-            SliderView sliderView = getSliderView();
-            getSupportFragmentManager().beginTransaction().add(R.id.sliderlayout, sliderView, "slider").commit();
-            mLayout.addView(sliderLayout);
+//            SliderView sliderView = getSliderView(" ");
+//            getSupportFragmentManager().beginTransaction().add(R.id.sliderlayout, sliderView, "slider").commit();
+            int weight = homeJSON.optJSONObject("slider").optInt("weight");
+            mLayout.addView(sliderLayout, weight);
         }
-        if (homeJSON.has("banner") && homeJSON.optBoolean("banner")) {
+
+        if (homeJSON.has("banner") && homeJSON.optJSONObject("banner").optBoolean("show")) {
             Utils.log(this.getClass(), "hasBanner");
+            int weight = homeJSON.optJSONObject("banner").optInt("weight");
             bannerLayout = new BannerLayout(this);
-            mLayout.addView(bannerLayout);
+            mLayout.addView(bannerLayout, weight);
         }
         if (homeJSON.has("grid") && homeJSON.optJSONObject("grid") != null) {
             JSONObject gridJSON = homeJSON.optJSONObject("grid");
@@ -402,8 +422,11 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 modulesLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 modulesLayout.setOrientation(LinearLayout.VERTICAL);
                 modulesLayout.setPadding(Utils.pxFromDp(this, 8), Utils.pxFromDp(this, 8), Utils.pxFromDp(this, 8), Utils.pxFromDp(this, 8));
+                modulesLayout.removeAllViews();
 
                 LinearLayout titleLayout = new LinearLayout(this);
+                titleLayout.removeAllViews();
+
                 if (!typeObject.has("show_header") || typeObject.optBoolean("show_header")) {
                     titleLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 40)));
                     titleLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -431,7 +454,8 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                             public void onClick(View v) {
                                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(typeObject.optString("showall_link")))
                                         .putExtra("fromApp", true)
-                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             }
                         });
                         titleLayout.addView(tv_showall, 1);
@@ -481,7 +505,8 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(typeObject.optString("link")))
                                     .putExtra("data", jsonObject.toString())
                                     .putExtra("fromApp", true)
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -497,9 +522,11 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 mLayout.addView(cardView);
             }
         }
-        scrollView.addView(mLayout);
-        frameLayout.addView(scrollView);
-
+//        scrollView.addView(mLayout);
+        frameLayout.removeAllViews();
+        frameLayout.addView(mLayout);
+        Bundle extras = new Bundle();
+        extras.putString("max_ad_content_rating", "G");
         if (homeJSON.has("showbanneraddon") && DmUtilities.isNetworkConnected(this)) {
             String alignment = homeJSON.optString("showbanneraddon");
             String admob_id = pref.getPreferences(Pref.KEY_ADMOB_ID);
@@ -510,7 +537,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 mAdView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 mAdView.setAdSize(AdSize.SMART_BANNER);
                 mAdView.setAdUnitId(banneradd_id);
-                AdRequest adRequest = new AdRequest.Builder().build();
+                AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build();
                 mAdView.loadAd(adRequest);
 
                 if (TextUtils.equals(alignment, "top")) {
@@ -567,7 +594,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         LinearLayout linearLayout = new LinearLayout(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         linearLayout.setLayoutParams(layoutParams);
-        linearLayout.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        linearLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
         linearLayout.setId(R.id.ll_container);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         return linearLayout;
@@ -640,8 +667,12 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         return bottomNavigationView;
     }
 
-    private SliderView getSliderView() {
+    private SliderView getSliderView(String data) {
         SliderView view = new SliderView();
+        Bundle bundle = new Bundle();
+        bundle.putString("data", data);
+        view.setArguments(bundle);
+
         return view;
     }
 
@@ -739,7 +770,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+       finish();
     }
 
     private boolean handleMenu(MenuItem item) {
@@ -778,6 +809,20 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                     R.color.h_green_500, //2
             }
     );
-
-
+    boolean closeApp = false;
+    @Override
+    public void finish() {
+        if (closeApp) {
+            super.finish();
+        } else {
+            closeApp = true;
+            Toast.makeText(getApplicationContext(), "Press again to close app", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    closeApp = false;
+                }
+            }, 2000);
+        }
+    }
 }

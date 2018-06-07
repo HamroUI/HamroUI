@@ -1,9 +1,11 @@
 package com.yuvi.hamroui.video;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -28,8 +30,27 @@ public class VideoListActivity extends BaseActivity implements OnItemClickListen
         setTitle("Videos");
         View view = getLayoutInflater().inflate(R.layout.activity_video, null);
         frameLayout.addView(view);
-
         RecyclerView rv_video = view.findViewById(R.id.rv_video);
+        try {
+            if (!TextUtils.isEmpty(getIntent().getDataString())) {
+                Uri uri = getIntent().getData();
+                if (uri.getQueryParameterNames() != null) {
+                    for (String key : uri.getQueryParameterNames()) {
+                        if (TextUtils.equals(key, "m_title")) {
+                            getSupportActionBar().setTitle(uri.getQueryParameter(key));
+                        } else if (TextUtils.equals(key, "fromapp")) {
+                            fromApp = uri.getBooleanQueryParameter(key, false);
+                        } else {
+                            model.requestMap.put(key, uri.getQueryParameter(key));
+                        }
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         VideoAdapter adapter = new VideoAdapter(getApplicationContext(), model) {
             @Override
             protected void onLoadingMoreComplete() {
@@ -41,6 +62,18 @@ public class VideoListActivity extends BaseActivity implements OnItemClickListen
             protected void onFailed(String message) {
                 super.onFailed(message);
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected void showLoadingProgress() {
+                super.showLoadingProgress();
+                showProgressDialog("Loading videolist, Please wait");
+            }
+
+            @Override
+            protected void hideLoadingProgress(String mesg) {
+                super.hideLoadingProgress(mesg);
+                hideProgressDialog();
             }
         };
         rv_video.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

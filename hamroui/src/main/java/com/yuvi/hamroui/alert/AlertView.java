@@ -43,7 +43,6 @@ public class AlertView extends LinearLayout {
         this.setMinimumHeight(Utils.pxFromDp(getContext(), 48));
         this.setGravity(Gravity.CENTER_VERTICAL);
         this.setPadding(Utils.pxFromDp(getContext(), 8), Utils.pxFromDp(getContext(), 8), Utils.pxFromDp(getContext(), 8), Utils.pxFromDp(getContext(), 8));
-
         TextView tv_title = new TextView(getContext());
         ImageView iv_close = new ImageView(getContext());
 

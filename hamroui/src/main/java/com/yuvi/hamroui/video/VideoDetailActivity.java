@@ -36,7 +36,7 @@ import org.json.JSONObject;
 public class VideoDetailActivity extends BaseActivity {
     WebView wv;
     ImageView banner, playButton;
-    String videoID = "";
+//    String videoID = "";
 
     @Override
     protected void addwithBaseOnCreate(Bundle savedInstanceState, FrameLayout frameLayout, AdapterModel model) {
@@ -46,11 +46,17 @@ public class VideoDetailActivity extends BaseActivity {
         banner = findViewById(R.id.iv_video_detail_banner);
         playButton = findViewById(R.id.iv_video_detail_play);
 
+        Utils.log(getClass(), "fromApp = " + fromApp);
+
         if (!fromApp && !TextUtils.isEmpty(getIntent().getDataString()) && DmUtilities.isNetworkConnected(this)) {
-            videoID = Uri.parse(getIntent().getDataString()).getQueryParameter("id");
-            if (model.requestMap.containsKey("id")) {
-                model.requestMap.put("id", videoID);
+            Uri uri = getIntent().getData();
+            for(String key : uri.getQueryParameterNames()){
+                model.requestMap.put(key, uri.getQueryParameter(key));
             }
+//            videoID = Uri.parse(getIntent().getDataString()).getQueryParameter("id");
+//            if (model.requestMap.containsKey("id")) {
+//                model.requestMap.put("id", videoID);
+//            }
             Videos videos = ViewModelProviders.of(this).get(Videos.class);
             videos.loadVideo(model, this);
             videos.getVideos().observe(this, new Observer<String>() {
@@ -65,7 +71,9 @@ public class VideoDetailActivity extends BaseActivity {
                 }
             });
             showProgressDialog("Loading videos from server, Please wait");
-        } else {
+        }
+
+        if (fromApp) {
             String data = getIntent().getStringExtra("data");
             Utils.log(getClass(), "data = " + data);
             try {

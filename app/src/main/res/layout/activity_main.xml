@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.mantraideas.samplproject.MainActivity">
+    tools:context="com.mantraideas.samplproject.com.nep.samplproject.MainActivity">
 
     <com.yuvi.hamroui.alert.AlertView
         android:id="@+id/alertview"

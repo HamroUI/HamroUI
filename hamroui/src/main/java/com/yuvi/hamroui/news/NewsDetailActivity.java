@@ -28,7 +28,7 @@ public class NewsDetailActivity extends BaseActivity {
     TextView tv_news_source, tv_news_date;
     WebView wv_news;
     ImageView iv_news;
-    String newsId = "";
+//    String newsId = "";
 
     @Override
     protected void addwithBaseOnCreate(Bundle savedInstanceState, FrameLayout frameLayout, AdapterModel model) {
@@ -40,9 +40,13 @@ public class NewsDetailActivity extends BaseActivity {
         iv_news = view.findViewById(R.id.iv_newsimage);
 
         if (!fromApp && !TextUtils.isEmpty(getIntent().getDataString()) && DmUtilities.isNetworkConnected(this)) {
-            newsId = Uri.parse(getIntent().getDataString()).getQueryParameter("id");
-            if (model.requestMap.containsKey("id")) {
-                model.requestMap.put("id", newsId);
+//            newsId = Uri.parse(getIntent().getDataString()).getQueryParameter("id");
+//            if (model.requestMap.containsKey("id")) {
+//                model.requestMap.put("id", newsId);
+//            }
+            Uri uri = getIntent().getData();
+            for (String key : uri.getQueryParameterNames()) {
+                model.requestMap.put(key, uri.getQueryParameter(key));
             }
             News news = ViewModelProviders.of(this).get(News.class);
             news.loadNews(model, this);
@@ -58,7 +62,8 @@ public class NewsDetailActivity extends BaseActivity {
                 }
             });
             showProgressDialog("Loading news from server, Please wait");
-        } else {
+        }
+        if (fromApp) {
             String data = getIntent().getStringExtra("data");
             Utils.log(getClass(), "data = " + data);
             try {

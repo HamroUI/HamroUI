@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,29 +50,36 @@ public class SliderView extends Fragment {
         pager = getView().findViewById(R.id.pager);
         SliderIndicator indicator = getView().findViewById(R.id.sliderIndicator);
         final List<SliderModel> sliderModels = new ArrayList<>();
-        String data = "[\n" +
-                "        {\n" +
-                "            \"name\": \"A footballing experience for all, at Qatar 2022\",\n" +
-                "            \"image\": \"http://cdn.hamroapi.com/resize?url=http://cdn.hamroapi.com/res/hamroapi/1513671119801-16.jpg&w=640&h=400\",\n" +
-                "            \"url\": \"wc22://web?url=http://www.fifa.com/worldcup/news/y=2017/m=12/news=a-footballing-experience-for-all-at-qatar-2022-2923861.html\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"name\": \"Qatar World Cup 2022 - Official Trailer\",\n" +
-                "            \"image\": \"http://cdn.hamroapi.com/resize?url=http://cdn.hamroapi.com/res/hamroapi/1513670974184-84.jpg&w=640&h=400\",\n" +
-                "            \"url\": \"wc22://youtube?id=oM0Je0MLVI0\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"name\": \"Qatar looking into using Iranian island for World Cup 2022\",\n" +
-                "            \"image\": \"http://cdn.hamroapi.com/resize?url=http://cdn.hamroapi.com/res/hamroapi/1513671044112-82.jpg&w=640&h=400\",\n" +
-                "            \"url\": \"wc22://web?url=http://english.alarabiya.net/en/features/2017/12/17/Qatar-looking-into-using-Iranian-island-for-World-Cup-2022.html\"\n" +
-                "        }\n" +
-                "    ]";
+//        String data = "[\n" +
+//                "        {\n" +
+//                "            \"name\": \"A footballing experience for all, at Qatar 2022\",\n" +
+//                "            \"image\": \"http://cdn.hamroapi.com/resize?url=http://cdn.hamroapi.com/res/hamroapi/1513671119801-16.jpg&w=640&h=400\",\n" +
+//                "            \"url\": \"wc22://web?url=http://www.fifa.com/worldcup/news/y=2017/m=12/news=a-footballing-experience-for-all-at-qatar-2022-2923861.html\"\n" +
+//                "        },\n" +
+//                "        {\n" +
+//                "            \"name\": \"Qatar World Cup 2022 - Official Trailer\",\n" +
+//                "            \"image\": \"http://cdn.hamroapi.com/resize?url=http://cdn.hamroapi.com/res/hamroapi/1513670974184-84.jpg&w=640&h=400\",\n" +
+//                "            \"url\": \"wc22://youtube?id=oM0Je0MLVI0\"\n" +
+//                "        },\n" +
+//                "        {\n" +
+//                "            \"name\": \"Qatar looking into using Iranian island for World Cup 2022\",\n" +
+//                "            \"image\": \"http://cdn.hamroapi.com/resize?url=http://cdn.hamroapi.com/res/hamroapi/1513671044112-82.jpg&w=640&h=400\",\n" +
+//                "            \"url\": \"wc22://web?url=http://english.alarabiya.net/en/features/2017/12/17/Qatar-looking-into-using-Iranian-island-for-World-Cup-2022.html\"\n" +
+//                "        }\n" +
+//                "    ]";
+
+        String data = " ";
+        if(getArguments() != null && getArguments().containsKey("data")){
+            data = getArguments().getString("data");
+        }
+
+
         try {
             JSONArray jsonArray = new JSONArray(data);
             Utils.log(SliderView.class, "dataLength = " + jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.optJSONObject(i);
-                sliderModels.add(new SliderModel(json.optString("image"), json.optString("url"), json.optString("name")));
+                sliderModels.add(new SliderModel(json.optString("img"), json.optString("url"), json.optString("name")));
             }
             SliderAdapter adapter = new SliderAdapter(getFragmentManager(), sliderModels);
             pager.setAdapter(adapter);

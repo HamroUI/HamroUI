@@ -30,13 +30,13 @@ public class BannerLayout extends LinearLayout {
     }
 
     private void init() {
-        LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(layoutParams);
         this.setOrientation(VERTICAL);
         this.performClick();
 
         WebView wv_banner = new WebView(getContext());
-        wv_banner.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Utils.pxFromDp(getContext(), 75)));
+        wv_banner.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, Utils.pxFromDp(getContext(), 75)));
 //        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
         wv_banner.setId(R.id.banner);
         wv_banner.performClick();
@@ -47,9 +47,10 @@ public class BannerLayout extends LinearLayout {
     public BannerLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
+
     public void addBanner(final Banner banner) {
         this.banner = banner;
-        Utils.log(this.getClass(), "image = " + banner.getHtml());
+        Utils.log(this.getClass(), "image = " + banner.getHtml() + " url = " + banner.getUrl());
         if (!TextUtils.isEmpty(banner.getHtml()) && banner.getActive() == 1) {
             this.setVisibility(VISIBLE);
 //            Utils.loadImageWithGlide(getContext(), banner.getImage(), (ImageView) this.findViewById(R.id.bannerimage), null);
@@ -57,14 +58,13 @@ public class BannerLayout extends LinearLayout {
             WebView webView = this.findViewById(R.id.banner);
 //            String html = "<img style=\"height:100%;\" src=\"http://cdn.hamroapi.com/res/app/1526180579032-10.jpg\" />";
             webView.loadDataWithBaseURL(null, banner.getHtml(), "text/html", "UTF-8", null);
-        }
-        this.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP){
+            webView.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
                     if (!TextUtils.isEmpty(banner.url)) {
                         try {
                             getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(banner.getUrl()))
+                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                         } catch (ActivityNotFoundException e) {
                             e.printStackTrace();
@@ -73,9 +73,8 @@ public class BannerLayout extends LinearLayout {
                     }
                     return true;
                 }
-                return false;
-            }
-        });
+            });
 
+        }
     }
 }

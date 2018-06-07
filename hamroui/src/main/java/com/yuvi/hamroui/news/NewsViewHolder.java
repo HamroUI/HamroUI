@@ -47,7 +47,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder {
         }
         tv_news_title.setText(newsJSON.optString("name"));
         tv_news_desc.setText(Html.fromHtml(newsJSON.optString("description")));
-        tv_news_date.setText(newsJSON.optString("published_date"));
+        tv_news_date.setText(Utils.getRelativeTime(newsJSON.optString("published_date"), "yyyy-MM-dd HH:mm:ss") + " ago");
 
     }
 

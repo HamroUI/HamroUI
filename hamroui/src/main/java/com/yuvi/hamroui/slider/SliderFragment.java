@@ -1,8 +1,12 @@
 package com.yuvi.hamroui.slider;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +21,8 @@ import com.yuvi.hamroui.Utils;
  */
 
 public class SliderFragment extends Fragment {
+    String link = "";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,13 +41,25 @@ public class SliderFragment extends Fragment {
         if (getArguments().containsKey("url")) {
             imageUrl = getArguments().getString("url");
         }
+
+        if (getArguments().containsKey("link")) {
+            link = getArguments().getString("link");
+        }
         Utils.log(SliderFragment.class, "imageUrl = " + imageUrl);
 
         getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String link = "";
-                Utils.log(SliderFragment.class, "link = " + link);
+                if (!TextUtils.isEmpty(link)) {
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    } catch (ActivityNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         });
 

@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -42,6 +43,8 @@ public class SimpleWebViewActivity extends AppCompatActivity {
     String link;
     String title = "", source = "", desc = "";
     Pref pref;
+    boolean hideTitle = false;
+    TextView tv_source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +54,16 @@ public class SimpleWebViewActivity extends AppCompatActivity {
         String dataFromDeepLink = getIntent().getDataString();
         fromDeepLink = !TextUtils.isEmpty(dataFromDeepLink);
         pref = new Pref(this);
+        tv_source = findViewById(R.id.news_source);
         if (fromDeepLink) {
             try {
                 Uri uri = Uri.parse(dataFromDeepLink);
-                title = "ElectionNepal News";
+                title = "News";
                 link = uri.getQueryParameter("url");
+                hideTitle = uri.getBooleanQueryParameter("hide_url", false);
+                if(hideTitle){
+                    tv_source.setVisibility(View.GONE);
+                }
                 source = "(Loading) " + link;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -75,9 +83,9 @@ public class SimpleWebViewActivity extends AppCompatActivity {
             }
 
         }
-        final WebView wv = (WebView) findViewById(R.id.wv);
-        final TextView tv_title = ((TextView) findViewById(R.id.news_title));
-        final TextView tv_source = ((TextView) findViewById(R.id.news_source));
+        final WebView wv = findViewById(R.id.wv);
+        final TextView tv_title = findViewById(R.id.news_title);
+
         if (!TextUtils.isEmpty(title)) {
             tv_title.setText(title);
         }
@@ -85,7 +93,7 @@ public class SimpleWebViewActivity extends AppCompatActivity {
             tv_source.setText(source);
         }
 
-        pBar = (ProgressBar) findViewById(R.id.pBar);
+        pBar = findViewById(R.id.pBar);
         pBar.setMax(100);
         pBar.setProgress(0);
 
@@ -167,12 +175,14 @@ public class SimpleWebViewActivity extends AppCompatActivity {
         String admobId = pref.getPreferences(Pref.KEY_ADMOB_ID);
         String bannerAddId = pref.getPreferences(Pref.KEY_BANNER_ID);
         if (!TextUtils.isEmpty(admobId) && !TextUtils.isEmpty(admobId) && DmUtilities.isNetworkConnected(this)) {
+            Bundle extras = new Bundle();
+            extras.putString("max_ad_content_rating", "G");
             MobileAds.initialize(this, admobId);
             AdView mAdView = new AdView(this);
             mAdView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             mAdView.setAdSize(AdSize.SMART_BANNER);
             mAdView.setAdUnitId(bannerAddId);
-            AdRequest adRequest = new AdRequest.Builder().build();
+            AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build();
             mAdView.loadAd(adRequest);
             LinearLayout ll_ads = findViewById(R.id.ll_ads);
             ll_ads.removeAllViews();

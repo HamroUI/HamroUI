@@ -5,7 +5,7 @@
     android:background="#30000000"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="4dp">
 
     <TextView
         android:id="@+id/tv_title"
@@ -14,14 +14,14 @@
         android:text="Sample Title"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:textSize="16sp" />
+        android:textSize="12sp" />
 
     <LinearLayout
         android:id="@+id/indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp"
+        android:padding="4dp"
         />
 
 </LinearLayout>
