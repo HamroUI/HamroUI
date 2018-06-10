@@ -530,8 +530,9 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 mLayout.addView(cardView);
             }
         }
-        scrollView.addView(frameLayout);
-        frameLayout.addView(mLayout);
+        scrollView.addView(mLayout);
+        frameLayout.addView(scrollView);
+
         Bundle extras = new Bundle();
         extras.putString("max_ad_content_rating", "G");
         if (homeJSON.has("showbanneraddon") && DmUtilities.isNetworkConnected(this)) {
