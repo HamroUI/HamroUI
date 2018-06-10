@@ -87,6 +87,8 @@ public class AlertView extends LinearLayout {
             });
 
             this.setVisibility(VISIBLE);
+        }else if(this.getVisibility() == VISIBLE){
+            this.setVisibility(GONE);
         }
     }
 

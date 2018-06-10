@@ -112,33 +112,39 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         super.onCreate(savedInstanceState);
         pref = new Pref(this);
         linearLayout = getHomeLayout();
-        linearLayout.removeAllViews();
-
         Toolbar toolbar = getToolbar();
+
         linearLayout.addView(toolbar, 0);
         linearLayout.addView(getFrameLayout(), 1);
         View view = linearLayout;
         boolean isAppconfigUpdated = false;
+
         try {
             appConfigJSON = new JSONObject(getAppconfigFile());
+            // this will check the appconfig is updated or not.
             if (appConfigJSON.has("version") && appConfigJSON.optInt("version") > pref.getIntPreferences("version")) {
                 pref.clearAll();
                 pref.setIntPreferences("version", appConfigJSON.optInt("version"));
                 isAppconfigUpdated = true;
             }
+
             if (appConfigJSON.has("pkgname") && !TextUtils.isEmpty(appConfigJSON.optString("pkgname"))) {
                 packageName = appConfigJSON.optString("pkgname");
                 pref.setPreferences(Pref.KEY_PACKAGE_NAME, packageName);
             }
+
             if (appConfigJSON.has("main_deeplink") && !TextUtils.isEmpty(appConfigJSON.optString("main_deeplink"))) {
                 pref.setPreferences(Pref.KEY_MAIN_DEEPLINK, appConfigJSON.optString("main_deeplink"));
             }
+
             if (appConfigJSON.has("setting_link") && !TextUtils.isEmpty(appConfigJSON.optString("setting_link"))) {
                 pref.setPreferences(Pref.KEY_SETTING_LINK, appConfigJSON.optString("setting_link"));
             }
+
             if (appConfigJSON.has("baseurl") && !TextUtils.isEmpty(appConfigJSON.optString("baseurl"))) {
                 pref.setPreferences("baseurl", appConfigJSON.optString("baseurl"));
             }
+
             if (appConfigJSON.has("primarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("primarycolor"))) {
                 Utils.log(this.getClass(), "assign color = " + appConfigJSON.optString("primarycolor"));
                 primaryColor = appConfigJSON.optString("primarycolor");
@@ -146,14 +152,17 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 appConfigJSON.remove("primarycolor");
                 toolbar.setBackgroundColor(Color.parseColor(primaryColor));
             }
+
             if (appConfigJSON.has("secondarycolor") && !TextUtils.isEmpty(appConfigJSON.optString("secondarycolor"))) {
                 secondaryColor = appConfigJSON.optString("secondarycolor");
                 appConfigJSON.remove("secondarycolor");
             }
+
             if (appConfigJSON.has("primarydark") && !TextUtils.isEmpty(appConfigJSON.optString("primarydark"))) {
                 primarrDarkColor = appConfigJSON.optString("primarydark");
                 appConfigJSON.remove(primarrDarkColor);
             }
+
             if (appConfigJSON.has("admob_id")) {
                 pref.setPreferences(Pref.KEY_ADMOB_ID, appConfigJSON.optString("admob_id"));
             }
@@ -161,6 +170,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             if (appConfigJSON.has("banner_id")) {
                 pref.setPreferences(Pref.KEY_BANNER_ID, appConfigJSON.optString("banner_id"));
             }
+
             if (appConfigJSON.has("fullscreen_id")) {
                 pref.setPreferences(Pref.KEY_INTERESTIAL_ID, appConfigJSON.optString("fullscreen_id"));
             }
@@ -168,11 +178,12 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             if (appConfigJSON.has("youtubeAPIKey")) {
                 pref.setPreferences(Pref.KEY_YOUTUBE_ID, appConfigJSON.optString("youtubeAPIKey"));
             }
+
             if (appConfigJSON.has("disclaimer") && !TextUtils.isEmpty(appConfigJSON.optString("disclaimer"))) {
                 pref.setPreferences(Pref.KEY_DISCLAIMER, appConfigJSON.optString("disclaimer"));
             }
-            Iterator<String> iterator = appConfigJSON.keys();
 
+            Iterator<String> iterator = appConfigJSON.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next();
                 switch (key) {
@@ -192,6 +203,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                         JSONArray bottomsheetArray = appConfigJSON.optJSONArray("bottomsheet");
                         linearLayout.addView(getBottomSheetNavigation(bottomsheetArray));
                         break;
+
                     case "modulesconfig":
                         Utils.log(BaseMainActivity.class, "isAppconfigUpdated = " + isAppconfigUpdated);
                         if (isAppconfigUpdated) {
@@ -209,7 +221,9 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         setContentView(view);
+        //TODO check the activity has the full screen mode enabled or not
         setSupportActionBar(toolbar);
 
         if (view instanceof DrawerLayout) {
@@ -230,7 +244,6 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
 
             drawerLayout.addDrawerListener(actionBarDrawerToggle);
             actionBarDrawerToggle.syncState();
-
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -298,6 +311,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             if (!TextUtils.isEmpty(alert) && alertView != null) {
                 alertView.setData(new AlertData(alert, alert_link));
             }
+
             if(sliderLayout != null && configJSON.has("sliders")){
                 String data = configJSON.optString("sliders");
                 SliderView sliderView = getSliderView(data);
@@ -312,14 +326,13 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             }
             if (configJSON.has("versionCode") && configJSON.has("versionInfo") && configJSON.has("versionName") && !checkForUpdateShown && DmUtilities.isNetworkConnected(this)) {
                 int versionCode = configJSON.optInt("versionCode");
-//                int versionCode = 2;
                 String versionInfo = configJSON.optString("versionInfo");
                 String versionName = configJSON.optString("versionName");
 
                 Utils.log(getClass(), "updateView :: versionCode = " + Utils.getVersioncode(this));
                 if (versionCode > Utils.getVersioncode(this)) {
                     DeepLink deepLink = new DeepLink(this);
-                    deepLink.manageDeeplink("adarji://checkforupdate?mesg=" + versionInfo);
+                    deepLink.manageDeeplink("adarji://checkforupdate");
                     checkForUpdateShown = true;
                 }
             }
@@ -346,8 +359,8 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         if (homeJSON.has("actionbar")) {
             actionBarArray = homeJSON.optJSONArray("actionbar");
         }
-//        NestedScrollView scrollView = new NestedScrollView(this);
-//        scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        NestedScrollView scrollView = new NestedScrollView(this);
+        scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         LinearLayout mLayout = new LinearLayout(this);
         mLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -371,8 +384,6 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             sliderLayout = new LinearLayout(this);
             sliderLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.pxFromDp(this, 150)));
             sliderLayout.setId(R.id.sliderlayout);
-//            SliderView sliderView = getSliderView(" ");
-//            getSupportFragmentManager().beginTransaction().add(R.id.sliderlayout, sliderView, "slider").commit();
             int weight = homeJSON.optJSONObject("slider").optInt("weight");
             mLayout.addView(sliderLayout, weight);
         }
@@ -499,9 +510,6 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                     @Override
                     public void OnClick(JSONObject jsonObject) {
                         try {
-//                            String data = jsonObject.toString();
-//                            String uri = typeObject.optString("link") + "?data=" + data;
-//                            Utils.log(BaseMainActivity.this.getClass(), "onclicked uri = " + uri);
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(typeObject.optString("link")))
                                     .putExtra("data", jsonObject.toString())
                                     .putExtra("fromApp", true)
@@ -522,8 +530,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 mLayout.addView(cardView);
             }
         }
-//        scrollView.addView(mLayout);
-        frameLayout.removeAllViews();
+        scrollView.addView(frameLayout);
         frameLayout.addView(mLayout);
         Bundle extras = new Bundle();
         extras.putString("max_ad_content_rating", "G");
@@ -626,7 +633,6 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             Utils.loadImageWithGlide(this, header, (ImageView) view.findViewById(R.id.iv_nav_header), (ProgressBar) view.findViewById(R.id.prgbar));
         }
         getMenuFromJSONArray(navigationView.getMenu(), menuArray, Menu.FIRST);
-//        navigationView.setNavigationItemSelectedListener(this);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -758,10 +764,6 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         return menu;
     }
 
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//        return handleMenu(item);
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -780,9 +782,6 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             Utils.log(getClass(), "Handlemenu :: menuLink = " + link);
 
             try {
-//                startActivity(new Intent(Intent.ACTION_VIEW)
-//                        .setData(Uri.parse(link))
-//                .putExtra("fromApp", true));
                 DeepLink deepLink = new DeepLink(this);
                 deepLink.manageDeeplink(link);
                 isHandled = true;

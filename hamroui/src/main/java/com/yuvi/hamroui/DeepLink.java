@@ -24,8 +24,6 @@ public class DeepLink {
 
     public void manageDeeplink(String deeplink) {
         Uri deepLinkUri = Uri.parse(deeplink);
-//        String key = deepLinkUri.getQueryParameter("action");
-
         switch (deepLinkUri.getHost()) {
             case "rateus":
                 Utils.doRate(appCompatActivity);

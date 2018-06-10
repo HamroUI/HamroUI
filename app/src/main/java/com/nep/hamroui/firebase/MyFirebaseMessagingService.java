@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.Target;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.nep.hamroui.MainActivity;
-import com.mantraideas.samplproject.R;
+import com.nep.hamroui.R;
 
 import java.util.Map;
 import java.util.Random;

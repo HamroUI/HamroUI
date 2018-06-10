@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.mantraideas.samplproject.R;
 import com.yuvi.hamroui.Utils;
 
 

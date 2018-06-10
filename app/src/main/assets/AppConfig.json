@@ -1,204 +1,200 @@
 {
-  "pkgname": "com.sample.app",
-  "version": 1,
+  "pkgname": "com.mantraideas.samplproject",
+  "version": 100000,
   "primarydark": "#303F9F",
-  "primarycolor": "#F44336",
-  "secondarycolor": "#536DFE",
+  "primarycolor": "#3F51B5",
+  "secondarycolor": "#FF4081",
   "admob_id": "ca-app-pub-3940256099942544~3347511713",
   "banner_id": "ca-app-pub-3940256099942544/6300978111",
-  "fullscreen_id": "ca-app-pub-3940256099942544/1033173712",
+  "fullscreen_id": "",
   "baseurl": "https://vs.hamroapi.com/v6/",
   "youtubeAPIKey": "AIzaSyClu7gEsgyK8_8BFzt6n8VXRFGq-nnb-bc",
-  "main_deeplink": "sp://main",
-  "setting_link":"sp://setting",
-  "disclaimer": "This is the disclaimer text for the testing purpose of the app. This app is build by mantraideas pvt ltd and all the rights reserve to the mantra ideas pvt ltd",
+  "main_deeplink": "adarji://main",
+  "setting_link": "adarji://setting",
+  "disclaimer": "All the logos, trademarks and other symbols are the properties of their respective owners. We do not endorse or support any channel or any company. This app is distributed as is without warranty of any kind and the user may use it on his/her own risk. This apps users and third parties, agree to indemnify and hold harmless this apps creators and its agents, from any damages claimed as a result of information, resources, products or services, or third party links obtained from this app. \n\nIf anybody still finds this app harmful in any way, they must send a request/notice to the creators first to remove the discrepancy.",
+  "sidebar": {
+    "width": 300,
+    "align": "left",
+    "header": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+    "menu": [
+      {
+        "submenu": "Main",
+        "items": [
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "home",
+            "icon": "",
+            "link": "sp://home"
+          }
+        ]
+      },
+      {
+        "submenu": "Others",
+        "items": [
+          {
+            "title": "Share",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "Rateus",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "Setting",
+            "icon": "",
+            "link": "sp://home"
+          },
+          {
+            "title": "About Developer",
+            "icon": "",
+            "link": "sp://home"
+          }
+        ]
+      }
+    ]
+  },
   "home": {
     "persist": true,
-    "showbanneraddon": "bottom",
+    "showbanneraddon": "top",
     "url": "",
     "request": {
       "action": "config",
-      "app_category": "sample",
-      "category_id": "15"
+      "app_category": "video",
+      "pkg_name": "com.np.oldnepalisongs"
     },
     "actionbar": [
       {
         "title": "Rate Us",
         "showalways": false,
-        /*forcefully shows the icon in actionbar*/
         "icon": "",
-        "link": "sp://rateus"
+        "link": "oldnepalisongs://rateus"
       },
       {
         "title": "Disclaimer",
         "showalways": false,
         "icon": "",
-        "link": "sp://disclaimer"
+        "link": "oldnepalisongs://disclaimer"
       },
       {
         "title": "Share App",
         "showalways": false,
-        /* if false shows in popupmenu*/
         "icon": "",
-        "link": "sp://share"
+        "link": "oldnepalisongs://share"
       },
       {
         "title": "Setting",
         "showalways": false,
-        /* if false shows in popupmenu*/
         "icon": "",
-        "link": "sp://setting"
+        "link": "oldnepalisongs://setting"
       }
     ],
-    "alert": true,
-    "slider": false,
-    "banner": true,
-    /* "grid": {
-       "type": "grid",
-       "max_horizontal": "2",
-       "menu": [
-         */
-    /* {
-               "title": "news",
-              */
-    /*
-            */
-    /* grid menu title for eg news*/
-    /*
-            */
-    /*
-                      "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-                      */
-    /*
-            */
-    /*valid icon url*/
-    /*
-            */
-    /*
-                      "link": "sp://news"
-                     */
-    /*
-            */
-    /* deeplink of the page to be opened when clicked*/
-    /*
-            */
-    /*
-                    },*/
-    /*
-            {
-              "title": "Vidoes",
-              "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-              "link": "sp://videos"
-            },
-            {
-              "title": "gallery",
-              "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-              "link": "sp://gallery"
-            },
-            {
-              "title": "Audio",
-              "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-              "link": "sp://audiolist"
-            },
-            {
-              "title": "Lyrics",
-              "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-              "link": "sp://simplelist"
-            }
-          ]
-        },*/
+    "alert": {
+      "show": true,
+      "weight": 0
+    },
+    "slider": {
+      "show": true,
+      "weight": 1
+    },
+    "banner": {
+      "show": false,
+      "weight": 2
+    },
+    "grid": {
+      "type": "grid",
+      "max_horizontal": "2",
+      "menu": [
+        {
+          "title": "Vidoes",
+          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+          "link": "sp://videos"
+        },
+        {
+          "title": "gallery",
+          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+          "link": "sp://gallery"
+        },
+        {
+          "title": "Audio",
+          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+          "link": "sp://simplelist"
+        },
+        {
+          "title": "Lyrics",
+          "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
+          "link": "sp://simplelist"
+        }
+      ]
+    },
     "modules": [
       {
         "type": "videos",
         "title": "Videos",
         "max": 5,
         "showall": true,
-        "showall_link": "sp://videos",
         "show_header": true,
-        "link": "sp://videodetail",
+        "showall_link": "sp://videolist",
+        "link": "sp://news",
         "orientation": "horizontal",
         "layout": "videos_type_1"
       },
       {
-        "type": "gallery",
-        "title": "Gallery",
+        "type": "simplelist",
+        "title": "SachchiKathas",
         "max": 5,
-        "showall": true,
-        "showall_link": "sp://gallery",
-        "show_header": true,
-        "link": "sp://gallerydetail",
-        "orientation": "horizontal",
-        "layout": "gallery_type_1"
-      },
-      {
-        "type": "news",
-        "title": "News",
-        "max": 5,
-        "showall": true,
-        "showall_link": "sp://news",
-        "show_header": true,
-        "link": "sp://newsdetail",
+        "showall": false,
+        "show_header": false,
+        "showall_link": "sp://simplelist",
+        "link": "sp://webview",
         "orientation": "vertical",
         "layout": "news_type_2"
       }
-      /*,
-        {
-          "type": "simplelist",
-          "title":"SachchiKathas",
-          "max": 5,
-          "showall":false,
-          "show_header":false,
-          "link": "sp://webview",
-          "orientation": "vertical",
-          "layout": "news_type_2"
-        }*/
     ]
   },
-  /* "bottomsheet": [
-     {
-       "title": "news",
-       "icon": "",
-       "link": "sp://news"
-     },
-     {
-       "title": "audio",
-       "icon": "",
-       "link": "sp://audio"
-     },
-     {
-       "title": "gallery",
-       "icon": "",
-       "link": "sp://gallery"
-     },
-     {
-       "title": "videos",
-       "icon": "",
-       "link": "sp://videos"
-     }
-   ],*/
+  "bottomsheet": [
+    {
+      "title": "news",
+      "icon": "",
+      "link": "sp://news"
+    },
+    {
+      "title": "audio",
+      "icon": "",
+      "link": "sp://audio"
+    },
+    {
+      "title": "gallery",
+      "icon": "",
+      "link": "sp://gallery"
+    },
+    {
+      "title": "videos",
+      "icon": "",
+      "link": "sp://videos"
+    }
+  ],
   "modulesconfig": {
     "NewsActivity": {
       "request": {
         "action": "news",
         "start": "0",
         "limit": "10"
-      },
-      "url": "",
-      "hasPagination": true,
-      "persist": true,
-      "loginrequired": false,
-      "bookmark": true,
-      "showbanneraddon": "top",
-      "hasFullScreen": {
-        "event": "backpressed",
-        "afterClick": 0,
-        "withDelay": 0
-      }
-    },
-    "NewsDetailActivity": {
-      "request": {
-        "action": "news",
-        "id": "1"
       },
       "url": "",
       "hasPagination": true,
@@ -232,12 +228,12 @@
     },
     "GalleryActivity": {
       "request": {
-        "action": "gallery",
+        "action": "get_photo",
         "start": "0",
         "limit": "10"
       },
       "url": "",
-      "hasPagination": false,
+      "hasPagination": true,
       "persist": true,
       "loginrequired": false,
       "bookmark": true,
@@ -250,28 +246,11 @@
     },
     "VideoListActivity": {
       "request": {
-        "action": "videos",
+        "action": "get_videos",
         "start": "0",
         "limit": "10"
       },
-      "url": "",
-      "hasPagination": true,
-      "persist": false,
-      "loginrequired": false,
-      "bookmark": true,
-      "showbanneraddon": "top",
-      "hasFullScreen": {
-        "event": "backpressed",
-        "afterClick": 2,
-        "withDelay": 0
-      }
-    },
-    "VideoDetailActivity": {
-      "request": {
-        "action": "videos",
-        "id": "0"
-      },
-      "url": "",
+      "url": "http://vs.hamroapi.com/v4/",
       "hasPagination": true,
       "persist": false,
       "loginrequired": false,
@@ -289,6 +268,41 @@
         "action": "get_videos",
         "start": "0",
         "limit": "10"
+      },
+      "url": "http://vs.hamroapi.com/v4/",
+      "hasPagination": true,
+      "persist": false,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 2,
+        "withDelay": 0
+      }
+    },
+    "CastActivity": {
+      "label": "Cast",
+      "request": {
+        "action": "artists"
+      },
+      "url": "http://vs.hamroapi.com/v4/",
+      "hasPagination": true,
+      "persist": false,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 2,
+        "withDelay": 0
+      }
+    },
+    "CastDetailActivity": {
+      "label": "CastDetail",
+      "request": {
+        "action": "artists",
+        "id": "1"
       },
       "url": "http://vs.hamroapi.com/v4/",
       "hasPagination": true,
