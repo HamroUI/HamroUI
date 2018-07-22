@@ -75,33 +75,32 @@
     "url": "",
     "request": {
       "action": "config",
-      "app_category": "video",
-      "pkg_name": "com.np.oldnepalisongs"
+      "app_category": "sample"
     },
     "actionbar": [
       {
         "title": "Rate Us",
         "showalways": false,
         "icon": "",
-        "link": "oldnepalisongs://rateus"
+        "link": "sp://rateus"
       },
       {
         "title": "Disclaimer",
         "showalways": false,
         "icon": "",
-        "link": "oldnepalisongs://disclaimer"
+        "link": "sp://disclaimer"
       },
       {
         "title": "Share App",
         "showalways": false,
         "icon": "",
-        "link": "oldnepalisongs://share"
+        "link": "sp://share"
       },
       {
         "title": "Setting",
         "showalways": false,
         "icon": "",
-        "link": "oldnepalisongs://setting"
+        "link": "sp://setting"
       }
     ],
     "alert": {
@@ -133,7 +132,7 @@
         {
           "title": "Audio",
           "icon": "https://img.youtube.com/vi/SgELlp31pBM/mqdefault.jpg",
-          "link": "sp://simplelist"
+          "link": "sp://audio"
         },
         {
           "title": "Lyrics",
@@ -210,7 +209,8 @@
     },
     "AudioActivity": {
       "request": {
-        "action": "news",
+        "action": "audios",
+        "type":"कृष्ण भजन",
         "start": "0",
         "limit": "10"
       },
@@ -242,6 +242,24 @@
         "event": "backpressed",
         "afterClick": 0,
         "withDelay": 4000
+      }
+    },
+    "AudioDetailActivity": {
+      "request": {
+        "action": "get_audios",
+        "start": "0",
+        "limit": "10"
+      },
+      "url": "http://vs.hamroapi.com/v4/",
+      "hasPagination": true,
+      "persist": false,
+      "loginrequired": false,
+      "bookmark": true,
+      "showbanneraddon": "top",
+      "hasFullScreen": {
+        "event": "backpressed",
+        "afterClick": 2,
+        "withDelay": 0
       }
     },
     "VideoListActivity": {

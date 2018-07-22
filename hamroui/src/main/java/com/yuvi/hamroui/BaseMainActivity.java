@@ -97,6 +97,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
 
     @Override
     public void onSelected(GridMenu menu) {
+        Utils.log(getClass(), "link = " + menu.link);
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(menu.link))
                     .putExtra("fromApp", true)
@@ -114,10 +115,11 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
         linearLayout = getHomeLayout();
         Toolbar toolbar = getToolbar();
 
+
         linearLayout.addView(toolbar, 0);
         linearLayout.addView(getFrameLayout(), 1);
         View view = linearLayout;
-        boolean isAppconfigUpdated = false;
+        boolean isAppconfigUpdated = true;
 
         try {
             appConfigJSON = new JSONObject(getAppconfigFile());
@@ -126,6 +128,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
                 pref.clearAll();
                 pref.setIntPreferences("version", appConfigJSON.optInt("version"));
                 isAppconfigUpdated = true;
+                Utils.log(getClass(), "AppConfigUpdated = " + isAppconfigUpdated);
             }
 
             if (appConfigJSON.has("pkgname") && !TextUtils.isEmpty(appConfigJSON.optString("pkgname"))) {
@@ -539,7 +542,7 @@ public abstract class BaseMainActivity extends AppCompatActivity implements OnGr
             String alignment = homeJSON.optString("showbanneraddon");
             String admob_id = pref.getPreferences(Pref.KEY_ADMOB_ID);
             String banneradd_id = pref.getPreferences(Pref.KEY_BANNER_ID);
-            if (!TextUtils.isEmpty(admob_id) && !TextUtils.isEmpty(banneradd_id)) {
+            if (!BuildConfig.DEBUG && !TextUtils.isEmpty(admob_id) && !TextUtils.isEmpty(banneradd_id)) {
                 MobileAds.initialize(this, admob_id);
                 AdView mAdView = new AdView(this);
                 mAdView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

@@ -69,13 +69,14 @@ public class BaseActivity extends AppCompatActivity {
 
         String config = pref.getPreferences(this.getClass().getSimpleName());
 
+        Utils.log(getClass(), "config = " + config);
         packageName = pref.getPreferences("pkgname");
         url = pref.getPreferences("baseurl");
 
-        Utils.log(BaseActivity.class, this.getClass().getSimpleName());
+        Utils.log(BaseActivity.this.getClass(), "ActivityName = " + this.getClass().getSimpleName());
         String packageName = pref.getPreferences("pkgname");
         String url = pref.getPreferences("baseurl");
-        Utils.log(NewsActivity.class, "packageName = " + packageName + " url = " + url + " newsConfig = " + config);
+        Utils.log(getClass(), "packageName = " + packageName + " url = " + url);
         HashMap<String, String> requestMap = new HashMap<>();
         String showBannerAddOn = "";
         Bundle extras = new Bundle();
@@ -88,7 +89,7 @@ public class BaseActivity extends AppCompatActivity {
             String banneradd_id = pref.getPreferences(Pref.KEY_BANNER_ID);
             String fullScreenId = pref.getPreferences(Pref.KEY_INTERESTIAL_ID);
 
-            if (DmUtilities.isNetworkConnected(this)
+            if (!BuildConfig.DEBUG && DmUtilities.isNetworkConnected(this)
                     && !TextUtils.isEmpty(admob_id)
                     && !TextUtils.isEmpty(banneradd_id)
                     && configJSON.has("showbanneraddon")
@@ -127,7 +128,7 @@ public class BaseActivity extends AppCompatActivity {
                 hasPagination = configJSON.optBoolean("hasPagination", false);
             }
 
-            if (configJSON.has("hasFullScreen")) {
+            if (!BuildConfig.DEBUG && configJSON.has("hasFullScreen")) {
                 afterClick = pref.getIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount");
                 fullScreenAddJSON = configJSON.optJSONObject("hasFullScreen");
                 mInterstitialAd = new InterstitialAd(this);
@@ -210,14 +211,14 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        Utils.log(getClass(), "afterClick = " + afterClick + " fromAppConfig = " + fullScreenAddJSON.optInt("afterClick") + " fromPref = " + pref.getIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount"));
+//        Utils.log(getClass(), "afterClick = " + afterClick + " fromAppConfig = " + fullScreenAddJSON.optInt("afterClick") + " fromPref = " + pref.getIntPreferences(this.getClass().getSimpleName() + "_fullscreenCount"));
 
         if (fullScreenAddJSON != null && afterClick > fullScreenAddJSON.optInt("afterClick")) {
             afterClick = fullScreenAddJSON.optInt("afterClick");
         }
 
-        Utils.log(this.getClass(), "loadAdd = " + (fullScreenAddJSON != null && afterClick == fullScreenAddJSON.optInt("afterClick")));
-        Utils.log(getClass(), "addLoaded = " + mInterstitialAd.isLoaded());
+//        Utils.log(this.getClass(), "loadAdd = " + (fullScreenAddJSON != null && afterClick == fullScreenAddJSON.optInt("afterClick")));
+//        Utils.log(getClass(), "addLoaded = " + mInterstitialAd.isLoaded());
 
         if (fullScreenAddJSON != null && afterClick == fullScreenAddJSON.optInt("afterClick") && mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();

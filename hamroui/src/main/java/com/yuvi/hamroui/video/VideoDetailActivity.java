@@ -53,10 +53,6 @@ public class VideoDetailActivity extends BaseActivity {
             for(String key : uri.getQueryParameterNames()){
                 model.requestMap.put(key, uri.getQueryParameter(key));
             }
-//            videoID = Uri.parse(getIntent().getDataString()).getQueryParameter("id");
-//            if (model.requestMap.containsKey("id")) {
-//                model.requestMap.put("id", videoID);
-//            }
             Videos videos = ViewModelProviders.of(this).get(Videos.class);
             videos.loadVideo(model, this);
             videos.getVideos().observe(this, new Observer<String>() {

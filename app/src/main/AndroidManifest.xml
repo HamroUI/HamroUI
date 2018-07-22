@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!--<permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />-->
-    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name="com.nep.hamroui.MainApplication"
@@ -36,7 +36,7 @@
 
                 <data
                     android:host="main"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
 
         </activity>
@@ -51,7 +51,7 @@
 
                 <data
                     android:host="news"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
 
 
@@ -66,8 +66,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="videolist"
-                    android:scheme="oldnepalisongs" />
+                    android:host="videos"
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
 
@@ -83,7 +83,7 @@
 
                 <data
                     android:host="player"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
         <activity
@@ -98,7 +98,7 @@
 
                 <data
                     android:host="newsdetail"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
         <activity
@@ -112,8 +112,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="video"
-                    android:scheme="oldnepalisongs" />
+                    android:host="videodetail"
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
 
@@ -128,11 +128,11 @@
 
                 <data
                     android:host="gallery"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.yuvi.hamroui.audio.AudioActivity"
+            android:name="com.yuvi.hamroui.audio.AudioDetailActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
             <intent-filter android:label="productdetail">
                 <action android:name="android.intent.action.VIEW" />
@@ -141,8 +141,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="audiolist"
-                    android:scheme="oldnepalisongs" />
+                    android:host="audiodetail"
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
 
@@ -157,7 +157,7 @@
 
                 <data
                     android:host="simplelist"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
 
@@ -173,7 +173,7 @@
 
                 <data
                     android:host="web"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
 
@@ -190,7 +190,7 @@
 
                 <data
                     android:host="gallerydetail"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
 
@@ -206,7 +206,7 @@
 
                 <data
                     android:host="cast"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
 
@@ -222,7 +222,7 @@
 
                 <data
                     android:host="castdetail"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
 
@@ -238,7 +238,7 @@
 
                 <data
                     android:host="category"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
         </activity>
 
@@ -254,8 +254,24 @@
 
                 <data
                     android:host="setting"
-                    android:scheme="oldnepalisongs" />
+                    android:scheme="sp" />
             </intent-filter>
+        </activity>
+
+        <activity android:name="com.yuvi.hamroui.audio.AudioActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout">
+
+            <intent-filter android:label="AudioList">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="audio"
+                    android:scheme="sp" />
+            </intent-filter>
+
         </activity>
 
         <service android:name="com.yuvi.hamroui.audio.MediaPlayerService" />
