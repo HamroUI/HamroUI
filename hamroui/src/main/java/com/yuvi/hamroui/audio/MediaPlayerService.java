@@ -70,6 +70,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     //AudioPlayer notification ID
     private static final int NOTIFICATION_ID = 101;
+    private int currentMediaPos = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initMediaSession() throws RemoteException {
@@ -199,7 +200,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
                 R.drawable.ic_action_close); //replace with your own image
 
         // Create a new Notification
-        NotificationCompat.Builder notificationBuilder =  new NotificationCompat.Builder(this, "1000")
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "1000")
                 .setShowWhen(false)
                 // Set the Notification style
 //                .setStyle(new NotificationCompat.se
@@ -330,6 +331,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             stopSelf();
         }
         mediaPlayer.prepareAsync();
+//        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                if (mp != null)
+//                    mp.seekTo(currentMediaPos);
+//            }
+//        });
     }
 
     private boolean requestAudioFocus() {
@@ -367,6 +375,12 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         registerBecomingNoisyReceiver();
         //Listen for new Audio to play -- BroadcastReceiver
         register_playNewAudio();
+        register_removeService();
+
+        // start mediaplayer
+//        initMediaPlayer();
+//        updateMetaData();
+//        buildNotification(PlaybackStatus.PLAYING);
     }
 
     @Override
@@ -387,6 +401,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         //unregister BroadcastReceivers
         unregisterReceiver(becomingNoisyReceiver);
         unregisterReceiver(playNewAudio);
+        unregisterReceiver(removeFromSelf);
 
     }
 
@@ -396,8 +411,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
             //An audio file is passed to the service through putExtra();
-//            mediaFile = intent.getExtras().getString("media");
-            mediaFile = "https://upload.wikimedia.org/wikipedia/commons/6/6c/Grieg_Lyric_Pieces_Kobold.ogg";
+            mediaFile = intent.getExtras().getString("media");
+            currentMediaPos = Integer.parseInt(intent.getExtras().getString("currentPos"));
+//            mediaFile = "https://upload.wikimedia.org/wikipedia/commons/6/6c/Grieg_Lyric_Pieces_Kobold.ogg";
         } catch (NullPointerException e) {
             stopSelf();
         }
@@ -499,6 +515,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     @Override
     public void onPrepared(MediaPlayer mp) {
         //Invoked when the media source is ready for playback.
+        mp.seekTo(currentMediaPos);
         playMedia();
     }
 
@@ -598,4 +615,35 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         registerReceiver(playNewAudio, filter);
     }
 
+    private BroadcastReceiver removeFromSelf = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            //Get the new media index form SharedPreferences
+//            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
+//            if (audioIndex != -1 && audioIndex < audioList.size()) {
+//                //index is in a valid range
+//                activeAudio = audioList.get(audioIndex);
+//            } else {
+//                stopSelf();
+//            }
+
+            //A PLAY_NEW_AUDIO action received
+            //reset mediaPlayer to play the new Audio
+            if (mediaPlayer != null) {
+                stopMedia();
+                mediaPlayer.reset();
+            }
+            stopSelf();
+//            initMediaPlayer();
+//            updateMetaData();
+//            buildNotification(PlaybackStatus.PLAYING);
+        }
+    };
+
+    private void register_removeService() {
+        //Register playNewMedia receiver
+        IntentFilter filter = new IntentFilter(AudioDetailActivity.Broadcast_REMOVE_SERVICE);
+        registerReceiver(removeFromSelf, filter);
+    }
 }
